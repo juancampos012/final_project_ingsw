@@ -25,9 +25,9 @@ model user{
   lastName    String
   password    String
   email       String  @unique
-  isActive    Boolean
-  avatar      String
-  role        String  @default("user")
+  isActive    Boolean ? @default(false)
+  avatar      String ?
+  role        String ? @default("user")
   address     address?
 }
 
