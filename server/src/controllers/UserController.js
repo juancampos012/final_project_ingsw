@@ -5,9 +5,7 @@ const prisma = new PrismaClient();
 const createUser = async (req, res) => {
     try{
         const { name, lastName, password, email, isActive, role, address } = req.body;
-        console.log(req.body);
         const avatar = req.file ? req.file.filename : null;
-
         const user = await prisma.user.create({
             data: {
                 name,
@@ -20,7 +18,6 @@ const createUser = async (req, res) => {
                 address,
             },
         });
-
         res.status(201).json({user});
     }catch(error){
         console.error(error);
@@ -30,7 +27,6 @@ const createUser = async (req, res) => {
 
 const getListUsers = async (req, res) => {
     try{
-        console.log('Listar usuarios');
         const users = await prisma.user.findMany();
         res.status(200).json(users);
     }catch(error){
@@ -45,7 +41,7 @@ const deleteUser = async (req, res) => {
         const user = await prisma.user.delete({
             where: { id: id },
         });
-        if(product){
+        if(user){
             res.status(200).json({message: "User deleted successfully"});
         } else {
             throw new Error("User not found");
@@ -54,6 +50,7 @@ const deleteUser = async (req, res) => {
         res.status(500).json({message: error.message});
     }
 }
+
 const getUserByName = async (req, res) => {
     try{
         const { name } = req.query;
@@ -81,3 +78,19 @@ const getUserbyId = async (req, res) => {
         res.status(400).json({message: error.message});
     }
 }
+
+const updateUserByEmail = async (req, res) => {
+    try{
+        const {email} = req.body;
+        const { name, lastName, password, isActive, role, address }= req.body;
+        const user = await prisma.user.update({
+            where: { email: email},
+            data: { name, lastName, password, isActive, role, address },
+        });
+        res.status(200).json(user);
+    }catch(error){
+        res.status(400).json({message: error.message});
+    }
+}
+
+module.exports = {createUser, getListUsers, deleteUser, getUserByName, getUserbyId, updateUserByEmail};
