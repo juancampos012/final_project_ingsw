@@ -1,5 +1,5 @@
 import './App.css';
-import { CreateUser } from './components/CreateUser';
+import { CreateUser } from './components/CRUD/CreateUser';
 
 function App() {
   return (
