@@ -16,11 +16,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors());
 
-// http://localhost:3006/
+// http://localhost:3006
 app.listen(PORT, () => console.log('Server running on port', PORT));
 
-// http://localhost:3006/users/
-app.use('/users', userRoutes);
+// http://localhost:3006/api/v1/users
+app.use('/api/v1/users', userRoutes);
 
 //connect to mongo
 const getConnection = async () => {
