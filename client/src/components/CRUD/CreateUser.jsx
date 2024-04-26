@@ -29,7 +29,7 @@ const VisuallyHiddenInput = styled('input')({
 export const CreateUser = () => {
     const [name, setName] = React.useState("");
     const [lastName, setLastName] = React.useState("");
-    const [password, setPassword] = React.useState();
+    const [passwordHash, setPasswordHash] = React.useState();
     const [email, setEmail] = React.useState("");
     const [image, setImage] = React.useState();
 
@@ -47,7 +47,6 @@ export const CreateUser = () => {
   
       if (file && validImageTypes.includes(file.type)) {
           setImage(file);
-          console.log(file);
       } else {
           alert("Por favor, selecciona un archivo de imagen válido.");
       }
@@ -58,11 +57,10 @@ export const CreateUser = () => {
             const data = {
               name,
               lastName,
-              password,
+              passwordHash,
               email,
             };
             const response = await userController.newUser(data, image);
-            console.log(response);
             response.status == 201
               ? alert("Creación exitosa")
               : alert("Error al crear el producto");
@@ -101,8 +99,8 @@ export const CreateUser = () => {
                       </IconButton>
                     </InputAdornment>
                   }
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={passwordHash}
+                  onChange={(e) => setPasswordHash(e.target.value)}
                   label="Password"
                 /> 
             </FormControl>

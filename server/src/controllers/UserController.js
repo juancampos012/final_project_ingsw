@@ -1,11 +1,13 @@
 //back: hace create, get  y delete
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const bcrypt = require('bcrypt');
 
 const createUser = async (req, res) => {
     try{
-        const { name, lastName, password, email, isActive, role, address } = req.body;
-        const avatar = req.file ? req.file.filename : null;
+        const { name, lastName, passwordHash, email, isActive, role, address } = req.body;
+        const avatar = req.file ? req.file.filename : "defaultAvatar.png";
+        password = createHash(passwordHash);
         const user = await prisma.user.create({
             data: {
                 name,
@@ -24,6 +26,10 @@ const createUser = async (req, res) => {
         res.status(500).json({error: "Something went wrong"});
     }
 };
+
+var createHash = function(password){
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+}
 
 const getListUsers = async (req, res) => {
     try{
