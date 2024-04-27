@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import * as React from 'react';
 import { User } from '../../request/users';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -13,10 +14,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 
 const userController = new User();
 
-export const Login = () => {
+export const Login = ({ setToken }) => {
   const [passwordHash, setPasswordHash] = React.useState(""); 
   const [email, setEmail] = React.useState("");
-
   const [showPassword, setShowPassword] = React.useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -25,24 +25,33 @@ export const Login = () => {
     event.preventDefault();
   };
 
-  const handleCreate = async () => {
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
       try {
           const data = {
             passwordHash,
             email,
           };
           const response = await userController.login(data);
-          if(response.status == 200){
-            alert("login successful");
-          }else if(response.status == 401){
+          const responseData = await response.json();
+          if(response.status === 200){
+            setToken(responseData.token); 
+            navigate('/new-user');
+          }else if(response.status === 401){
             alert("user not login");
-          }else if(response.status == 500){
+          }else if(response.status === 500){
             alert("err");
           }
       } catch (error) {
           alert("Ocurrió un error al intentar crear el producto");
       }
   };
+
+  const handleSignupClick = () => {
+    navigate('/signup');
+  };
+
 
   return (
     <>
@@ -64,7 +73,7 @@ export const Login = () => {
                     </div>
                     <div>
                         <ThemeProvider theme={theme}>
-                            <FormControl sx={{ width: '370px', marginBottom: '70px', marginTop: '70px' }} variant="outlined">
+                            <FormControl sx={{ width: '370px', marginBottom: '75px', marginTop: '50px' }} variant="outlined">
                                 <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                                 <OutlinedInput
                                     id="outlined-adornment-password"
@@ -92,12 +101,13 @@ export const Login = () => {
                         <Button 
                             variant="contained" 
                             disableElevation
-                            onClick={handleCreate}
+                            onClick={handleLogin}
                             style={{ backgroundColor: '#000000', width: '250px', borderRadius: '50px' }}
                         >
                             Iniciar Sesión
                         </Button>
                     </div>
+                    <a onClick={handleSignupClick}>Crear usuario</a>
                 </div>
             </div>
         </div>
