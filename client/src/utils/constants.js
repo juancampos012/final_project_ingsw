@@ -6,6 +6,7 @@ export const ENV ={
     BASE_API: API_URL,
     API_ROUTES:{
         NEWUSER: "users/new-user",
+        LOGIN: "users/login",
         LISTUSER: "users/list-user",
         GETUSERBYID: "users/get-user-by-id",
         GETUSERBYNAME: "users/get-user-by-name",
