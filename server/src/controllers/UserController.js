@@ -2,10 +2,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-
-dotenv.config();
 
 const createUser = async (req, res) => {
     try{
@@ -26,6 +22,7 @@ const createUser = async (req, res) => {
         });
         res.status(201).json({user});
     }catch(error){
+        console.error(error);
         res.status(500).json({error: "Something went wrong"});
     }
 };
@@ -39,20 +36,13 @@ const login = async (req, res) => {
         const { email, passwordHash } = req.body;
         const user = await prisma.user.findUnique({
             where: { email: email},
-        });      
-        console.log(user);  
+        });        
         if(user && isValidPassword(user, passwordHash)){
-            const token = jwt.sign(
-                { id: user.id }, 
-                process.env.TWT_SECRET, 
-                { expiresIn: process.env.JTW_EXPIRATION}
-            );
-            res.status(200).json({user, token});
+            res.status(200).json({user});
         }else{
             res.status(401).json({error: "User undefined or invalid password"});
         }
     }catch(error){
-        console.log(error);
         res.status(500).json({error: "Something went wrong"});
     }
 };
