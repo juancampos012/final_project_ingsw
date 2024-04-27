@@ -1,10 +1,11 @@
 import './App.css';
 import { CreateUser } from './components/CRUD/CreateUser';
+import { Login } from './components/CRUD/Login';
 
 function App() {
   return (
     <>
-      <CreateUser/>
+      <Login/>
     </>
   );
 }

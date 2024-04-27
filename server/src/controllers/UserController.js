@@ -31,6 +31,26 @@ var createHash = function(password){
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 }
 
+const login = async (req, res) => {
+    try{
+        const { email, passwordHash } = req.body;
+        const user = await prisma.user.findUnique({
+            where: { email: email},
+        });        
+        if(user && isValidPassword(user, passwordHash)){
+            res.status(200).json({user});
+        }else{
+            res.status(401).json({error: "User undefined or invalid password"});
+        }
+    }catch(error){
+        res.status(500).json({error: "Something went wrong"});
+    }
+};
+
+var isValidPassword = function(user, password){
+    return bcrypt.compareSync(password, user.password);
+}
+
 const getListUsers = async (req, res) => {
     try{
         const users = await prisma.user.findMany();
@@ -99,4 +119,4 @@ const updateUserByEmail = async (req, res) => {
     }
 }
 
-module.exports = {createUser, getListUsers, deleteUser, getUserByName, getUserbyId, updateUserByEmail};
+module.exports = {createUser, getListUsers, deleteUser, getUserByName, getUserbyId, updateUserByEmail, login};
