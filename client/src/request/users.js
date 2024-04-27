@@ -16,12 +16,11 @@ export class User {
 
   async login(data) {
     const url = `${this.base_api}/${ENV.API_ROUTES.LOGIN}`;
-    console.log(data);
-    const response = await fetch(url,{
-      method: 'POST',
-      headers: {"content-type": "application/json"},
-      body: JSON.stringify(data) 
-    })
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json"},
+      body: JSON.stringify(data),
+    });
     return response;
   }
 }

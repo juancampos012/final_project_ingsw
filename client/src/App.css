@@ -45,12 +45,17 @@ body{
     justify-content: center;
     align-items: center;
     padding-top: 80px;
-    padding-bottom : 90px;
+    padding-bottom : 80px;
     padding-left: 50px;
     padding-right: 50px;
     background-color: white;
     border-radius: 25px;
     width: 43%;
+}
+
+.div-login-info a:hover {
+    cursor: pointer;
+    color: rgb(112, 114, 115);
 }
 
 .text-login{
@@ -74,4 +79,12 @@ body{
     font-size: 110%;
     margin: 0;
     margin-top: 35px;
+}
+
+.button-login{
+    margin-bottom: 30px;
+}
+
+.button-singup{
+    margin-bottom: 30px;
 }
