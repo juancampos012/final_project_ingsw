@@ -16,6 +16,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors());
 
+app.use('/uploads/users', express.static('./uploads/users'));
+
 // http://localhost:3006
 app.listen(PORT, () => console.log('Server running on port', PORT));
 
