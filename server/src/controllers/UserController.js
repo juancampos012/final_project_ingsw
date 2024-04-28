@@ -2,6 +2,9 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+require('dotenv').config();
 
 const createUser = async (req, res) => {
     try{
@@ -37,9 +40,11 @@ const login = async (req, res) => {
         const { email, passwordHash } = req.body;
         const user = await prisma.user.findUnique({
             where: { email: email},
-        });        
+        });   
         if(user && isValidPassword(user, passwordHash)){
-            res.status(200).json({user});
+            console.log(user);     
+            const token = jwt.sign({ id: user.id, email: user.email }, process.env.TWT_SECRET, { expiresIn: process.env.JTW_EXPIRATION });
+            res.status(200).json({user, token});
         }else{
             res.status(401).json({error: "User undefined or invalid password"});
         }
