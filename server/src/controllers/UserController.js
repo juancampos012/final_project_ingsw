@@ -43,7 +43,7 @@ const login = async (req, res) => {
         });   
         if(user && isValidPassword(user, passwordHash)){
             console.log(user);     
-            const token = jwt.sign({ id: user.id, email: user.email }, process.env.TWT_SECRET, { expiresIn: process.env.JTW_EXPIRATION });
+            const token = jwt.sign({ user }, process.env.TWT_SECRET, { expiresIn: process.env.JTW_EXPIRATION });
             res.status(200).json({user, token});
         }else{
             res.status(401).json({error: "User undefined or invalid password"});
@@ -125,4 +125,54 @@ const updateUserByEmail = async (req, res) => {
     }
 }
 
-module.exports = {createUser, getListUsers, deleteUser, getUserByName, getUserbyId, updateUserByEmail, login};
+const verificarTokenJWT = (token, secreto) => {
+    try {
+        const decoded = jwt.verify(token, secreto);
+        return decoded; 
+    } catch (error) {
+        return null; // Devuelve null si el token no es válido
+    }
+}
+
+const verificarJWTMiddleware = async (req, res ) => {
+    const { token } = req.query; 
+    const secret = process.env.TWT_SECRET;
+
+    if (!token) {
+        return res.status(401).json({ message: "Token de autorización no proporcionado" });
+    }
+
+    const information = verificarTokenJWT(token, secret);
+    if (information) {
+        res.status(201).json({ user: information });
+    } else {
+        return res.status(401).json({ message: "Token de autorización no válido" });
+    }
+}
+
+const createCookie =async (req, res) => {
+    const { token } = req.query;
+    res.cookie('miCookie', token);
+    res.send('Cookie establecida');
+}
+
+const getCookie = async (req, res) => {
+    const valorActual = req.cookies.miCookie;
+    if (valorActual) {
+        res.send(`Valor de la cookie: ${valorActual}`);
+    } else {
+        res.send('La cookie no está establecida');
+    }
+}
+
+const changeCookie = (req, res) => {
+    const valorActual = req.cookies.miCookie;
+    if (valorActual) {r
+        res.cookie('miCookie', 'nuevo valor de la cookie');
+        res.send('Cookie cambiada');
+    } else {
+        res.send('La cookie no está establecida');
+    }
+}
+
+module.exports = {createUser, getListUsers, deleteUser, getUserByName, getUserbyId, updateUserByEmail, login, verificarJWTMiddleware, createCookie};
