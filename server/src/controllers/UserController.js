@@ -6,7 +6,8 @@ const bcrypt = require('bcrypt');
 const createUser = async (req, res) => {
     try{
         const { name, lastName, passwordHash, email, isActive, role, address } = req.body;
-        const avatar = req.file ? req.file.filename : "defaultAvatar.png";
+        const avatarUrl = req.file ? req.file.filename : "defaultAvatar.png";
+        const avatar = `http://localhost:3006/uploads/users/${avatarUrl}`;
         password = createHash(passwordHash);
         const user = await prisma.user.create({
             data: {
