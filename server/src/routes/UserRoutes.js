@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 const userController = require("../controllers/UserController")
+const cookieParser = require('cookie-parser');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -21,5 +22,7 @@ router.get("/get-user-by-id", userController.getUserbyId);
 router.get("/get-user-by-name", userController.getUserByName); 
 router.patch("/update-user", userController.updateUserByEmail); 
 router.delete("/delete-user", userController.deleteUser); 
+router.get("/verify-token", userController.verificarJWTMiddleware);
+router.get("/create-cookie/", cookieParser(), userController.createCookie);
 
 module.exports = router;
