@@ -2,9 +2,9 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { Login } from './components/CRUD/Login';
 import React, { useState } from 'react';
-import { SingupUser } from './components/CRUD/SingupUser';
 import { Navbar } from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
+import { Singup } from './components/CRUD/Singup';
 
 function App() {
   const [token, setToken] = useState(""); 
@@ -14,7 +14,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<Login setToken={setToken} setUser={setUser}/>} />
-        <Route path="/signup" element={<SingupUser/>} />
+        <Route path="/signup" element={<Singup/>} />
         <Route path="*" element={<Navigate to="/login" />} />
         <Route
           path="/home"

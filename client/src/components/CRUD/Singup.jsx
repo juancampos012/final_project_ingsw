@@ -28,7 +28,7 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-export const SingupUser = () => {
+export const Singup = () => {
   const [name, setName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [passwordHash, setPasswordHash] = React.useState(""); 
