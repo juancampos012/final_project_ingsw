@@ -86,7 +86,7 @@ export const Navbar = () => {
     };
 
     const handleLogout = () => {
-        userController.createCookie("cerrarseision");
+        userController.createCookie("jwt", "cerrarseision");
         window.location.reload();
     };
 
@@ -116,7 +116,7 @@ export const Navbar = () => {
 
     return (
         <>
-          <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex', marginTop: '80px' }}>
             <CssBaseline />
             <AppBar position="fixed" open={open} sx={{bgcolor:'black'}}>
               <Toolbar>

@@ -37,7 +37,7 @@ export const Login = () => {
           const responseData = await response.json();
           if(response.status === 200){
             const token = responseData.token; 
-            await userController.createCookie(token);
+            await userController.createCookie("jwt", token);
             navigate('/home');
           }else if(response.status === 401){
             alert("user not login");
@@ -50,7 +50,7 @@ export const Login = () => {
   };
 
   const handleSignupClick = () => {
-    navigate('/signup');
+    navigate('/signup-personal-data');
   };
 
 
