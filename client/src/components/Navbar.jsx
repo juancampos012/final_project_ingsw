@@ -69,7 +69,9 @@ export const Navbar = () => {
         return data.json();
     })
     .then(response => {
-        setUser(response.user.user);
+        if(response.user){
+            setUser(response.user.user);
+        }
     })
     .catch(error => {
         console.error(error); 
@@ -83,12 +85,20 @@ export const Navbar = () => {
         setOpen(false);
     };
 
+    const handleLogout = () => {
+        userController.createCookie("cerrarseision");
+        window.location.reload();
+    };
+
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
 
-    const handleCloseUserMenu = () => {
+    const handleCloseUserMenu = (event) => {
         setAnchorElUser(null);
+        if (event.target.innerText === "Cerrar sesión") {
+            handleLogout();
+        }
     };
 
     const [anchorElNotif, setAnchorElNotif] = React.useState(null);

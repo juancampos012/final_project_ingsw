@@ -42,7 +42,6 @@ const login = async (req, res) => {
             where: { email: email},
         });   
         if(user && isValidPassword(user, passwordHash)){
-            console.log(user);     
             const token = jwt.sign({ user }, process.env.TWT_SECRET, { expiresIn: process.env.JTW_EXPIRATION });
             res.status(200).json({user, token});
         }else{
@@ -130,11 +129,11 @@ const verificarTokenJWT = (token, secreto) => {
         const decoded = jwt.verify(token, secreto);
         return decoded; 
     } catch (error) {
-        return null; // Devuelve null si el token no es válido
+        return null; 
     }
 }
 
-const verificarJWTMiddleware = async (req, res ) => {
+const verifyTokenjwt = async (req, res ) => {
     const { token } = req.query; 
     const secret = process.env.TWT_SECRET;
 
@@ -152,9 +151,8 @@ const verificarJWTMiddleware = async (req, res ) => {
 
 const createCookie =async (req, res) => {
     const { token } = req.body;
-    console.log(token);
     res.cookie('jwt', token);
     res.send('Cookie establecida');
 }
 
-module.exports = {createUser, getListUsers, deleteUser, getUserByName, getUserbyId, updateUserByEmail, login, verificarJWTMiddleware, createCookie};
+module.exports = {createUser, getListUsers, deleteUser, getUserByName, getUserbyId, updateUserByEmail, login, verifyTokenjwt, createCookie};

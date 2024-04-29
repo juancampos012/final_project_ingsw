@@ -21,7 +21,7 @@ router.get("/get-user-by-id", userController.getUserbyId);
 router.get("/get-user-by-name", userController.getUserByName); 
 router.patch("/update-user", userController.updateUserByEmail); 
 router.delete("/delete-user", userController.deleteUser); 
-router.get("/verify-token", userController.verificarJWTMiddleware);
+router.get("/verify-token", userController.verifyTokenjwt);
 router.post("/create-cookie", userController.createCookie);
 
 module.exports = router;
