@@ -14,20 +14,9 @@ export class User {
     return response;
   }
 
-  async deleteProduct(id) {
-    console.log(id);
-    const url = `${this.base_api}/${ENV.API_ROUTES.DELETEPRODUCT}`;
-    const response = await fetch(url,{
-      method: 'DELETE',
-      headers: {"content-type": "application/json"},
-      body: JSON.stringify({ id: id }) 
-    })
-    return response;
-}
-
-  async updateProduct(data) {
+  async updateUser(data) {
     console.log(data);
-    const url = `${this.base_api}/${ENV.API_ROUTES.EDITPRODUCT}`;
+    const url = `${this.base_api}/${ENV.API_ROUTES.UPDATEUSER}`;
     console.log(url);
     const response = await fetch(url,{
       method: 'PATCH',
@@ -37,13 +26,33 @@ export class User {
     return response;
   }
 
-  async readProducts(id) {
-    const url = `${this.base_api}/${ENV.API_ROUTES.READPRODUCT}?id=${id}`;
+  async login(data) {
+    const url = `${this.base_api}/${ENV.API_ROUTES.LOGIN}`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json"},
+      body: JSON.stringify(data),
+    });
+    return response;
+  }
+
+  async createCookie(name, token) {
+    const url = `${this.base_api}/${ENV.API_ROUTES.CREATECOOKIE}`;
+    const response = await fetch(url, {
+      method: 'POST', 
+      headers: {"content-type": "application/json"},
+      body: JSON.stringify({ name: name, token: token }),
+      credentials: 'include'
+    });
+    return response;
+  }
+
+  async verifyToken(token) {
+    const url = `${this.base_api}/${ENV.API_ROUTES.VERIFYTOKEN}?token=${token}`;
     const response = await fetch(url,{
       method: 'GET',
       headers: {"content-type": "application/json"}
     });
-    const data = await response.json();
-    return {status: response.status, result: data};
+    return response;
   }
 }

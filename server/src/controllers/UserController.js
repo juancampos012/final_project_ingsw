@@ -2,16 +2,21 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+require('dotenv').config();
 
 const createUser = async (req, res) => {
     try{
-        const { name, lastName, passwordHash, email, isActive, role, address } = req.body;
-        const avatar = req.file ? req.file.filename : "defaultAvatar.png";
+        const { name, lastName, identification, passwordHash, email, isActive, role, address } = req.body;
+        const avatarUrl = req.file ? req.file.filename : "defaultAvatar.png";
+        const avatar = `http://localhost:3006/uploads/users/${avatarUrl}`;
         password = createHash(passwordHash);
         const user = await prisma.user.create({
             data: {
                 name,
                 lastName,
+                identification,
                 password,
                 email,
                 isActive,
@@ -29,6 +34,27 @@ const createUser = async (req, res) => {
 
 var createHash = function(password){
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+}
+
+const login = async (req, res) => {
+    try{
+        const { email, passwordHash } = req.body;
+        const user = await prisma.user.findUnique({
+            where: { email: email},
+        });   
+        if(user && isValidPassword(user, passwordHash)){
+            const token = jwt.sign({ user }, process.env.TWT_SECRET, { expiresIn: process.env.JTW_EXPIRATION });
+            res.status(200).json({user, token});
+        }else{
+            res.status(401).json({error: "User undefined or invalid password"});
+        }
+    }catch(error){
+        res.status(500).json({error: "Something went wrong"});
+    }
+};
+
+var isValidPassword = function(user, password){
+    return bcrypt.compareSync(password, user.password);
 }
 
 const getListUsers = async (req, res) => {
@@ -88,15 +114,47 @@ const getUserbyId = async (req, res) => {
 const updateUserByEmail = async (req, res) => {
     try{
         const {email} = req.body;
-        const { name, lastName, password, isActive, role, address }= req.body;
+        const { name, lastName, identification, passwordHash, isActive, role, address }= req.body;
+        password = createHash(passwordHash);
         const user = await prisma.user.update({
             where: { email: email},
-            data: { name, lastName, password, isActive, role, address },
+            data: { name, lastName, identification, password, isActive, role, address },
         });
-        res.status(200).json(user);
+        res.status(201).json(user);
     }catch(error){
         res.status(400).json({message: error.message});
     }
 }
 
-module.exports = {createUser, getListUsers, deleteUser, getUserByName, getUserbyId, updateUserByEmail};
+const verificarTokenJWT = (token, secreto) => {
+    try {
+        const decoded = jwt.verify(token, secreto);
+        return decoded; 
+    } catch (error) {
+        return null; 
+    }
+}
+
+const verifyTokenjwt = async (req, res ) => {
+    const { token } = req.query; 
+    const secret = process.env.TWT_SECRET;
+
+    if (!token) {
+        return res.status(401).json({ message: "Token de autorización no proporcionado" });
+    }
+
+    const information = verificarTokenJWT(token, secret);
+    if (information) {
+        res.status(201).json({ user: information });
+    } else {
+        return res.status(401).json({ message: "Token de autorización no válido" });
+    }
+}
+
+const createCookie =async (req, res) => {
+    const { name, token } = req.body;
+    res.cookie(name, token);
+    res.send('Cookie establecida');
+}
+
+module.exports = {createUser, getListUsers, deleteUser, getUserByName, getUserbyId, updateUserByEmail, login, verifyTokenjwt, createCookie};

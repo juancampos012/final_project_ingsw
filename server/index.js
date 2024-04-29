@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 
@@ -14,7 +15,13 @@ const PORT = process.env.PORT || 4000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
+app.use(cookieParser());
+
+app.use('/uploads/users', express.static('./uploads/users'));
 
 // http://localhost:3006
 app.listen(PORT, () => console.log('Server running on port', PORT));
@@ -26,7 +33,7 @@ app.use('/api/v1/users', userRoutes);
 const getConnection = async () => {
     try {
       await mongoose.connect(process.env.DATABASE_URL );
-      console.log(`MongoDB Connected`);
+      console.log(`MongoDB Connected good`);
     } catch (error) {
       console.error(`Failed with error: ${error.message}`);
     }
