@@ -40,3 +40,52 @@ model address{
   user         user?  @relation(fields: [userId], references: [id])
   userId       String @unique @db.ObjectId
 }
+
+model truck {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  licensePlate  String   @unique
+  brand         String
+  model         String
+  capacity      Int
+  tires         tire[]
+  trips         trip[]
+  fuel          fuel[]
+  maintenances  maintenance[]
+}
+
+model tire {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  brand       String
+  model       String
+  wear        Float
+  truck       truck     @relation(fields: [truckId], references: [id])
+  truckId     String    @db.ObjectId
+}
+
+model trip {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  route       String
+  distance    Float
+  time        Float
+  truck       truck      @relation(fields: [truckId], references: [id])
+  truckId     String     @db.ObjectId
+}
+
+model fuel {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  quantity    Float
+  cost        Float
+  efficiency  Float
+  truck       truck     @relation(fields: [truckId], references: [id])
+  truckId     String    @db.ObjectId
+}
+
+model maintenance {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  type        String
+  date        DateTime
+  cost        Float
+  truck       truck     @relation(fields: [truckId], references: [id])
+  truckId     String    @db.ObjectId
+}
+
