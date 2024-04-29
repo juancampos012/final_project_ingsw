@@ -114,12 +114,13 @@ const getUserbyId = async (req, res) => {
 const updateUserByEmail = async (req, res) => {
     try{
         const {email} = req.body;
-        const { name, lastName, password, isActive, role, address }= req.body;
+        const { name, lastName, identification, passwordHash, isActive, role, address }= req.body;
+        password = createHash(passwordHash);
         const user = await prisma.user.update({
             where: { email: email},
-            data: { name, lastName, password, isActive, role, address },
+            data: { name, lastName, identification, password, isActive, role, address },
         });
-        res.status(200).json(user);
+        res.status(201).json(user);
     }catch(error){
         res.status(400).json({message: error.message});
     }
