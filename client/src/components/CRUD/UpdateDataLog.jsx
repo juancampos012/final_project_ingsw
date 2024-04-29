@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { User } from '../../request/users';
-import { styled } from '@mui/material/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import TextField from '@mui/material/TextField';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -17,18 +15,6 @@ import Cookies from 'js-cookie';
 
 const userController = new User();
 
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1,
-});
-
 export const UpdateDataLog = () => {
   const miCookie = Cookies.get('user');
   const user = JSON.parse(miCookie);
@@ -38,7 +24,6 @@ export const UpdateDataLog = () => {
   const [passwordHash, setPasswordHash] = React.useState(""); 
   const [email, setEmail] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
-  const [uploadSuccess, setUploadSuccess] = React.useState(false);
   const miCookiejwt = Cookies.get('jwt');
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -81,7 +66,8 @@ export const UpdateDataLog = () => {
           console.error(error);
           alert("Ocurrió un error al intentar editar el usuario");
       }
-      navigate('/home')
+      userController.createCookie("jwt", "cerrarseision");
+      window.location.reload();
   };
 
   return (
@@ -135,7 +121,6 @@ export const UpdateDataLog = () => {
                 >
                   Editar usuario
                 </Button>
-                {uploadSuccess && <p>La foto se ha cargado exitosamente.</p>}
               </div>
             </div>
           </div>
