@@ -88,3 +88,7 @@ body{
 .button-singup{
     margin-bottom: 30px;
 }
+
+.table-head{
+    background-color: rgba(54, 54, 54);
+}   

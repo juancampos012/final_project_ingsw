@@ -15,15 +15,15 @@ export const TableCars = () => {
         <TableContainer component={Paper} >
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
-            <TableRow sx={{ backgroundColor: 'grey'}}>
-                <TableCell>Placa</TableCell>
-                <TableCell>Marca</TableCell>
-                <TableCell>Linea</TableCell>
-                <TableCell>Modelo</TableCell>
-                <TableCell>Estado actual</TableCell>
-                <TableCell>Kilometraje</TableCell>
-                <TableCell>M. Preventivo</TableCell>
-                <TableCell>Legales</TableCell>
+            <TableRow className='table-head'>
+                <TableCell sx={{ color: 'white'}}>Placa</TableCell>
+                <TableCell sx={{ color: 'white'}}>Marca</TableCell>
+                <TableCell sx={{ color: 'white'}}>Linea</TableCell>
+                <TableCell sx={{ color: 'white'}}>Modelo</TableCell>
+                <TableCell sx={{ color: 'white'}}>Estado actual</TableCell>
+                <TableCell sx={{ color: 'white'}}>Kilometraje</TableCell>
+                <TableCell sx={{ color: 'white'}}>M. Preventivo</TableCell>
+                <TableCell sx={{ color: 'white'}}>Legales</TableCell>
             </TableRow>
             </TableHead>
             <TableBody>

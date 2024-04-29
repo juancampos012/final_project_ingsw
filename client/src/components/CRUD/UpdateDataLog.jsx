@@ -2,7 +2,7 @@ import * as React from 'react';
 import { User } from '../../request/users';
 import { styled } from '@mui/material/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { json, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import TextField from '@mui/material/TextField';
@@ -29,7 +29,7 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-export const SingupDataLog = () => {
+export const UpdateDataLog = () => {
   const miCookie = Cookies.get('user');
   const user = JSON.parse(miCookie);
   const name = user.name;
@@ -37,9 +37,9 @@ export const SingupDataLog = () => {
   const identification = user.identification;
   const [passwordHash, setPasswordHash] = React.useState(""); 
   const [email, setEmail] = React.useState("");
-  const [image, setImage] = React.useState(null); 
   const [showPassword, setShowPassword] = React.useState(false);
   const [uploadSuccess, setUploadSuccess] = React.useState(false);
+  const miCookiejwt = Cookies.get('jwt');
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -49,22 +49,22 @@ export const SingupDataLog = () => {
 
   const navigate = useNavigate();
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+    React.useEffect(() => {
+        userController.verifyToken(miCookiejwt)
+        .then(data => {
+            return data.json();
+        })
+        .then(response => {
+            if(response.user){
+                setEmail(response.user.user.email);
+            }
+        })
+        .catch(error => {
+            console.error(error); 
+        });
+    }, []);
 
-    if (file && validImageTypes.includes(file.type)) {
-        setImage(file);
-        setUploadSuccess(true);
-        setTimeout(() => {
-          setUploadSuccess(false);
-        }, 1600);
-    } else {
-        alert("Por favor, selecciona un archivo de imagen válido.");
-    }
-  };
-
-  const handleCreate = async () => {
+  const handleUpdate = async () => {
       try {
           const data = {
             name,
@@ -73,19 +73,15 @@ export const SingupDataLog = () => {
             passwordHash,
             email,
           };
-          console.log(data)
-          const response = await userController.newUser(data, image);
+          const response = await userController.updateUser(data);
           response.status === 201
-            ? alert("Creación exitosa")
-            : alert("Error al crear el producto");
+            ? alert("Edicion exitosa")
+            : alert("Error al editar el usuario");
       } catch (error) {
           console.error(error);
-          alert("Ocurrió un error al intentar crear el producto");
+          alert("Ocurrió un error al intentar editar el usuario");
       }
-  };
-
-  const handleLoginClick = () => {
-    navigate('/login');
+      navigate('/home')
   };
 
   return (
@@ -96,12 +92,12 @@ export const SingupDataLog = () => {
           <div className='div-login-right'>
             <div className='div-login-info'>
               <div className='text-login'>
-                <h2>Nuevo usuario</h2>
+                <h2>Editar usuario</h2>
                 <h4>Servientrega</h4>
               </div>
               <div>
                 <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginTop: '35px' }} id="outlined-basic" label="Email" variant="outlined" value={email} onChange={(e) => setEmail(e.target.value.toLocaleLowerCase())}/>
+                  <TextField sx={{ width: '370px', marginTop: '35px' }} id="outlined-basic" label="Email" variant="outlined" value={email} />
                 </ThemeProvider>
               </div>
               <div>
@@ -130,31 +126,17 @@ export const SingupDataLog = () => {
                   </FormControl>
                 </ThemeProvider>
               </div>
-              <div>
-                <Button
-                  component="label"
-                  role={undefined}
-                  variant="contained"
-                  tabIndex={-1}
-                  startIcon={<CloudUploadIcon />}
-                  style={{ backgroundColor: '#000000', borderRadius: '50px', marginTop:'35px' }}
-                >
-                  Cargar foto
-                  <VisuallyHiddenInput type="file" accept='image/*' onChange={handleImageUpload}/>
-                </Button>
-              </div>
               <div className="button-singup">
                 <Button 
                   variant="contained" 
                   disableElevation
-                  onClick={handleCreate}
+                  onClick={handleUpdate}
                   style={{ backgroundColor: '#000000', width: '250px', borderRadius: '50px', marginTop:'35px' }}
                 >
-                  Crear usuario
+                  Editar usuario
                 </Button>
                 {uploadSuccess && <p>La foto se ha cargado exitosamente.</p>}
               </div>
-              <a onClick={handleLoginClick}>Iniciar seisión</a>
             </div>
           </div>
         </div>
