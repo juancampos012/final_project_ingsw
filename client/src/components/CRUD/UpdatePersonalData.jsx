@@ -52,7 +52,7 @@ export const UpdatePersonalData = () => {
             <div className='div-login-info'>
               <div className='text-login'>
                 <h2>Editar usuario</h2>
-                <h4>Servientrega</h4>
+                <h4>Datos personales</h4>
               </div>
               <div>
                 <ThemeProvider theme={theme}>
