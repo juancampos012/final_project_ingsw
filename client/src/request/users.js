@@ -14,6 +14,18 @@ export class User {
     return response;
   }
 
+  async updateUser(data) {
+    console.log(data);
+    const url = `${this.base_api}/${ENV.API_ROUTES.UPDATEUSER}`;
+    console.log(url);
+    const response = await fetch(url,{
+      method: 'PATCH',
+      body: JSON.stringify(data),
+      headers: {"Content-Type": "application/json"},
+    })    
+    return response;
+  }
+
   async login(data) {
     const url = `${this.base_api}/${ENV.API_ROUTES.LOGIN}`;
     const response = await fetch(url, {

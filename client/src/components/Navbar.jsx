@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { User } from '../request/users';
+import { useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -55,27 +56,41 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
+const ListItemButtonStyled = styled(ListItemButton)({
+    '&:hover': {
+      backgroundColor: 'rgb(54,54,54)', 
+      color: 'white',
+      '& svg': {
+        color: 'white',
+      },
+    },
+  });
+  
 
 export const Navbar = () => {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [user, setUser] = React.useState("");
-    const settings = ['Perfil', 'Configuración', 'Cerrar sesión']; 
+    const settings = ['Editar perfil', 'Cerrar sesión']; 
     const miCookie = Cookies.get('jwt');
 
-    userController.verifyToken(miCookie)
-    .then(data => {
-        return data.json();
-    })
-    .then(response => {
-        if(response.user){
-            setUser(response.user.user);
-        }
-    })
-    .catch(error => {
-        console.error(error); 
-    });
+    React.useEffect(() => {
+        userController.verifyToken(miCookie)
+        .then(data => {
+            return data.json();
+        })
+        .then(response => {
+            if(response.user){
+                setUser(response.user.user);
+            }
+        })
+        .catch(error => {
+            console.error(error); 
+        });
+    }, []);
+
+    const navigate = useNavigate();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -90,6 +105,10 @@ export const Navbar = () => {
         window.location.reload();
     };
 
+    const handleUpdate = () => {
+        navigate('/update-personal-data');
+    };
+
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
@@ -98,6 +117,8 @@ export const Navbar = () => {
         setAnchorElUser(null);
         if (event.target.innerText === "Cerrar sesión") {
             handleLogout();
+        }else if (event.target.innerText === "Editar perfil") {
+            handleUpdate();
         }
     };
 
@@ -211,15 +232,15 @@ export const Navbar = () => {
               </DrawerHeader>
               <Divider />
               <List>
-                {['Mis camiones', 'Mantenimientos', 'Rutas'].map((text, index) => (
-                  <ListItem key={text} disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
+              {['Mis camiones', 'Mantenimientos', 'Rutas'].map((text, index) => (
+                <ListItem key={text} disablePadding>
+                    <ListItemButtonStyled>
+                    <ListItemIcon>
                         {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                      </ListItemIcon>
-                      <ListItemText primary={text} />
-                    </ListItemButton>
-                  </ListItem>
+                    </ListItemIcon>
+                    <ListItemText primary={text} />
+                    </ListItemButtonStyled>
+                </ListItem>
                 ))}
               </List>
             </Drawer>
