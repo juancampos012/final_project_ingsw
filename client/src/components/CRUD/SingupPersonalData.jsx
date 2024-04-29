@@ -21,7 +21,7 @@ export const SingupPersonalData = () => {
       identification,
     }
     userController.createCookie("user", JSON.stringify(user));
-    navigate('/singup-data-log');
+    navigate('/signup-address');
     window.location.reload();
   };
 
@@ -38,7 +38,7 @@ export const SingupPersonalData = () => {
             <div className='div-login-info'>
               <div className='text-login'>
                 <h2>Nuevo usuario</h2>
-                <h4>Servientrega</h4>
+                <h4>Datos personales</h4>
               </div>
               <div>
                 <ThemeProvider theme={theme}>

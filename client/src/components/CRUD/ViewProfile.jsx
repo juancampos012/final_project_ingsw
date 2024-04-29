@@ -1,16 +1,8 @@
 import * as React from 'react';
 import { User } from '../../request/users';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import InputLabel from '@mui/material/InputLabel';
-import IconButton from '@mui/material/IconButton';
-import FormControl from '@mui/material/FormControl';
 import Cookies from 'js-cookie';
 import Avatar from '@mui/material/Avatar';
 
