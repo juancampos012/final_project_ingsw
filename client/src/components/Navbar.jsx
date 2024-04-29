@@ -72,7 +72,7 @@ export const Navbar = () => {
     const [open, setOpen] = React.useState(false);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [user, setUser] = React.useState("");
-    const settings = ['Editar perfil', 'Cerrar sesión']; 
+    const settings = ['Ver perfil', 'Editar perfil', 'Cerrar sesión']; 
     const miCookie = Cookies.get('jwt');
 
     React.useEffect(() => {
@@ -109,6 +109,10 @@ export const Navbar = () => {
         navigate('/update-personal-data');
     };
 
+    const handleViewProfile = () => {
+        navigate('/view-profile');
+    };
+
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
@@ -119,6 +123,8 @@ export const Navbar = () => {
             handleLogout();
         }else if (event.target.innerText === "Editar perfil") {
             handleUpdate();
+        }else if (event.target.innerText === "Ver perfil") {
+            handleViewProfile();
         }
     };
 
@@ -184,7 +190,7 @@ export const Navbar = () => {
                 <Box sx={{ flexGrow: 0 }}>
                   <Tooltip title="Open settings">
                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, mr: 5 }}>
-                        <Avatar alt="Remy Sharp" src={user.avatar} sx={{ border: '2px solid #4DA05F' }} />
+                        <Avatar alt="Remy Sharp" src={user.avatar} sx={{ border: '2px solid #4DA05F', width:'50px', height:'50px', mb:'10px', mt:'10px' }} />
                     </IconButton>
                   </Tooltip>
                   <Menu

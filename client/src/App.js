@@ -9,6 +9,7 @@ import { SingupDataLog } from './components/CRUD/SingupDataLog';
 import { TableCars } from './components/TableCars';
 import { UpdatePersonalData } from './components/CRUD/UpdatePersonalData';
 import { UpdateDataLog } from './components/CRUD/UpdateDataLog';
+import { ViewProfile } from './components/CRUD/ViewProfile';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path='/singup-data-log' element={<SingupDataLog/>}/>
         <Route path="/update-personal-data" element={<RequireAuth><UpdatePersonalData/></RequireAuth>} />
         <Route path="/update-data-log" element={<RequireAuth><UpdateDataLog/></RequireAuth>} />
+        <Route path="/view-profile" element={<RequireAuth><ViewProfile/></RequireAuth>} />
         <Route path="/home" element={<RequireAuth><div><Navbar/><TableCars/></div></RequireAuth>} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
