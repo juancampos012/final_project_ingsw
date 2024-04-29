@@ -151,28 +151,10 @@ const verificarJWTMiddleware = async (req, res ) => {
 }
 
 const createCookie =async (req, res) => {
-    const { token } = req.query;
-    res.cookie('miCookie', token);
+    const { token } = req.body;
+    console.log(token);
+    res.cookie('jwt', token);
     res.send('Cookie establecida');
-}
-
-const getCookie = async (req, res) => {
-    const valorActual = req.cookies.miCookie;
-    if (valorActual) {
-        res.send(`Valor de la cookie: ${valorActual}`);
-    } else {
-        res.send('La cookie no está establecida');
-    }
-}
-
-const changeCookie = (req, res) => {
-    const valorActual = req.cookies.miCookie;
-    if (valorActual) {r
-        res.cookie('miCookie', 'nuevo valor de la cookie');
-        res.send('Cookie cambiada');
-    } else {
-        res.send('La cookie no está establecida');
-    }
 }
 
 module.exports = {createUser, getListUsers, deleteUser, getUserByName, getUserbyId, updateUserByEmail, login, verificarJWTMiddleware, createCookie};

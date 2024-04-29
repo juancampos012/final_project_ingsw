@@ -11,6 +11,7 @@ export const ENV ={
         GETUSERBYID: "users/get-user-by-id",
         GETUSERBYNAME: "users/get-user-by-name",
         UPDATEUSER: "users/update-user",
-        DELETEUSER: "users/delete-user"
+        DELETEUSER: "users/delete-user",
+        CREATECOOKIE: "users/create-cookie"
     }
 }
