@@ -23,4 +23,15 @@ export class User {
     });
     return response;
   }
+
+  async createCookie(token) {
+    const url = `${this.base_api}/${ENV.API_ROUTES.CREATECOOKIE}`;
+    const response = await fetch(url, {
+      method: 'POST', 
+      headers: {"content-type": "application/json"},
+      body: JSON.stringify({ token: token }),
+      credentials: 'include'
+    });
+    return response;
+  }
 }

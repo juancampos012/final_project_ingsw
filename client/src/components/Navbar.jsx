@@ -54,7 +54,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 
 export const Navbar = ({user}) => {
-    console.log(user);
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
