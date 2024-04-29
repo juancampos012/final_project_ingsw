@@ -13,6 +13,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import InputLabel from '@mui/material/InputLabel';
 import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
+import Cookies from 'js-cookie';
 
 const userController = new User();
 
@@ -28,9 +29,10 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-export const Singup = () => {
-  const [name, setName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
+export const SingupDataLog = () => {
+  const name = Cookies.get('name');
+  const lastName = Cookies.get('lastName');
+  const identification = Cookies.get('identification');
   const [passwordHash, setPasswordHash] = React.useState(""); 
   const [email, setEmail] = React.useState("");
   const [image, setImage] = React.useState(null); 
@@ -65,9 +67,11 @@ export const Singup = () => {
           const data = {
             name,
             lastName,
+            identification,
             passwordHash,
             email,
           };
+          console.log(data)
           const response = await userController.newUser(data, image);
           response.status === 201
             ? alert("Creación exitosa")
@@ -92,16 +96,6 @@ export const Singup = () => {
               <div className='text-login'>
                 <h2>Nuevo usuario</h2>
                 <h4>Servientrega</h4>
-              </div>
-              <div>
-                <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginTop: '50px' }}  id="outlined-basic" label="Nombre" variant="outlined" value={name} onChange={(e) => setName(e.target.value)}/>
-                </ThemeProvider>
-              </div>
-              <div>
-                <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginTop: '35px' }} id="outlined-basic" label="Apellido" variant="outlined" value={lastName} onChange={(e) => setLastName(e.target.value)}/>
-                </ThemeProvider>
               </div>
               <div>
                 <ThemeProvider theme={theme}>

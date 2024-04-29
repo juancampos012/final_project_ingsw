@@ -151,8 +151,8 @@ const verifyTokenjwt = async (req, res ) => {
 }
 
 const createCookie =async (req, res) => {
-    const { token } = req.body;
-    res.cookie('jwt', token);
+    const { name, token } = req.body;
+    res.cookie(name, token);
     res.send('Cookie establecida');
 }
 

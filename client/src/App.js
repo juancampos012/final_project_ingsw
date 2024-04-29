@@ -4,20 +4,26 @@ import { Login } from './components/CRUD/Login';
 import React from 'react';
 import { Navbar } from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
-import { Singup } from './components/CRUD/Singup';
+import { SingupPersonalData } from './components/CRUD/SingupPersonalData';
+import { SingupDataLog } from './components/CRUD/SingupDataLog';
+import { TableCars } from './components/TableCars';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login/>} />
-        <Route path="/signup" element={<Singup/>} />
+        <Route path="/login" element={ <Login/> } />
+        <Route path="/signup-personal-data" element={<SingupPersonalData/>} />
+        <Route path='/singup-data-log' element={<SingupDataLog/>}/>
         <Route path="*" element={<Navigate to="/login" />} />
         <Route
           path="/home"
           element={
             <RequireAuth >
-              <Navbar/>
+              <div>  
+                <Navbar/>
+                <TableCars/>
+              </div>
             </RequireAuth>
           }
         />

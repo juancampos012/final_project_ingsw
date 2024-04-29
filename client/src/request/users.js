@@ -24,12 +24,12 @@ export class User {
     return response;
   }
 
-  async createCookie(token) {
+  async createCookie(name, token) {
     const url = `${this.base_api}/${ENV.API_ROUTES.CREATECOOKIE}`;
     const response = await fetch(url, {
       method: 'POST', 
       headers: {"content-type": "application/json"},
-      body: JSON.stringify({ token: token }),
+      body: JSON.stringify({ name: name, token: token }),
       credentials: 'include'
     });
     return response;
