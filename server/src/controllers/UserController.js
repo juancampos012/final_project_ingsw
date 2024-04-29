@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const createUser = async (req, res) => {
     try{
-        const { name, lastName, identification, passwordHash, email, isActive, role, address } = req.body;
+        const { name, lastName, identification, passwordHash, email, isActive, role, department, municipality, nomenclature } = req.body;
         const avatarUrl = req.file ? req.file.filename : "defaultAvatar.png";
         const avatar = `http://localhost:3006/uploads/users/${avatarUrl}`;
         password = createHash(passwordHash);
@@ -22,7 +22,13 @@ const createUser = async (req, res) => {
                 isActive,
                 avatar,
                 role,
-                address,
+                address: {
+                    create: {
+                        department,
+                        municipality,
+                        nomenclature,
+                    }
+                }
             },
         });
         res.status(201).json({user});
@@ -31,6 +37,7 @@ const createUser = async (req, res) => {
         res.status(500).json({error: "Something went wrong"});
     }
 };
+
 
 var createHash = function(password){
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
