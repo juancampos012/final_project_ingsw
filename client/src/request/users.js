@@ -34,4 +34,13 @@ export class User {
     });
     return response;
   }
+
+  async verifyToken(token) {
+    const url = `${this.base_api}/${ENV.API_ROUTES.VERIFYTOKEN}?token=${token}`;
+    const response = await fetch(url,{
+      method: 'GET',
+      headers: {"content-type": "application/json"}
+    });
+    return response;
+  }
 }

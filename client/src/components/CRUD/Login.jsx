@@ -14,7 +14,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 
 const userController = new User();
 
-export const Login = ({ setUser}) => {
+export const Login = () => {
   const [passwordHash, setPasswordHash] = React.useState(""); 
   const [email, setEmail] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
@@ -37,7 +37,6 @@ export const Login = ({ setUser}) => {
           const responseData = await response.json();
           if(response.status === 200){
             const token = responseData.token; 
-            setUser(responseData.user);
             await userController.createCookie(token);
             navigate('/home');
           }else if(response.status === 401){

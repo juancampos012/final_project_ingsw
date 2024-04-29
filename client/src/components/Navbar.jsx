@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
+import { User } from '../request/users';
 import Menu from '@mui/material/Menu';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -24,8 +25,10 @@ import MenuItem from '@mui/material/MenuItem';
 import Avatar from '@mui/material/Avatar';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Popover from '@mui/material/Popover';
+import Cookies from 'js-cookie';
 
 const drawerWidth = 240;
+const userController = new User();
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -53,11 +56,24 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 
-export const Navbar = ({user}) => {
+export const Navbar = () => {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [user, setUser] = React.useState("");
     const settings = ['Perfil', 'Configuración', 'Cerrar sesión']; 
+    const miCookie = Cookies.get('jwt');
+
+    userController.verifyToken(miCookie)
+    .then(data => {
+        return data.json();
+    })
+    .then(response => {
+        setUser(response.user.user);
+    })
+    .catch(error => {
+        console.error(error); 
+    });
 
     const handleDrawerOpen = () => {
         setOpen(true);
