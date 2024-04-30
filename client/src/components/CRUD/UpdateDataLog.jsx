@@ -79,7 +79,7 @@ export const UpdateDataLog = () => {
             <div className='div-login-info'>
               <div className='text-login'>
                 <h2>Editar usuario</h2>
-                <h4>Servientrega</h4>
+                <h4>Datos perfil</h4>
               </div>
               <div>
                 <ThemeProvider theme={theme}>

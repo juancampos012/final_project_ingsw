@@ -30,11 +30,16 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export const SingupDataLog = () => {
-  const miCookie = Cookies.get('user');
-  const user = JSON.parse(miCookie);
+  const miCookieUser = Cookies.get('user');
+  const user = JSON.parse(miCookieUser);
+  const miCookieAddress = Cookies.get('address');
+  const address = JSON.parse(miCookieAddress);
   const name = user.name;
   const lastName = user.lastName;
   const identification = user.identification;
+  const department = address.departament;
+  const municipality = address.municipality;
+  const nomenclature = address.nomenclature;
   const [passwordHash, setPasswordHash] = React.useState(""); 
   const [email, setEmail] = React.useState("");
   const [image, setImage] = React.useState(null); 
@@ -72,6 +77,9 @@ export const SingupDataLog = () => {
             identification,
             passwordHash,
             email,
+            department,
+            municipality,
+            nomenclature,
           };
           console.log(data)
           const response = await userController.newUser(data, image);
@@ -97,7 +105,7 @@ export const SingupDataLog = () => {
             <div className='div-login-info'>
               <div className='text-login'>
                 <h2>Nuevo usuario</h2>
-                <h4>Servientrega</h4>
+                <h4>Datos perfil</h4>
               </div>
               <div>
                 <ThemeProvider theme={theme}>
