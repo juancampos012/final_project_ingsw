@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const createUser = async (req, res) => {
     try{
-        const { name, lastName, identification, passwordHash, email, isActive, role, department, municipality, nomenclature} = req.body;
+        const { name, lastName, identification, passwordHash, email, isActive, role, department, municipality, nomenclature } = req.body;
         const avatarUrl = req.file ? req.file.filename : "defaultAvatar.png";
         const avatar = `http://localhost:3006/uploads/users/${avatarUrl}`;
         password = createHash(passwordHash);
@@ -26,7 +26,7 @@ const createUser = async (req, res) => {
                     create: {
                         department,
                         municipality,
-                        nomenclature
+                        nomenclature,
                     }
                 }
             },

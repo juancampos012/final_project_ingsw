@@ -1,24 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const createAddress = async (req, res) => {
-    try{
-        const { department, municipality, nomenclature, user, userId} = req.body;
-        const address = await prisma.address.create({
-            data: {
-                department,
-                municipality,
-                nomenclature,
-                user,
-                userId,
-            },
-        });
-        res.status(201).json({address});
-    }catch(error){
-        console.error(error);
-        res.status(500).json({error: "Something went wrong"});
-    }
-};
 
 const getListAddress = async (req, res) => {
     try{
