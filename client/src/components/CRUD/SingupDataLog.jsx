@@ -37,7 +37,7 @@ export const SingupDataLog = () => {
   const name = user.name;
   const lastName = user.lastName;
   const identification = user.identification;
-  const departament = address.departament;
+  const department = address.departament;
   const municipality = address.municipality;
   const nomenclature = address.nomenclature;
   const [passwordHash, setPasswordHash] = React.useState(""); 
@@ -77,6 +77,9 @@ export const SingupDataLog = () => {
             identification,
             passwordHash,
             email,
+            department,
+            municipality,
+            nomenclature,
           };
           console.log(data)
           const response = await userController.newUser(data, image);
@@ -90,12 +93,6 @@ export const SingupDataLog = () => {
   };
 
   const handleLoginClick = () => {
-    const addres = {
-      departament,
-      municipality,
-      nomenclature,
-    };
-    console.log(addres);
     navigate('/login');
   };
 
