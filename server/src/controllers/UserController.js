@@ -22,7 +22,13 @@ const createUser = async (req, res) => {
                 isActive,
                 avatar,
                 role,
-                address,
+                address: {
+                    create: {
+                        department: address.department,
+                        municipality: address.municipality,
+                        nomenclature: address.nomenclature
+                    }
+                }
             },
         });
         res.status(201).json({user});
@@ -31,6 +37,7 @@ const createUser = async (req, res) => {
         res.status(500).json({error: "Something went wrong"});
     }
 };
+
 
 var createHash = function(password){
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
