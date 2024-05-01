@@ -92,3 +92,21 @@ body{
 .table-head{
     background-color: rgba(54, 54, 54);
 }   
+
+.div-create-truck{
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.div-create-truck-left{
+    margin-right: 50px;
+}
+
+.button-create-truck{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 30px;
+}

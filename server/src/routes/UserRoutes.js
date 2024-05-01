@@ -17,6 +17,7 @@ const upload = multer({storage});
 router.post('/new-user', upload.single("avatar"), userController.createUser);
 router.post('/login', userController.login);
 router.get("/list-user", userController.getListUsers); 
+router.get("/list-identifications", userController.getListIdentifications); 
 router.get("/get-user-by-id", userController.getUserbyId); 
 router.get("/get-user-by-name", userController.getUserByName); 
 router.patch("/update-user", userController.updateUserByEmail); 
