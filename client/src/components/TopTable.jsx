@@ -1,6 +1,7 @@
 import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { User } from '../request/users';
+import { Truck, Tuck } from '../request/trucks';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -23,6 +24,7 @@ const style = {
 };
 
 const userController = new User();
+const truckController = new Truck();
 
 export const TopTable = () => {
   const [open, setOpen] = React.useState(false);
@@ -52,18 +54,45 @@ export const TopTable = () => {
   }, []);
 
   const handleCreate = async () => {
-    const data = {
-      licensePlate,
-      brand,
-      model,
-      year,
-      capacity,
-      identification,
-    };
-    console.log(data);
-  };
+    try {
+      const capacityInt = parseInt(capacity);
+      if (isNaN(capacityInt)) {
+        throw new Error('La capacidad debe ser un número válido.');
+      }
+      const data = {
+        licensePlate,
+        brand,
+        model,
+        year,
+        capacity: capacityInt, 
+      };
+      const response = await truckController.newTrucK(data);
+      response.status === 201
+        ? alert("Creacion exitosa")
+        : alert("Error al crear el camion");
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+      alert("Ocurrió un error al intentar crear el camion");
+    }
+  };  
 
-  const handleChangeDepartament = (event) => {
+  React.useEffect(() => {
+    const fetchData = async () => {
+      if (identification) {
+        try {
+          const response = await userController.getUserByIdentification(identification);
+          setName(response.name);
+          setLastName(response.lastName);
+        } catch (error) {
+          console.error('Hubo un error al obtener los datos del usuario:', error);
+        }
+      }
+    };
+    fetchData();
+  }, [identification]);  
+
+  const handleChangeIdentification = (event) => {
     setIdentification(event.target.value);
   };
 
@@ -91,7 +120,7 @@ export const TopTable = () => {
                             id="demo-simple-select"
                             value={identification}
                             label="Identificacion"
-                            onChange={handleChangeDepartament}
+                            onChange={handleChangeIdentification}
                         >
                             {identifications && identifications.map((identification) => (
                             <MenuItem key={identification.identification} value={identification.identification}>{identification.identification}</MenuItem>
