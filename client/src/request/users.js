@@ -15,7 +15,6 @@ export class User {
   }
 
   async updateUser(data) {
-    console.log(data);
     const url = `${this.base_api}/${ENV.API_ROUTES.UPDATEUSER}`;
     console.log(url);
     const response = await fetch(url,{
@@ -24,6 +23,16 @@ export class User {
       headers: {"Content-Type": "application/json"},
     })    
     return response;
+  }
+
+  async getListIdentifications() {
+    const url = `${this.base_api}/${ENV.API_ROUTES.GETLISTUSER}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { "Content-Type": "application/json" },
+    });
+    const identifications = await response.json();
+    return identifications;
   }
 
   async login(data) {

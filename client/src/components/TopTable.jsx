@@ -1,5 +1,6 @@
 import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { User } from '../request/users';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -21,6 +22,8 @@ const style = {
   borderRadius: 3,
 };
 
+const userController = new User();
+
 export const TopTable = () => {
   const [open, setOpen] = React.useState(false);
   const [licensePlate, setLicensePlate] = React.useState("");
@@ -35,6 +38,18 @@ export const TopTable = () => {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await userController.getListIdentifications();
+        setIdentifications(response);
+      } catch (error) {
+        console.error('Hubo un error al cargar los datos:', error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleCreate = async () => {
     const data = {
@@ -75,11 +90,11 @@ export const TopTable = () => {
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={identification}
-                            label="Departamento"
+                            label="Identificacion"
                             onChange={handleChangeDepartament}
                         >
                             {identifications && identifications.map((identification) => (
-                            <MenuItem key={identification} value={identification}>{identification}</MenuItem>
+                            <MenuItem key={identification.identification} value={identification.identification}>{identification.identification}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>

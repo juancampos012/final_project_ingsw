@@ -8,6 +8,7 @@ export const ENV ={
         NEWUSER: "users/new-user",
         LOGIN: "users/login",
         LISTUSER: "users/list-user",
+        GETLISTUSER: "users/list-identifications",
         GETUSERBYID: "users/get-user-by-id",
         GETUSERBYNAME: "users/get-user-by-name",
         UPDATEUSER: "users/update-user",
