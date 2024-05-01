@@ -74,6 +74,20 @@ const getListUsers = async (req, res) => {
     }
 };
 
+const getListIdentifications = async (req, res) => {
+    try {
+        const identifications = await prisma.user.findMany({
+            select: {
+                identification: true
+            }
+        });
+        res.status(200).json(identifications);
+    } catch (error) {
+        console.log(error.message);
+        res.status(400).json({ message: error.message });
+    }
+};
+
 const deleteUser = async (req, res) => {
     try{ 
         const {id} = req.body;
@@ -165,4 +179,4 @@ const createCookie =async (req, res) => {
     res.send('Cookie establecida');
 }
 
-module.exports = {createUser, getListUsers, deleteUser, getUserByName, getUserbyId, updateUserByEmail, login, verifyTokenjwt, createCookie};
+module.exports = {createUser, getListUsers, deleteUser, getUserByName, getUserbyId, updateUserByEmail, login, verifyTokenjwt, createCookie, getListIdentifications};
