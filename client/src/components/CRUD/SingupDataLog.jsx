@@ -81,7 +81,6 @@ export const SingupDataLog = () => {
             municipality,
             nomenclature,
           };
-          console.log(data)
           const response = await userController.newUser(data, image);
           response.status === 201
             ? alert("Creación exitosa")

@@ -11,6 +11,7 @@ import { UpdatePersonalData } from './components/CRUD/UpdatePersonalData';
 import { UpdateDataLog } from './components/CRUD/UpdateDataLog';
 import { ViewProfile } from './components/CRUD/ViewProfile';
 import { SingupAddress } from './components/CRUD/SingupAddress';
+import { TopTable } from './components/TopTable';
 
 function App() {
   return (
@@ -20,10 +21,34 @@ function App() {
         <Route path="/signup-personal-data" element={<SingupPersonalData/>} />
         <Route path="/signup-address" element={<SingupAddress/>} />
         <Route path='/singup-data-log' element={<SingupDataLog/>}/>
-        <Route path="/update-personal-data" element={<RequireAuth><UpdatePersonalData/></RequireAuth>} />
-        <Route path="/update-data-log" element={<RequireAuth><UpdateDataLog/></RequireAuth>} />
-        <Route path="/view-profile" element={<RequireAuth><ViewProfile/></RequireAuth>} />
-        <Route path="/home" element={<RequireAuth><div><Navbar/><TableCars/></div></RequireAuth>} />
+        <Route path="/update-personal-data" 
+        element={
+          <RequireAuth>
+            <UpdatePersonalData/>
+          </RequireAuth>
+        } />
+        <Route path="/update-data-log" 
+        element={
+          <RequireAuth>
+            <UpdateDataLog/>
+          </RequireAuth>
+        } />
+        <Route path="/view-profile" 
+        element={
+          <RequireAuth>
+            <ViewProfile/>
+          </RequireAuth>
+        } />
+        <Route path="/home" 
+        element={
+          <RequireAuth>
+            <div>
+              <Navbar/>
+              <TopTable/>
+              <TableCars/>
+            </div>
+          </RequireAuth>
+        } />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>

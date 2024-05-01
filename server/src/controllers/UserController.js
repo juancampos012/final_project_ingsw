@@ -109,9 +109,10 @@ const getUserByName = async (req, res) => {
 const getUserbyId = async (req, res) => {
     try{
         const {id} = req.query; 
-        const user = await prisma.user.findUnique({
+        const user = await prisma.address.findUnique({
             where: { id: id },
         });
+        console.log(user);
         res.status(200).json(user);
     }catch(error){
         res.status(400).json({message: error.message});
