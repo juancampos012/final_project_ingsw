@@ -46,7 +46,7 @@ model truck {
   licensePlate  String   @unique
   brand         String
   model         String
-  year         String
+  year          String
   capacity      Int
   tires         tire[]
   trips         trip[]
