@@ -3,7 +3,7 @@ import { ENV } from "../utils/constants";
 export class User {
   base_api = ENV.BASE_API;
   async newUser(data, imageFile) {
-    const url = `${this.base_api}/${ENV.API_ROUTES.NEWUSER}`;
+    const url = `${this.base_api}/${ENV.API_ROUTES_USER.NEWUSER}`;
     const formData = new FormData();
     Object.keys(data).forEach(key => formData.append(key, data[key]));
     formData.append('avatar', imageFile);
@@ -15,7 +15,7 @@ export class User {
   }
 
   async updateUser(data) {
-    const url = `${this.base_api}/${ENV.API_ROUTES.UPDATEUSER}`;
+    const url = `${this.base_api}/${ENV.API_ROUTES_USER.UPDATEUSER}`;
     console.log(url);
     const response = await fetch(url,{
       method: 'PATCH',
@@ -25,8 +25,17 @@ export class User {
     return response;
   }
 
+  async getUserByIdentification(identification) {
+    const url = `${this.base_api}/${ENV.API_ROUTES_USER.GETUSERBYIDENTIFICATION}?identification=${identification}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { "Content-Type": "application/json" },
+    });
+    return response.json();
+  }
+
   async getListIdentifications() {
-    const url = `${this.base_api}/${ENV.API_ROUTES.GETLISTUSER}`;
+    const url = `${this.base_api}/${ENV.API_ROUTES_USER.GETLISTUSER}`;
     const response = await fetch(url, {
       method: 'GET',
       headers: { "Content-Type": "application/json" },
@@ -36,7 +45,7 @@ export class User {
   }
 
   async login(data) {
-    const url = `${this.base_api}/${ENV.API_ROUTES.LOGIN}`;
+    const url = `${this.base_api}/${ENV.API_ROUTES_USER.LOGIN}`;
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json"},
@@ -46,7 +55,7 @@ export class User {
   }
 
   async createCookie(name, token) {
-    const url = `${this.base_api}/${ENV.API_ROUTES.CREATECOOKIE}`;
+    const url = `${this.base_api}/${ENV.API_ROUTES_USER.CREATECOOKIE}`;
     const response = await fetch(url, {
       method: 'POST', 
       headers: {"content-type": "application/json"},
@@ -57,7 +66,7 @@ export class User {
   }
 
   async verifyToken(token) {
-    const url = `${this.base_api}/${ENV.API_ROUTES.VERIFYTOKEN}?token=${token}`;
+    const url = `${this.base_api}/${ENV.API_ROUTES_USER.VERIFYTOKEN}?token=${token}`;
     const response = await fetch(url,{
       method: 'GET',
       headers: {"content-type": "application/json"}
