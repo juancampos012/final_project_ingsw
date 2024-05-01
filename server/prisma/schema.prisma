@@ -50,7 +50,7 @@ model truck {
   capacity      Int
   tires         tire[]
   trips         trip[]
-  fuel          fuel[]
+  refueling     refueling[]
   maintenances  maintenance[]
 }
 
@@ -72,7 +72,7 @@ model trip {
   truckId     String     @db.ObjectId
 }
 
-model fuel {
+model refueling {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   quantity    Float
   cost        Float
