@@ -133,6 +133,19 @@ const getUserbyId = async (req, res) => {
     }
 }
 
+const getUserByIdentification = async (req, res) => {
+    try{
+        const {identification} = req.query; 
+        const user = await prisma.address.findUnique({
+            where: { identification: identification },
+        });
+        console.log(user);
+        res.status(200).json(user);
+    }catch(error){
+        res.status(400).json({message: error.message});
+    }
+}
+
 const updateUserByEmail = async (req, res) => {
     try{
         const {email} = req.body;
@@ -179,4 +192,4 @@ const createCookie =async (req, res) => {
     res.send('Cookie establecida');
 }
 
-module.exports = {createUser, getListUsers, deleteUser, getUserByName, getUserbyId, updateUserByEmail, login, verifyTokenjwt, createCookie, getListIdentifications};
+module.exports = {createUser, getListUsers, deleteUser, getUserByName, getUserbyId, updateUserByEmail, login, verifyTokenjwt, createCookie, getListIdentifications, getUserByIdentification };
