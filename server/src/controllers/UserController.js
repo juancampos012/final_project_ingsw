@@ -123,7 +123,7 @@ const getUserByName = async (req, res) => {
 const getUserbyId = async (req, res) => {
     try{
         const {id} = req.query; 
-        const user = await prisma.address.findUnique({
+        const user = await prisma.user.findUnique({
             where: { id: id },
         });
         console.log(user);
@@ -136,7 +136,7 @@ const getUserbyId = async (req, res) => {
 const getUserByIdentification = async (req, res) => {
     try{
         const {identification} = req.query; 
-        const user = await prisma.address.findUnique({
+        const user = await prisma.user.findUnique({
             where: { identification: identification },
         });
         console.log(user);
