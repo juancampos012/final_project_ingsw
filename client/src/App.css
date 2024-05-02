@@ -110,3 +110,7 @@ body{
     position: relative;
     margin-bottom: 30px;
 }
+
+.table-body :hover{
+    background-color: rgb(232, 231, 231);
+}
