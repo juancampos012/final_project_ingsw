@@ -161,7 +161,7 @@ export const SingupDataLog = () => {
                 </Button>
                 {uploadSuccess && <p>La foto se ha cargado exitosamente.</p>}
               </div>
-              <a onClick={handleLoginClick}>Iniciar seisión</a>
+              <a onClick={handleLoginClick}>Iniciar sesión</a>
             </div>
           </div>
         </div>

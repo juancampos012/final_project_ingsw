@@ -11,24 +11,63 @@ export const SingupPersonalData = () => {
   const [name, setName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [identification, setIdentification] = React.useState("");
+  const [nameIsEmpty, setNameIsEmpty] = React.useState(false);  
+  const [lastnameIsEmpty, setLastnameIsEmpty] = React.useState(false);  
+  const [idIsEmpty, setIdIsEmpty] = React.useState(false);  
 
   const navigate = useNavigate();
 
   const handleCreate = async () => {
-    const user = {
-      name,
-      lastName,
-      identification,
+    if (handleEmpty()) {
+      const user = {
+        name,
+        lastName,
+        identification,
+      }
+      userController.createCookie("user", JSON.stringify(user));
+      navigate('/signup-address');
+      window.location.reload();
+    } else {
+      setIsEmpty(true);
+      alert('Por favor, rellene todos los campos antes de continuar.');
     }
-    userController.createCookie("user", JSON.stringify(user));
-    navigate('/signup-address');
-    window.location.reload();
   };
+
+  const handleEmpty = () => {
+    return name !== "" && lastName !== "" && identification !== "";
+  }
 
   const handleLoginClick = () => {
     navigate('/login');
   };
-
+  const theme = createTheme({
+    components: {
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: isEmpty ?  'red' : 'black',
+            },
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: isEmpty ?  'red' : 'black',
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: isEmpty ?  'red' : 'black',
+            },
+          },
+        },
+      },
+      MuiInputLabel: {
+        styleOverrides: {
+          root: {
+            '&.Mui-focused': {
+              color: 'black',
+            },
+          },
+        },
+      },
+    },
+  });
   return (
       <>
         <div className='div-login'>
@@ -73,31 +112,3 @@ export const SingupPersonalData = () => {
   );
 }
 
-const theme = createTheme({
-  components: {
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'black',
-          },
-          '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'black',
-          },
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'black',
-          },
-        },
-      },
-    },
-    MuiInputLabel: {
-      styleOverrides: {
-        root: {
-          '&.Mui-focused': {
-            color: 'black',
-          },
-        },
-      },
-    },
-  },
-});

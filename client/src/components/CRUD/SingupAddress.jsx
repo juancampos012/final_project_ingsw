@@ -19,6 +19,7 @@ export const SingupAddress = () => {
   const [departaments, setDepartaments] = React.useState("");
   const [municipalitys, setMunicipalitys] = React.useState("");
   const [data, setData] = React.useState("");
+  const [isEmpty, setIsEmpty] = React.useState(false); 
 
   const navigate = useNavigate();
 
@@ -41,14 +42,19 @@ export const SingupAddress = () => {
   
 
   const handleCreate = async () => {
-    const address = {
-      departament,
-      municipality,
-      nomenclature,
+    if (departament !== "" && municipality !== "" && nomenclature !== "") {
+      const address = {
+        departament,
+        municipality,
+        nomenclature,
+      }
+      userController.createCookie("address", JSON.stringify(address));
+      navigate('/singup-data-log');
+      window.location.reload();
+    } else {
+      setIsEmpty(true);
+      alert('Por favor, rellene todos los campos antes de continuar.');
     }
-    userController.createCookie("address", JSON.stringify(address));
-    navigate('/singup-data-log');
-    window.location.reload();
   };
 
   const handleLoginClick = () => {
@@ -73,6 +79,35 @@ export const SingupAddress = () => {
     }  
   }, [departament]);
   
+  const theme = createTheme({
+    components: {
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: isEmpty ? 'red' : 'black',
+            },
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: isEmpty ? 'red' : 'black',
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: isEmpty ? 'red' : 'black',
+            },
+          },
+        },
+      },
+      MuiInputLabel: {
+        styleOverrides: {
+          root: {
+            '&.Mui-focused': {
+              color: 'black',
+            },
+          },
+        },
+      },
+    },
+  });
+
   return (
       <>
         <div className='div-login'>
@@ -143,31 +178,3 @@ export const SingupAddress = () => {
   );
 }
 
-const theme = createTheme({
-  components: {
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'black',
-          },
-          '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'black',
-          },
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'black',
-          },
-        },
-      },
-    },
-    MuiInputLabel: {
-      styleOverrides: {
-        root: {
-          '&.Mui-focused': {
-            color: 'black',
-          },
-        },
-      },
-    },
-  },
-});
