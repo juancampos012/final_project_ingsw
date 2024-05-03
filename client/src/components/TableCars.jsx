@@ -1,6 +1,6 @@
 import React from 'react';
 import { Truck } from '../request/trucks';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Checkbox } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
 body{
     margin: 0;
     padding: 0;
@@ -5,6 +7,10 @@ body{
 
 .div-login{
     display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: rgb(186, 185, 185);
     width: 100%;
     height: 100vh; 
 }
@@ -12,9 +18,10 @@ body{
 .div-login-left {
     position: relative;
     width: 45%;
+    height: 90vh;
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: center; 
+    background-position: center;  
 }
   
 .div-login-left::after {
@@ -25,18 +32,18 @@ body{
     bottom: 0;
     right: 0;
     position: absolute;
-    z-index: -1;   
+    border-radius: 30px 0px 0px 30px;
 }  
 
 .div-login-right{
     display: flex;
-    width: 55%; 
+    width: 45%; 
+    height: 90vh;
     justify-content: center;
     align-items: center;
-    background-image: url('./images/backrithlogin.png');
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-color: white;
     background-position: center; 
+    border-radius: 0px 30px 30px 0px;
 }
 
 .div-login-info{
@@ -48,9 +55,8 @@ body{
     padding-bottom : 80px;
     padding-left: 50px;
     padding-right: 50px;
-    background-color: white;
     border-radius: 25px;
-    width: 43%;
+    width: 45%;
 }
 
 .div-login-info a:hover {
@@ -62,10 +68,11 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-family: 'Lato', sans-serif;
 }
 
 .text-login h2{
-    font-size: 300%;
+    font-size: 290%;
     margin: 0;
     margin-bottom: 35px;
 }
@@ -82,7 +89,7 @@ body{
 }
 
 .button-login{
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 .button-singup{
@@ -113,4 +120,19 @@ body{
 
 .table-body :hover{
     background-color: rgb(232, 231, 231);
+}
+
+.div-top-table{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 4%;
+}
+
+.div-top-table h4{
+    font-family: 'Lato', sans-serif;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    font-size: 300%;
+    margin-left: 25%;
 }
