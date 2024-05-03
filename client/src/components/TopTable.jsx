@@ -29,6 +29,8 @@ const truckController = new Truck();
 export const TopTable = () => {
   const [open, setOpen] = React.useState(false);
   const [licensePlate, setLicensePlate] = React.useState("");
+  const [mileage, setMileage ] = React.useState("");
+  const [userId, setUserId ] = React.useState("");
   const [brand, setBrand] = React.useState("");
   const [model, setModel] = React.useState("");
   const [year, setYear] = React.useState("");
@@ -54,23 +56,23 @@ export const TopTable = () => {
   }, []);
 
   const handleCreate = async () => {
+    const mileageInt = parseInt(mileage);
+    const capacityInt = parseInt(capacity);
     try {
-      const capacityInt = parseInt(capacity);
-      if (isNaN(capacityInt)) {
-        throw new Error('La capacidad debe ser un número válido.');
-      }
       const data = {
         licensePlate,
         brand,
         model,
         year,
-        capacity: capacityInt, 
+        capacity: capacityInt,
+        mileage: mileageInt,
+        userId, 
       };
+      console.log(data);
       const response = await truckController.newTrucK(data);
       response.status === 201
         ? alert("Creacion exitosa")
         : alert("Error al crear el camion");
-      window.location.reload();
     } catch (error) {
       console.error(error);
       alert("Ocurrió un error al intentar crear el camion");
@@ -82,6 +84,7 @@ export const TopTable = () => {
       if (identification) {
         try {
           const response = await userController.getUserByIdentification(identification);
+          setUserId(response.id);
           setName(response.name);
           setLastName(response.lastName);
         } catch (error) {
@@ -143,21 +146,21 @@ export const TopTable = () => {
                     <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Apellido" variant="outlined" value={lastName} />
                   </ThemeProvider>
                 </div>
-              </div>
-              <div className='div-create-truck-rigth'>
                 <div>
                   <ThemeProvider theme={theme}>
-                    <TextField sx={{ width: '370px' }} id="outlined-basic" label="Placa" variant="outlined" value={licensePlate} onChange={(e) => setLicensePlate(e.target.value)} />
+                    <TextField sx={{ width: '370px', marginTop: '40px' }}id="outlined-basic" label="Placa" variant="outlined" value={licensePlate} onChange={(e) => setLicensePlate(e.target.value)} />
                   </ThemeProvider>
-                </div>
-                <div>
+                  <div>
                   <ThemeProvider theme={theme}>
                     <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Marca" variant="outlined" value={brand} onChange={(e) => setBrand(e.target.value)} />
                   </ThemeProvider>
                 </div>
+                </div>
+              </div>
+              <div className='div-create-truck-rigth'>
                 <div>
                   <ThemeProvider theme={theme}>
-                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Linea" variant="outlined" value={model} onChange={(e) => setModel(e.target.value)} />
+                    <TextField sx={{ width: '370px' }} id="outlined-basic" label="Linea" variant="outlined" value={model} onChange={(e) => setModel(e.target.value)} />
                   </ThemeProvider>              
                 </div>
                 <div>
@@ -170,6 +173,11 @@ export const TopTable = () => {
                     <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Capacidad" variant="outlined" value={capacity} onChange={(e) => setCapacity(e.target.value)} />
                   </ThemeProvider>
                 </div>
+                <div>
+                  <ThemeProvider theme={theme}>
+                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Kilometraje" variant="outlined" value={mileage} onChange={(e) => setMileage(e.target.value)} />
+                  </ThemeProvider>
+                </div>
               </div>
             </div>
             <div className="button-create-truck">
@@ -177,7 +185,6 @@ export const TopTable = () => {
                 variant="contained"
                 disableElevation
                 onClick={handleCreate}
-                style={{ backgroundColor: '#000000', width: '250px', borderRadius: '50px', marginTop: '35px' }}
               >
                 Crear
               </Button>
