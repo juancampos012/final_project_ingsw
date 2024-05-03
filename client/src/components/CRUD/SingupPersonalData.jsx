@@ -14,6 +14,7 @@ export const SingupPersonalData = () => {
   const [nameIsEmpty, setNameIsEmpty] = React.useState(false);  
   const [lastnameIsEmpty, setLastnameIsEmpty] = React.useState(false);  
   const [idIsEmpty, setIdIsEmpty] = React.useState(false);  
+  const [ isEmpty, setIsEmpty ] = React.useState(false);
 
   const navigate = useNavigate();
 
@@ -31,8 +32,6 @@ export const SingupPersonalData = () => {
       setIsEmpty(true);
       alert('Por favor, rellene todos los campos antes de continuar.');
     }
-    userController.createCookie("user", JSON.stringify(user));
-    navigate('/signup-address');
   };
 
   const handleEmpty = () => {
