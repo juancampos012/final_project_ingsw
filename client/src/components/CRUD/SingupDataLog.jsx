@@ -183,6 +183,10 @@ const theme = createTheme({
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: 'black',
           },
+          borderRadius: '15px', 
+          '& fieldset': {
+            borderRadius: '15px',
+          },
         },
       },
     },

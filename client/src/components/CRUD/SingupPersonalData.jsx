@@ -22,7 +22,6 @@ export const SingupPersonalData = () => {
     }
     userController.createCookie("user", JSON.stringify(user));
     navigate('/signup-address');
-    window.location.reload();
   };
 
   const handleLoginClick = () => {
@@ -86,6 +85,10 @@ const theme = createTheme({
           },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: 'black',
+          },
+          borderRadius: '15px', 
+          '& fieldset': {
+            borderRadius: '15px',
           },
         },
       },

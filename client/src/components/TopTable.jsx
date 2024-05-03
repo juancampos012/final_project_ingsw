@@ -1,7 +1,7 @@
 import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { User } from '../request/users';
-import { Truck, Tuck } from '../request/trucks';
+import { Truck } from '../request/trucks';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -70,7 +70,7 @@ export const TopTable = () => {
       response.status === 201
         ? alert("Creacion exitosa")
         : alert("Error al crear el camion");
-      console.log(response);
+      window.location.reload();
     } catch (error) {
       console.error(error);
       alert("Ocurrió un error al intentar crear el camion");
@@ -97,89 +97,94 @@ export const TopTable = () => {
   };
 
   return (
-    <div>
-      <Button onClick={handleOpen} sx={{ color: 'black' }}>Crear Camión</Button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <div className='text-login'>
-            <h2>Nuevo Camion</h2>
-          </div>
-          <div className='div-create-truck'>
-            <div className='div-create-truck-left'>
-              <div>
-                <ThemeProvider theme={theme}>
-                    <FormControl sx={{ width: '370px'}}  variant="outlined">
-                        <InputLabel id="demo-simple-select-label">Identificacion</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={identification}
-                            label="Identificacion"
-                            onChange={handleChangeIdentification}
-                        >
-                            {identifications && identifications.map((identification) => (
-                            <MenuItem key={identification.identification} value={identification.identification}>{identification.identification}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </ThemeProvider>
+    <div className='div-top-table'>
+      <div>
+        <h4>Camiones</h4>
+      </div>
+      <div >
+        <Button onClick={handleOpen} sx={{ color: 'black', mr: '10px', marginBottom: '0'}}>Crear Camión</Button>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <div className='text-login'>
+              <h2>Nuevo Camion</h2>
+            </div>
+            <div className='div-create-truck'>
+              <div className='div-create-truck-left'>
+                <div>
+                  <ThemeProvider theme={theme}>
+                      <FormControl sx={{ width: '370px'}}  variant="outlined">
+                          <InputLabel id="demo-simple-select-label">Identificacion</InputLabel>
+                          <Select
+                              labelId="demo-simple-select-label"
+                              id="demo-simple-select"
+                              value={identification}
+                              label="Identificacion"
+                              onChange={handleChangeIdentification}
+                          >
+                              {identifications && identifications.map((identification) => (
+                              <MenuItem key={identification.identification} value={identification.identification}>{identification.identification}</MenuItem>
+                              ))}
+                          </Select>
+                      </FormControl>
+                  </ThemeProvider>
+                </div>
+                <div>
+                  <ThemeProvider theme={theme}>
+                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Nombre" variant="outlined" value={name} />
+                  </ThemeProvider>
+                </div>
+                <div>
+                  <ThemeProvider theme={theme}>
+                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Apellido" variant="outlined" value={lastName} />
+                  </ThemeProvider>
+                </div>
               </div>
-              <div>
-                <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Nombre" variant="outlined" value={name} />
-                </ThemeProvider>
-              </div>
-              <div>
-                <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Apellido" variant="outlined" value={lastName} />
-                </ThemeProvider>
+              <div className='div-create-truck-rigth'>
+                <div>
+                  <ThemeProvider theme={theme}>
+                    <TextField sx={{ width: '370px' }} id="outlined-basic" label="Placa" variant="outlined" value={licensePlate} onChange={(e) => setLicensePlate(e.target.value)} />
+                  </ThemeProvider>
+                </div>
+                <div>
+                  <ThemeProvider theme={theme}>
+                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Marca" variant="outlined" value={brand} onChange={(e) => setBrand(e.target.value)} />
+                  </ThemeProvider>
+                </div>
+                <div>
+                  <ThemeProvider theme={theme}>
+                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Linea" variant="outlined" value={model} onChange={(e) => setModel(e.target.value)} />
+                  </ThemeProvider>              
+                </div>
+                <div>
+                  <ThemeProvider theme={theme}>
+                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Año" variant="outlined" value={year} onChange={(e) => setYear(e.target.value)} />
+                  </ThemeProvider>
+                </div>
+                <div>
+                  <ThemeProvider theme={theme}>
+                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Capacidad" variant="outlined" value={capacity} onChange={(e) => setCapacity(e.target.value)} />
+                  </ThemeProvider>
+                </div>
               </div>
             </div>
-            <div className='div-create-truck-rigth'>
-              <div>
-                <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px' }} id="outlined-basic" label="Placa" variant="outlined" value={licensePlate} onChange={(e) => setLicensePlate(e.target.value)} />
-                </ThemeProvider>
-              </div>
-              <div>
-                <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Marca" variant="outlined" value={brand} onChange={(e) => setBrand(e.target.value)} />
-                </ThemeProvider>
-              </div>
-              <div>
-                <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Linea" variant="outlined" value={model} onChange={(e) => setModel(e.target.value)} />
-                </ThemeProvider>              
-              </div>
-              <div>
-                <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Año" variant="outlined" value={year} onChange={(e) => setYear(e.target.value)} />
-                </ThemeProvider>
-              </div>
-              <div>
-                <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Capacidad" variant="outlined" value={capacity} onChange={(e) => setCapacity(e.target.value)} />
-                </ThemeProvider>
-              </div>
+            <div className="button-create-truck">
+              <Button
+                variant="contained"
+                disableElevation
+                onClick={handleCreate}
+                style={{ backgroundColor: '#000000', width: '250px', borderRadius: '50px', marginTop: '35px' }}
+              >
+                Crear
+              </Button>
             </div>
-          </div>
-          <div className="button-create-truck">
-            <Button
-              variant="contained"
-              disableElevation
-              onClick={handleCreate}
-              style={{ backgroundColor: '#000000', width: '250px', borderRadius: '50px', marginTop: '35px' }}
-            >
-              Crear
-            </Button>
-          </div>
-        </Box>
-      </Modal>
+          </Box>
+        </Modal>
+      </div>
     </div>
   );
 }
@@ -198,6 +203,10 @@ const theme = createTheme({
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: 'black',
           },
+          borderRadius: '15px', 
+          '& fieldset': {
+            borderRadius: '15px',
+          },
         },
       },
     },
@@ -212,5 +221,3 @@ const theme = createTheme({
     },
   },
 });
-
-export default TopTable;

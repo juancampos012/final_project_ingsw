@@ -4,7 +4,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -19,6 +18,7 @@ export const SingupAddress = () => {
   const [departaments, setDepartaments] = React.useState("");
   const [municipalitys, setMunicipalitys] = React.useState("");
   const [data, setData] = React.useState("");
+  const [address, setAddress] = React.useState({});
 
   const navigate = useNavigate();
 
@@ -37,18 +37,16 @@ export const SingupAddress = () => {
     };
     fetchData();
   }, []);
-  
-  
 
   const handleCreate = async () => {
-    const address = {
+    const newAddress = {
       departament,
       municipality,
       nomenclature,
     }
-    userController.createCookie("address", JSON.stringify(address));
+    setAddress(newAddress);
+    userController.createCookie("address", JSON.stringify(newAddress)); 
     navigate('/singup-data-log');
-    window.location.reload();
   };
 
   const handleLoginClick = () => {
@@ -156,6 +154,10 @@ const theme = createTheme({
           },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: 'black',
+          },
+          borderRadius: '15px', 
+          '& fieldset': {
+            borderRadius: '15px',
           },
         },
       },
