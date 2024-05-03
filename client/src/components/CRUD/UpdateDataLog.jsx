@@ -16,11 +16,6 @@ import Cookies from 'js-cookie';
 const userController = new User();
 
 export const UpdateDataLog = () => {
-  const miCookie = Cookies.get('user');
-  const user = JSON.parse(miCookie);
-  const name = user.name;
-  const lastName = user.lastName;
-  const identification = user.identification;
   const [passwordHash, setPasswordHash] = React.useState(""); 
   const [email, setEmail] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
@@ -31,8 +26,6 @@ export const UpdateDataLog = () => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
-  const navigate = useNavigate();
 
     React.useEffect(() => {
         userController.verifyToken(miCookiejwt)
@@ -52,9 +45,6 @@ export const UpdateDataLog = () => {
   const handleUpdate = async () => {
       try {
           const data = {
-            name,
-            lastName,
-            identification,
             passwordHash,
             email,
           };
@@ -62,12 +52,12 @@ export const UpdateDataLog = () => {
           response.status === 201
             ? alert("Edicion exitosa")
             : alert("Error al editar el usuario");
+            userController.createCookie("jwt", "cerrarseision");
+            window.location.reload();
       } catch (error) {
           console.error(error);
           alert("Ocurrió un error al intentar editar el usuario");
       }
-      userController.createCookie("jwt", "cerrarseision");
-      window.location.reload();
   };
 
   return (
@@ -119,7 +109,7 @@ export const UpdateDataLog = () => {
                   onClick={handleUpdate}
                   style={{ backgroundColor: '#000000', width: '250px', borderRadius: '50px', marginTop:'35px' }}
                 >
-                  Editar usuario
+                  Cambiar contraseña
                 </Button>
               </div>
             </div>
@@ -142,6 +132,10 @@ const theme = createTheme({
           },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: 'black',
+          },
+          borderRadius: '15px', 
+          '& fieldset': {
+            borderRadius: '15px',
           },
         },
       },

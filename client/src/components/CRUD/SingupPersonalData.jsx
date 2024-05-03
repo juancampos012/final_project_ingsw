@@ -31,6 +31,8 @@ export const SingupPersonalData = () => {
       setIsEmpty(true);
       alert('Por favor, rellene todos los campos antes de continuar.');
     }
+    userController.createCookie("user", JSON.stringify(user));
+    navigate('/signup-address');
   };
 
   const handleEmpty = () => {
@@ -112,3 +114,35 @@ export const SingupPersonalData = () => {
   );
 }
 
+const theme = createTheme({
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'black',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'black',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'black',
+          },
+          borderRadius: '15px', 
+          '& fieldset': {
+            borderRadius: '15px',
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focused': {
+            color: 'black',
+          },
+        },
+      },
+    },
+  },
+});

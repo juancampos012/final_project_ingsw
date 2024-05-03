@@ -72,7 +72,7 @@ export const Navbar = () => {
     const [open, setOpen] = React.useState(false);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [user, setUser] = React.useState("");
-    const settings = ['Ver perfil', 'Editar perfil', 'Cerrar sesión']; 
+    const settings = ['Ver perfil', 'Editar perfil', 'Cambiar contraseña', 'Cerrar sesión']; 
     const miCookie = Cookies.get('jwt');
 
     React.useEffect(() => {
@@ -113,6 +113,10 @@ export const Navbar = () => {
         navigate('/view-profile');
     };
 
+    const handleUpdatePassword = () => {
+        navigate('/update-data-log');
+    };
+
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
@@ -120,12 +124,14 @@ export const Navbar = () => {
     const handleCloseUserMenu = (event) => {
         setAnchorElUser(null);
         if (event.target.innerText === "Cerrar sesión") {
-            handleLogout();
+          handleLogout();
         }else if (event.target.innerText === "Editar perfil") {
-            handleUpdate();
+          handleUpdate();
         }else if (event.target.innerText === "Ver perfil") {
-            handleViewProfile();
-        }
+          handleViewProfile();
+        }else if (event.target.innerText === "Cambiar contraseña") {
+          handleUpdatePassword();
+      }
     };
 
     const [anchorElNotif, setAnchorElNotif] = React.useState(null);

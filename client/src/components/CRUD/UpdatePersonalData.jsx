@@ -12,6 +12,7 @@ export const UpdatePersonalData = () => {
   const [name, setName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [identification, setIdentification] = React.useState("");
+  const [email, setEmail] = React.useState("");
   const miCookie = Cookies.get('jwt');
   const navigate = useNavigate();
 
@@ -22,6 +23,7 @@ export const UpdatePersonalData = () => {
       })
       .then(response => {
           if(response.user){
+            setEmail(response.user.user.email);
               setName(response.user.user.name);
               setLastName(response.user.user.lastName);
               setIdentification(response.user.user.identification);
@@ -33,14 +35,24 @@ export const UpdatePersonalData = () => {
   }, []);
 
   const handleUpdate = async () => {
-    const user = {
-        name,
-        lastName,
-        identification,
+    try {
+        const data = {
+          name,
+          lastName,
+          identification,
+          email,
+        };
+        const response = await userController.updateUser(data);
+        console.log(data);
+        response.status === 201
+          ? alert("Edicion exitosa")
+          : alert("Error al editar el usuario");
+          userController.createCookie("jwt", "cerrarseision");
+          window.location.reload();
+    } catch (error) {
+        console.error(error);
+        alert("Ocurrió un error al intentar editar el usuario");
     }
-    userController.createCookie("user", JSON.stringify(user));
-    navigate('/update-data-log');
-    window.location.reload();
   };
 
   return (
@@ -76,7 +88,7 @@ export const UpdatePersonalData = () => {
                   onClick={handleUpdate}
                   style={{ backgroundColor: '#000000', width: '250px', borderRadius: '50px', marginTop:'35px' }}
                 >
-                  Siguiente
+                  Editar perfil
                 </Button>
               </div>
             </div>
@@ -99,6 +111,10 @@ const theme = createTheme({
           },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: 'black',
+          },
+          borderRadius: '15px', 
+          '& fieldset': {
+            borderRadius: '15px',
           },
         },
       },

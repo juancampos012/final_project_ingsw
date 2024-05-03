@@ -75,32 +75,3 @@ export const ViewProfile = () => {
       </>
   );
 }
-
-const theme = createTheme({
-  components: {
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'black',
-          },
-          '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'black',
-          },
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'black',
-          },
-        },
-      },
-    },
-    MuiInputLabel: {
-      styleOverrides: {
-        root: {
-          '&.Mui-focused': {
-            color: 'black',
-          },
-        },
-      },
-    },
-  },
-});

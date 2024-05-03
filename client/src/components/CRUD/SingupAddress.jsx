@@ -4,7 +4,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -20,6 +19,7 @@ export const SingupAddress = () => {
   const [municipalitys, setMunicipalitys] = React.useState("");
   const [data, setData] = React.useState("");
   const [isEmpty, setIsEmpty] = React.useState(false); 
+  const [address, setAddress] = React.useState({});
 
   const navigate = useNavigate();
 
@@ -38,8 +38,6 @@ export const SingupAddress = () => {
     };
     fetchData();
   }, []);
-  
-  
 
   const handleCreate = async () => {
     if (departament !== "" && municipality !== "" && nomenclature !== "") {
@@ -55,6 +53,14 @@ export const SingupAddress = () => {
       setIsEmpty(true);
       alert('Por favor, rellene todos los campos antes de continuar.');
     }
+    const newAddress = {
+      departament,
+      municipality,
+      nomenclature,
+    }
+    setAddress(newAddress);
+    userController.createCookie("address", JSON.stringify(newAddress)); 
+    navigate('/singup-data-log');
   };
 
   const handleLoginClick = () => {
@@ -178,3 +184,35 @@ export const SingupAddress = () => {
   );
 }
 
+const theme = createTheme({
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'black',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'black',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'black',
+          },
+          borderRadius: '15px', 
+          '& fieldset': {
+            borderRadius: '15px',
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focused': {
+            color: 'black',
+          },
+        },
+      },
+    },
+  },
+});

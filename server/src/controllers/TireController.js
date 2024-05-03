@@ -1,0 +1,77 @@
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
+
+const createTire = async (req, res) => {
+    try{
+        const { brand, model, wear, truck} = req.body;
+        const tire = await prisma.tire.create({
+            data: {
+                brand,
+                model,
+                wear, 
+                truck, 
+                
+            },
+        });
+        res.status(201).json({truck});
+    }catch(error){
+        console.error(error);
+        res.status(500).json({error: "Something went wrong"});
+    }
+};
+
+
+const getListTires = async (req, res) => {
+    try{
+        const tires = await prisma.tire.findMany();
+        res.status(200).json(tires);
+    }catch(error){
+        console.log(error.message);
+        res.status(400).json({message: error.message});
+    }
+};
+
+const getTirebyId = async (req, res) => {
+    try{
+        const {id} = req.query; 
+        const tire = await prisma.tire.findUnique({
+            where: { id: id },
+        });
+        res.status(200).json(tire);
+    }catch(error){
+        res.status(400).json({message: error.message});
+    }
+}
+
+const deleteTire = async (req, res) => {
+    try{ 
+        const {id} = req.body;
+        const tire = await prisma.tire.delete({
+            where: { id: id },
+        });
+        if(tire){
+            res.status(200).json({message: "Tire deleted successfully"});
+        } else {
+            throw new Error("Tire not found");
+        }
+    }catch(error){
+        res.status(500).json({message: error.message});
+    }
+}
+
+const updateTireById = async (req, res) => {
+    try{
+        const {id} = req.body;
+        const { brand, model, wear, truck} = req.body;
+        const tire = await prisma.tire.update({
+            where: { id: id},
+            data: { brand, model, wear, truck},
+        });
+        res.status(201).json(tire);
+    }catch(error){
+        res.status(400).json({message: error.message});
+    }
+}
+
+module.exports = {createTire, getListTires , getTirebyId , deleteTire, updateTireById }

@@ -123,7 +123,7 @@ const getUserByName = async (req, res) => {
 const getUserbyId = async (req, res) => {
     try{
         const {id} = req.query; 
-        const user = await prisma.address.findUnique({
+        const user = await prisma.user.findUnique({
             where: { id: id },
         });
         console.log(user);
@@ -136,7 +136,7 @@ const getUserbyId = async (req, res) => {
 const getUserByIdentification = async (req, res) => {
     try{
         const {identification} = req.query; 
-        const user = await prisma.address.findUnique({
+        const user = await prisma.user.findUnique({
             where: { identification: identification },
         });
         console.log(user);
@@ -148,9 +148,14 @@ const getUserByIdentification = async (req, res) => {
 
 const updateUserByEmail = async (req, res) => {
     try{
-        const {email} = req.body;
-        const { name, lastName, identification, passwordHash, isActive, role, address }= req.body;
-        password = createHash(passwordHash);
+        const { email, passwordHash, name, lastName, identification, isActive, role, address } = req.body;
+        let password = null;
+        if (passwordHash) {
+            password = createHash(passwordHash);
+        } else {
+            const user = await prisma.user.findUnique({where: { email: email}});
+            password = user ? user.password : null;
+        }
         const user = await prisma.user.update({
             where: { email: email},
             data: { name, lastName, identification, password, isActive, role, address },

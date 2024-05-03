@@ -54,4 +54,4 @@ const updateAddressById = async (req, res) => {
     }
 }
 
-module.exports = {createAddress, getListAddress, getAddressbyId, deleteAddress, updateAddressById}
+module.exports = { getListAddress, getAddressbyId, deleteAddress, updateAddressById}

@@ -62,19 +62,16 @@ export const Login = () => {
             <div className='div-login-right'>
                 <div className='div-login-info'>
                     <div className='text-login'>
-                        <h2>Bienvenidos a</h2>
-                        <h4>Administrador de vehiculos</h4>
-                        <h4>Servientrega</h4>
-                        <p>Servientrega es entrega segura</p>
+                        <h2 className='tittle-login'>Bienvenido</h2>
                     </div>
                     <div>
                         <ThemeProvider theme={theme}>
-                            <TextField sx={{ width: '370px', marginTop: '70px' }} id="outlined-basic" label="Email" variant="outlined" value={email} onChange={(e) => setEmail(e.target.value.toLocaleLowerCase())}/>
+                            <TextField sx={{ width: '370px', marginTop: '40px' , borderRadius: '100px'}} id="outlined-basic" label="Email" variant="outlined" value={email} onChange={(e) => setEmail(e.target.value.toLocaleLowerCase())} />
                         </ThemeProvider>
                     </div>
                     <div>
                         <ThemeProvider theme={theme}>
-                            <FormControl sx={{ width: '370px', marginBottom: '75px', marginTop: '50px' }} variant="outlined">
+                            <FormControl sx={{ width: '370px', marginTop: '50px', mb:'10px' }} variant="outlined">
                                 <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                                 <OutlinedInput
                                     id="outlined-adornment-password"
@@ -97,25 +94,26 @@ export const Login = () => {
                                 /> 
                             </FormControl>
                         </ThemeProvider>
+                        <Button onClick={handleSignupClick} style={{color: 'black'}} disableRipple sx={{ '&:hover': { backgroundColor: 'transparent', }}}>
+                          Crear usuario
+                        </Button>
                     </div>
                     <div className="button-login">
                         <Button 
                             variant="contained" 
                             disableElevation
                             onClick={handleLogin}
-                            style={{ backgroundColor: '#000000', width: '250px', borderRadius: '50px' }}
+                            style={{ backgroundColor: '#000000', width: '270px',height: '40px', borderRadius: '15px', marginTop:'40px', borderBottom:'0' }}
                         >
                             Iniciar Sesión
                         </Button>
                     </div>
-                    <a onClick={handleSignupClick}>Crear usuario</a>
                 </div>
             </div>
         </div>
     </>
   );
 }
-
 
 const theme = createTheme({
     components: {
@@ -130,6 +128,10 @@ const theme = createTheme({
             },
             '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
               borderColor: 'black',
+            },
+            borderRadius: '15px', 
+            '& fieldset': {
+              borderRadius: '15px',
             },
           },
         },
