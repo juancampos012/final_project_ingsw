@@ -48,7 +48,9 @@ model truck {
   brand         String
   model         String
   year          String
+  mileage       Int
   capacity      Int
+  actualStatus  String?   @default("En operación")
   tires         tire[]
   trips         trip[]
   fuel          fuel[]
