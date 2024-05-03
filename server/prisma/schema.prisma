@@ -30,6 +30,7 @@ model user{
   avatar          String ?
   role            String ? @default("user")
   address         address ?
+  trucks          truck[]
 }
 
 model address{
@@ -52,6 +53,8 @@ model truck {
   trips         trip[]
   fuel          fuel[]
   maintenances  maintenance[]
+  user         user?  @relation(fields: [userId], references: [id])
+  userId       String @unique @db.ObjectId
 }
 
 model tire {
