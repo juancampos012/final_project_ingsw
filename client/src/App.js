@@ -6,12 +6,12 @@ import { Navbar } from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
 import { SingupPersonalData } from './components/CRUD/SingupPersonalData';
 import { SingupDataLog } from './components/CRUD/SingupDataLog';
-import { TableCars } from './components/TableCars';
 import { UpdatePersonalData } from './components/CRUD/UpdatePersonalData';
 import { UpdateDataLog } from './components/CRUD/UpdateDataLog';
 import { ViewProfile } from './components/CRUD/ViewProfile';
 import { SingupAddress } from './components/CRUD/SingupAddress';
 import { TopTable } from './components/TopTable';
+import Tablecars from './components/TableCars';
 
 function App() {
   return (
@@ -45,7 +45,7 @@ function App() {
             <div>
               <Navbar/>
               <TopTable/>
-              <TableCars/>
+              <Tablecars/>
             </div>
           </RequireAuth>
         } />
