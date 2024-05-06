@@ -45,6 +45,8 @@ export const SingupDataLog = () => {
   const [image, setImage] = React.useState(null); 
   const [showPassword, setShowPassword] = React.useState(false);
   const [uploadSuccess, setUploadSuccess] = React.useState(false);
+  const [passwordHashTheme, setPasswordHashTheme] = React.useState(theme);
+  const [emailTheme, setEmailTheme] = React.useState(theme);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -71,6 +73,7 @@ export const SingupDataLog = () => {
 
   const handleCreate = async () => {
       try {
+        if (handleEmpty()) {
           const data = {
             name,
             lastName,
@@ -84,13 +87,39 @@ export const SingupDataLog = () => {
           const response = await userController.newUser(data, image);
           response.status === 201
             ? alert("Creación exitosa")
-            : alert("Error al crear el producto");
+            : alert("Error al crear el usuario");
           navigate('/drivers-admin')
-      } catch (error) {
+        }else{
+          alert('Por favor, rellene todos los campos antes de continuar.');
+        }
+        } catch (error) {
           console.error(error);
-          alert("Ocurrió un error al intentar crear el producto");
+          alert("Ocurrió un error al intentar crear el usuario");
       }
   };
+
+  const handleEmpty = () => {
+    if(email === "" || passwordHash === ""){
+      if(email === ""){
+        setEmailTheme(themeRed);
+      }if(passwordHash === ""){
+        setPasswordHashTheme(themeRed);
+      }
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  const handleEmail = (value) => {
+    setEmail(value);
+    value != "" ? setEmailTheme(theme) : setEmailTheme(themeRed);
+  }
+
+  const handlePassword = (value) => {
+    setPasswordHash(value);
+    value != "" ? setPasswordHashTheme(theme) : setPasswordHashTheme(themeRed);
+  }
 
   return (
       <>
@@ -104,12 +133,12 @@ export const SingupDataLog = () => {
                 <h4>Datos perfil</h4>
               </div>
               <div>
-                <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginTop: '35px' }} id="outlined-basic" label="Email" variant="outlined" value={email} onChange={(e) => setEmail(e.target.value.toLocaleLowerCase())}/>
+                <ThemeProvider theme={emailTheme}>
+                  <TextField sx={{ width: '370px', marginTop: '35px' }} id="outlined-basic" label="Email" variant="outlined" value={email} onChange={(e) => handleEmail(e.target.value.toLowerCase())}/>
                 </ThemeProvider>
               </div>
               <div>
-                <ThemeProvider theme={theme}>
+                <ThemeProvider theme={passwordHashTheme}>
                   <FormControl sx={{ width: '370px', marginTop: '35px' }}  variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                       <OutlinedInput
@@ -128,7 +157,7 @@ export const SingupDataLog = () => {
                           </InputAdornment>
                         }
                         value={passwordHash}
-                        onChange={(e) => setPasswordHash(e.target.value)}
+                        onChange={(e) => handlePassword(e.target.value)}
                         label="Password"
                       /> 
                   </FormControl>
@@ -191,6 +220,39 @@ const theme = createTheme({
         root: {
           '&.Mui-focused': {
             color: 'black',
+          },
+        },
+      },
+    },
+  },
+});
+
+const themeRed = createTheme({
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'red',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'red',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'red',
+          },
+          borderRadius: '15px', 
+          '& fieldset': {
+            borderRadius: '15px',
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focused': {
+            color: 'red',
           },
         },
       },
