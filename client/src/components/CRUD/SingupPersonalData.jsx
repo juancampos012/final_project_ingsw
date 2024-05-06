@@ -27,7 +27,6 @@ export const SingupPersonalData = () => {
       }
       userController.createCookie("user", JSON.stringify(user));
       navigate('/signup-address');
-      window.location.reload();
     } else {
       setIsEmpty(true);
       alert('Por favor, rellene todos los campos antes de continuar.');

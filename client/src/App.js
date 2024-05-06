@@ -12,6 +12,7 @@ import { ViewProfile } from './components/CRUD/ViewProfile';
 import { SingupAddress } from './components/CRUD/SingupAddress';
 import { TopTable } from './components/TopTable';
 import Tablecars from './components/TableCars';
+import MapComponent from './components/map';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/signup-personal-data" element={<SingupPersonalData/>} />
         <Route path="/signup-address" element={<SingupAddress/>} />
         <Route path='/singup-data-log' element={<SingupDataLog/>}/>
+        <Route path='/map' element={<MapComponent/>}/>
         <Route path="/update-personal-data" 
         element={
           <RequireAuth>
