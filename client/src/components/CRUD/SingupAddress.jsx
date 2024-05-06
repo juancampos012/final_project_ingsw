@@ -19,7 +19,6 @@ export const SingupAddress = () => {
   const [municipalitys, setMunicipalitys] = React.useState("");
   const [data, setData] = React.useState("");
   const [isEmpty, setIsEmpty] = React.useState(false); 
-  const [address, setAddress] = React.useState({});
 
   const navigate = useNavigate();
 
@@ -46,24 +45,12 @@ export const SingupAddress = () => {
         municipality,
         nomenclature,
       }
-      userController.createCookie("address", JSON.stringify(address));
+      userController.createCookie("address", JSON.stringify(address)); 
       navigate('/singup-data-log');
     } else {
       setIsEmpty(true);
       alert('Por favor, rellene todos los campos antes de continuar.');
     }
-    const newAddress = {
-      departament,
-      municipality,
-      nomenclature,
-    }
-    setAddress(newAddress);
-    userController.createCookie("address", JSON.stringify(newAddress)); 
-    navigate('/singup-data-log');
-  };
-
-  const handleLoginClick = () => {
-    navigate('/login');
   };
 
   const handleChangeDepartament = (event) => {
@@ -84,35 +71,6 @@ export const SingupAddress = () => {
     }  
   }, [departament]);
   
-  const theme = createTheme({
-    components: {
-      MuiOutlinedInput: {
-        styleOverrides: {
-          root: {
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: isEmpty ? 'red' : 'black',
-            },
-            '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: isEmpty ? 'red' : 'black',
-            },
-            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: isEmpty ? 'red' : 'black',
-            },
-          },
-        },
-      },
-      MuiInputLabel: {
-        styleOverrides: {
-          root: {
-            '&.Mui-focused': {
-              color: 'black',
-            },
-          },
-        },
-      },
-    },
-  });
-
   return (
       <>
         <div className='div-login'>
@@ -170,12 +128,11 @@ export const SingupAddress = () => {
                   variant="contained" 
                   disableElevation
                   onClick={handleCreate}
-                  style={{ backgroundColor: '#000000', width: '250px', borderRadius: '50px', marginTop:'35px' }}
+                  style={{ backgroundColor: '#000000', width: '270px',height: '40px', borderRadius: '15px', marginTop:'40px', borderBottom:'0' }}
                 >
                   Siguiente
                 </Button>
               </div>
-              <a onClick={handleLoginClick}>Iniciar sesión</a>
             </div>
           </div>
         </div>

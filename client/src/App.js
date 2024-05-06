@@ -13,6 +13,8 @@ import { SingupAddress } from './components/CRUD/SingupAddress';
 import { TopTable } from './components/TopTable';
 import Tablecars from './components/TableCars';
 import MapComponent from './components/map';
+import { TopTableDrivers } from './components/TopTableDirvers';
+import TableUsers from './components/TableDrivers';
 
 function App() {
   return (
@@ -41,13 +43,31 @@ function App() {
             <ViewProfile/>
           </RequireAuth>
         } />
-        <Route path="/home" 
+        <Route path="/trucks-admin" 
         element={
           <RequireAuth>
             <div>
               <Navbar/>
               <TopTable/>
               <Tablecars/>
+            </div>
+          </RequireAuth>
+        } />
+        <Route path="/drivers-admin" 
+        element={
+          <RequireAuth>
+            <div>
+              <Navbar/>
+              <TopTableDrivers/>
+              <TableUsers/>
+            </div>
+          </RequireAuth>
+        } />
+        <Route path="/home" 
+        element={
+          <RequireAuth>
+            <div>
+              <Navbar/>
             </div>
           </RequireAuth>
         } />

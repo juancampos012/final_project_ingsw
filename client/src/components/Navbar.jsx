@@ -110,6 +110,18 @@ export const Navbar = () => {
         navigate('/update-personal-data');
     };
 
+    const handlePrincipal = () => {
+      navigate('/home');
+    };
+
+    const handleTrucks = () => {
+      navigate('/trucks-admin');
+    };
+
+    const handleDrivers = () => {
+      navigate('/drivers-admin');
+    };
+
     const handleViewProfile = () => {
         navigate('/view-profile');
     };
@@ -253,56 +265,71 @@ export const Navbar = () => {
                 </IconButton>
               </DrawerHeader>
               <List>
-              {['Principal'].map((text) => (
-                <ListItem key={text} disablePadding>
-                    <ListItemButtonStyled>
+                {['Principal'].map((text) => (
+                  <ListItem key={text} disablePadding>
+                    <ListItemButtonStyled onClick={handlePrincipal}>
                       <ListItemIcon>
                         {(() => {
-                            if(text === 'Principal'){
-                                return <HomeIcon/>
-                            }
+                          if(text === 'Principal'){
+                            return <HomeIcon/>
+                          }
                         })()}
                       </ListItemIcon>
-                    <ListItemText primary={text} />
+                      <ListItemText primary={text} />
                     </ListItemButtonStyled>
-                </ListItem>
+                  </ListItem>
                 ))}
               </List>
               <Divider />
               <List>
-              {['Camiones', 'Conductores'].map((text) => (
-                <ListItem key={text} disablePadding>
-                    <ListItemButtonStyled>
+                {['Camiones', 'Rutas', 'Combustible', 'Neumaticos' ].map((text) => (
+                  <ListItem key={text} disablePadding>
+                    <ListItemButtonStyled onClick={text === 'Camiones' ? handleTrucks : handleDrivers}>
                       <ListItemIcon>
                         {(() => {
-                            if(text === 'Camiones'){
-                                return <LocalShippingIcon/>
-                            } else if(text === 'Conductores') { 
-                                return <AccountBoxIcon/>
-                            }
+                          if(text === 'Camiones'){
+                            return <LocalShippingIcon/>
+                          } else if(text === 'Conductores') { 
+                            return <AccountBoxIcon/>
+                          }
                         })()}
                       </ListItemIcon>
-                    <ListItemText primary={text} />
+                      <ListItemText primary={text} />
                     </ListItemButtonStyled>
-                </ListItem>
+                  </ListItem>
+                ))}
+              </List>
+              <Divider />
+              <List>
+                {['Conductores'].map((text) => (
+                  <ListItem key={text} disablePadding>
+                    <ListItemButtonStyled onClick={ handleDrivers }>
+                      <ListItemIcon>
+                        {(() => {
+                          return <AccountBoxIcon/>
+                        })()}
+                      </ListItemIcon>
+                      <ListItemText primary={text} />
+                    </ListItemButtonStyled>
+                  </ListItem>
                 ))}
               </List>
               </div>
               <Divider />
               <List>
-              {['Cerrar sesión'].map((text) => (
-                <ListItem key={text} disablePadding>
-                    <ListItemButtonStyled>
+                {['Cerrar sesión'].map((text) => (
+                  <ListItem key={text} disablePadding>
+                    <ListItemButtonStyled onClick={handleLogout}>
                       <ListItemIcon>
                         {(() => {
-                            if(text === 'Cerrar sesión'){
-                                return <LogoutIcon/>
-                            }
+                          if(text === 'Cerrar sesión'){
+                            return <LogoutIcon/>
+                          }
                         })()}
                       </ListItemIcon>
-                    <ListItemText primary={text} />
+                      <ListItemText primary={text} />
                     </ListItemButtonStyled>
-                </ListItem>
+                  </ListItem>
                 ))}
               </List>
             </div>
