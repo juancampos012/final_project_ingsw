@@ -85,14 +85,11 @@ export const SingupDataLog = () => {
           response.status === 201
             ? alert("Creación exitosa")
             : alert("Error al crear el producto");
+          navigate('/drivers-admin')
       } catch (error) {
           console.error(error);
           alert("Ocurrió un error al intentar crear el producto");
       }
-  };
-
-  const handleLoginClick = () => {
-    navigate('/login');
   };
 
   return (
@@ -155,13 +152,12 @@ export const SingupDataLog = () => {
                   variant="contained" 
                   disableElevation
                   onClick={handleCreate}
-                  style={{ backgroundColor: '#000000', width: '250px', borderRadius: '50px', marginTop:'35px' }}
+                  style={{ backgroundColor: '#000000', width: '270px',height: '40px', borderRadius: '15px', marginTop:'40px', borderBottom:'0' }}
                 >
                   Crear usuario
                 </Button>
                 {uploadSuccess && <p>La foto se ha cargado exitosamente.</p>}
               </div>
-              <a onClick={handleLoginClick}>Iniciar sesión</a>
             </div>
           </div>
         </div>
