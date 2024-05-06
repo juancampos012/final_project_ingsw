@@ -48,7 +48,6 @@ export const SingupAddress = () => {
       }
       userController.createCookie("address", JSON.stringify(address));
       navigate('/singup-data-log');
-      window.location.reload();
     } else {
       setIsEmpty(true);
       alert('Por favor, rellene todos los campos antes de continuar.');

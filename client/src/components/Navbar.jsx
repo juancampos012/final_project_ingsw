@@ -19,14 +19,16 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import Avatar from '@mui/material/Avatar';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Popover from '@mui/material/Popover';
 import Cookies from 'js-cookie';
+import HomeIcon from '@mui/icons-material/Home';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 240;
 const userController = new User();
@@ -72,7 +74,6 @@ export const Navbar = () => {
     const [open, setOpen] = React.useState(false);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [user, setUser] = React.useState("");
-    const settings = ['Ver perfil', 'Editar perfil', 'Cambiar contraseña', 'Cerrar sesión']; 
     const miCookie = Cookies.get('jwt');
 
     React.useEffect(() => {
@@ -121,17 +122,8 @@ export const Navbar = () => {
         setAnchorElUser(event.currentTarget);
     };
 
-    const handleCloseUserMenu = (event) => {
+    const handleCloseUserMenu = () => {
         setAnchorElUser(null);
-        if (event.target.innerText === "Cerrar sesión") {
-          handleLogout();
-        }else if (event.target.innerText === "Editar perfil") {
-          handleUpdate();
-        }else if (event.target.innerText === "Ver perfil") {
-          handleViewProfile();
-        }else if (event.target.innerText === "Cambiar contraseña") {
-          handleUpdatePassword();
-      }
     };
 
     const [anchorElNotif, setAnchorElNotif] = React.useState(null);
@@ -146,6 +138,15 @@ export const Navbar = () => {
 
     const openNotif = Boolean(anchorElNotif);
     const idNotif = openNotif ? 'simple-popover' : undefined;
+    
+    const MenuItemWithAction = ({ action, children }) => {
+      const handleClick = () => {
+        action();
+        setAnchorElUser(null);
+      };
+    
+      return <MenuItem onClick={handleClick}>{children}</MenuItem>;
+    };
 
     return (
         <>
@@ -215,11 +216,18 @@ export const Navbar = () => {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                   >
-                    {settings.map((setting) => (
-                      <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                        <Typography textAlign="center">{setting}</Typography>
-                      </MenuItem>
-                    ))}
+                     <MenuItemWithAction action={handleViewProfile}>
+                      <Typography textAlign="center">Ver perfil</Typography>
+                    </MenuItemWithAction>
+                    <MenuItemWithAction action={handleUpdate}>
+                      <Typography textAlign="center">Editar perfil</Typography>
+                    </MenuItemWithAction>
+                    <MenuItemWithAction action={handleUpdatePassword}>
+                      <Typography textAlign="center">Cambiar contraseña</Typography>
+                    </MenuItemWithAction>
+                    <MenuItemWithAction action={handleLogout}>
+                      <Typography textAlign="center">Cerrar sesión</Typography>
+                    </MenuItemWithAction>
                   </Menu>
                 </Box>
               </Toolbar>
@@ -237,24 +245,67 @@ export const Navbar = () => {
               anchor="left"
               open={open}
             >
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+              <div style={{ flex: 1 }}>
               <DrawerHeader>
                 <IconButton onClick={handleDrawerClose}>
                   {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                 </IconButton>
               </DrawerHeader>
-              <Divider />
               <List>
-              {['Mis camiones', 'Mantenimientos', 'Rutas'].map((text, index) => (
+              {['Principal'].map((text) => (
                 <ListItem key={text} disablePadding>
                     <ListItemButtonStyled>
-                    <ListItemIcon>
-                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                    </ListItemIcon>
+                      <ListItemIcon>
+                        {(() => {
+                            if(text === 'Principal'){
+                                return <HomeIcon/>
+                            }
+                        })()}
+                      </ListItemIcon>
                     <ListItemText primary={text} />
                     </ListItemButtonStyled>
                 </ListItem>
                 ))}
               </List>
+              <Divider />
+              <List>
+              {['Camiones', 'Conductores'].map((text) => (
+                <ListItem key={text} disablePadding>
+                    <ListItemButtonStyled>
+                      <ListItemIcon>
+                        {(() => {
+                            if(text === 'Camiones'){
+                                return <LocalShippingIcon/>
+                            } else if(text === 'Conductores') { 
+                                return <AccountBoxIcon/>
+                            }
+                        })()}
+                      </ListItemIcon>
+                    <ListItemText primary={text} />
+                    </ListItemButtonStyled>
+                </ListItem>
+                ))}
+              </List>
+              </div>
+              <Divider />
+              <List>
+              {['Cerrar sesión'].map((text) => (
+                <ListItem key={text} disablePadding>
+                    <ListItemButtonStyled>
+                      <ListItemIcon>
+                        {(() => {
+                            if(text === 'Cerrar sesión'){
+                                return <LogoutIcon/>
+                            }
+                        })()}
+                      </ListItemIcon>
+                    <ListItemText primary={text} />
+                    </ListItemButtonStyled>
+                </ListItem>
+                ))}
+              </List>
+            </div>
             </Drawer>
           </Box>
         </>

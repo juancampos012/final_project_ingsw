@@ -15,7 +15,7 @@ export const ViewProfile = () => {
   const [email, setEmail] = React.useState("");
   const [identification, setIdentification] = React.useState("");
   const [role, setRole] = React.useState("");
-  const [avatar, setAvatar] = React.useState(false);
+  const [avatar, setAvatar] = React.useState("");
   const miCookiejwt = Cookies.get('jwt');
 
   const navigate = useNavigate();

@@ -1,6 +1,7 @@
 import React from 'react';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { Truck } from '../request/trucks';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 const truckController = new Truck();
 
@@ -53,7 +54,29 @@ export default function Tablecars() {
       { field: 'brand', headerName: 'Marca', flex: 1 },
       { field: 'model', headerName: 'Linea', flex: 1 },
       { field: 'year', headerName: 'Modelo', flex: 1 },
-      { field: 'actualStatus', headerName: 'Estado actual', flex: 1 },
+      { 
+        field: 'actualStatus', 
+        headerName: 'Estado actual', 
+        flex: 1,
+        renderCell: (params) => {
+          let color = "disabled";
+          if (params.value === 'En operación') {
+            color = "success";
+          } else if (params.value === 'En mantenimiento') {
+            color = "warning";
+          } else if (params.value === 'Fuera de servicio') {
+            color = "error";
+          }
+          return (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <FiberManualRecordIcon color={color} sx={{width: '15px'}}/>
+                {'\u00A0'}{params.value}
+              </div>
+            </>
+          );
+        }
+      },
       { field: 'mileage', headerName: 'Kilometraje', flex: 1 },
       { field: 'placa', headerName: 'M. Preventivo', flex: 1 },
       { field: 'name', headerName: 'Legales', flex: 1 },
@@ -62,7 +85,7 @@ export default function Tablecars() {
   };  
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh', width: '100%' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '72vh', width: '100%' }}>
       <div style={{ height: '100%', width: '95%' }}>
         <DataGridPro
           {...data}
