@@ -73,4 +73,18 @@ const updateTruckByLicencePlate = async (req, res) => {
     }
 }
 
-module.exports = { createTruck, getListTruck, getTruckByLicencePlate, deleteTruckByLicencePlate, updateTruckByLicencePlate }
+const getListLicensePlate= async (req, res) => {
+    try {
+        const licensePlates = await prisma.truck.findMany({
+            select: {
+                licensePlate: true
+            }
+        });
+        res.status(200).json(licensePlates);
+    } catch (error) {
+        console.log(error.message);
+        res.status(400).json({ message: error.message });
+    }
+};
+
+module.exports = { createTruck, getListTruck, getTruckByLicencePlate, deleteTruckByLicencePlate, updateTruckByLicencePlate, getListLicensePlate }

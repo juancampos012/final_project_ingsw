@@ -89,7 +89,7 @@ export const Navbar = () => {
         .catch(error => {
             console.error(error); 
         });
-    }, []);
+    }, [miCookie]);
 
     const navigate = useNavigate();
 
@@ -107,19 +107,26 @@ export const Navbar = () => {
     };
 
     const handleUpdate = () => {
-        navigate('/update-personal-data');
+      navigate('/update-personal-data');
     };
 
     const handlePrincipal = () => {
       navigate('/home');
+      handleDrawerClose();
     };
 
     const handleTrucks = () => {
       navigate('/trucks-admin');
+      handleDrawerClose();
     };
 
     const handleDrivers = () => {
       navigate('/drivers-admin');
+      handleDrawerClose();
+    };
+
+    const handleRoutes = () => {
+      navigate('/routes-admin');
     };
 
     const handleViewProfile = () => {
@@ -265,72 +272,72 @@ export const Navbar = () => {
                 </IconButton>
               </DrawerHeader>
               <List>
-                {['Principal'].map((text) => (
-                  <ListItem key={text} disablePadding>
-                    <ListItemButtonStyled onClick={handlePrincipal}>
-                      <ListItemIcon>
-                        {(() => {
-                          if(text === 'Principal'){
-                            return <HomeIcon/>
-                          }
-                        })()}
-                      </ListItemIcon>
-                      <ListItemText primary={text} />
-                    </ListItemButtonStyled>
-                  </ListItem>
-                ))}
+                <ListItem key={'Principal'} disablePadding>
+                  <ListItemButtonStyled onClick={handlePrincipal}>
+                    <ListItemIcon>
+                      <HomeIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Principal'} />
+                  </ListItemButtonStyled>
+                </ListItem>
               </List>
               <Divider />
               <List>
-                {['Camiones', 'Rutas', 'Combustible', 'Neumaticos' ].map((text) => (
-                  <ListItem key={text} disablePadding>
-                    <ListItemButtonStyled onClick={text === 'Camiones' ? handleTrucks : handleDrivers}>
-                      <ListItemIcon>
-                        {(() => {
-                          if(text === 'Camiones'){
-                            return <LocalShippingIcon/>
-                          } else if(text === 'Conductores') { 
-                            return <AccountBoxIcon/>
-                          }
-                        })()}
-                      </ListItemIcon>
-                      <ListItemText primary={text} />
-                    </ListItemButtonStyled>
-                  </ListItem>
-                ))}
+                <ListItem key={'Camiones'} disablePadding>
+                  <ListItemButtonStyled onClick={handleTrucks}>
+                    <ListItemIcon>
+                      <LocalShippingIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Camiones'} />
+                  </ListItemButtonStyled>
+                </ListItem>
+                <ListItem key={'Rutas'} disablePadding>
+                  <ListItemButtonStyled onClick={handleRoutes}>
+                    <ListItemIcon>
+
+                    </ListItemIcon>
+                    <ListItemText primary={'Rutas'} />
+                  </ListItemButtonStyled>
+                </ListItem>
+                <ListItem key={'Combustible'} disablePadding>
+                  <ListItemButtonStyled onClick={handlePrincipal}>
+                    <ListItemIcon>
+
+                    </ListItemIcon>
+                    <ListItemText primary={'Combustible'} />
+                  </ListItemButtonStyled>
+                </ListItem>
+                <ListItem key={'Neumaticos'} disablePadding>
+                  <ListItemButtonStyled onClick={handlePrincipal}>
+                    <ListItemIcon>
+
+                    </ListItemIcon>
+                    <ListItemText primary={'Neumaticos'} />
+                  </ListItemButtonStyled>
+                </ListItem>
               </List>
               <Divider />
               <List>
-                {['Conductores'].map((text) => (
-                  <ListItem key={text} disablePadding>
-                    <ListItemButtonStyled onClick={ handleDrivers }>
-                      <ListItemIcon>
-                        {(() => {
-                          return <AccountBoxIcon/>
-                        })()}
-                      </ListItemIcon>
-                      <ListItemText primary={text} />
-                    </ListItemButtonStyled>
-                  </ListItem>
-                ))}
+                <ListItem key={'Conductores'} disablePadding>
+                  <ListItemButtonStyled onClick={handleDrivers}>
+                    <ListItemIcon>
+                      <AccountBoxIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Conductores'} />
+                  </ListItemButtonStyled>
+                </ListItem>
               </List>
               </div>
               <Divider />
               <List>
-                {['Cerrar sesión'].map((text) => (
-                  <ListItem key={text} disablePadding>
-                    <ListItemButtonStyled onClick={handleLogout}>
-                      <ListItemIcon>
-                        {(() => {
-                          if(text === 'Cerrar sesión'){
-                            return <LogoutIcon/>
-                          }
-                        })()}
-                      </ListItemIcon>
-                      <ListItemText primary={text} />
-                    </ListItemButtonStyled>
-                  </ListItem>
-                ))}
+                <ListItem key={'Cerrar sesión'} disablePadding>
+                  <ListItemButtonStyled onClick={handleLogout}>
+                    <ListItemIcon>
+                      <LogoutIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Cerrar sesión'} />
+                  </ListItemButtonStyled>
+                </ListItem>
               </List>
             </div>
             </Drawer>

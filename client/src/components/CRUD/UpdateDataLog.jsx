@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { User } from '../../request/users';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -40,7 +39,7 @@ export const UpdateDataLog = () => {
         .catch(error => {
             console.error(error); 
         });
-    }, []);
+    }, [miCookiejwt]);
 
   const handleUpdate = async () => {
       try {

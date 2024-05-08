@@ -20,5 +20,7 @@ export const ENV ={
     API_ROUTES_TRUCK:{
         NEWTRUCK: "trucks/new-truck",
         GETLISTTRUCKS: "trucks/list-truck",
+        GETLISTLICENSEPLATES: "trucks/list-license-plate",  
+        GETTRUCKBYLICENCEPLATE: "trucks/get-truck",  
     }
 }

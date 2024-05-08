@@ -2,7 +2,7 @@ import * as React from 'react';
 import { User } from '../../request/users';
 import { styled } from '@mui/material/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { json, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import TextField from '@mui/material/TextField';
@@ -113,12 +113,12 @@ export const SingupDataLog = () => {
 
   const handleEmail = (value) => {
     setEmail(value);
-    value != "" ? setEmailTheme(theme) : setEmailTheme(themeRed);
+    value !== "" ? setEmailTheme(theme) : setEmailTheme(themeRed);
   }
 
   const handlePassword = (value) => {
     setPasswordHash(value);
-    value != "" ? setPasswordHashTheme(theme) : setPasswordHashTheme(themeRed);
+    value !== "" ? setPasswordHashTheme(theme) : setPasswordHashTheme(themeRed);
   }
 
   return (
