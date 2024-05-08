@@ -6,12 +6,16 @@ import { Navbar } from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
 import { SingupPersonalData } from './components/CRUD/SingupPersonalData';
 import { SingupDataLog } from './components/CRUD/SingupDataLog';
-import { TableCars } from './components/TableCars';
 import { UpdatePersonalData } from './components/CRUD/UpdatePersonalData';
 import { UpdateDataLog } from './components/CRUD/UpdateDataLog';
 import { ViewProfile } from './components/CRUD/ViewProfile';
 import { SingupAddress } from './components/CRUD/SingupAddress';
 import { TopTable } from './components/TopTable';
+import Tablecars from './components/TableCars';
+import MapComponent from './components/map';
+import { TopTableDrivers } from './components/TopTableDirvers';
+import TableUsers from './components/TableDrivers';
+import { WelcomeComponent } from './components/WelcomeHome';
 
 function App() {
   return (
@@ -21,6 +25,7 @@ function App() {
         <Route path="/signup-personal-data" element={<SingupPersonalData/>} />
         <Route path="/signup-address" element={<SingupAddress/>} />
         <Route path='/singup-data-log' element={<SingupDataLog/>}/>
+        <Route path='/map' element={<MapComponent/>}/>
         <Route path="/update-personal-data" 
         element={
           <RequireAuth>
@@ -39,13 +44,32 @@ function App() {
             <ViewProfile/>
           </RequireAuth>
         } />
-        <Route path="/home" 
+        <Route path="/trucks-admin" 
         element={
           <RequireAuth>
             <div>
               <Navbar/>
               <TopTable/>
-              <TableCars/>
+              <Tablecars/>
+            </div>
+          </RequireAuth>
+        } />
+        <Route path="/drivers-admin" 
+        element={
+          <RequireAuth>
+            <div>
+              <Navbar/>
+              <TopTableDrivers/>
+              <TableUsers/>
+            </div>
+          </RequireAuth>
+        } />
+        <Route path="/home" 
+        element={
+          <RequireAuth>
+            <div>
+              <Navbar/>
+              <WelcomeComponent/>
             </div>
           </RequireAuth>
         } />

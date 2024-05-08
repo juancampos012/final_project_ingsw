@@ -45,7 +45,7 @@ export const Login = () => {
             alert("err");
           }
       } catch (error) {
-          alert("Ocurrió un error al intentar crear el producto");
+          alert("Ocurrió un error al intentar crear el usuario");
       }
   };
 

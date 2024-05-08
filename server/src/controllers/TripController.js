@@ -4,11 +4,13 @@ const prisma = new PrismaClient();
 
 const createTrip = async (req, res) => {
     try{
-        const { route, distance, time, truck} = req.body;
+        const { route, distance, originPlace, destinationPlace, time, truck} = req.body;
         const trip = await prisma.trip.create({
             data: {
                 route,
                 distance,
+                originPlace,
+                destinationPlace,
                 time, 
                 truck, 
             },

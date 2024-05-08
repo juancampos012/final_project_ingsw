@@ -43,12 +43,13 @@ export const UpdatePersonalData = () => {
           email,
         };
         const response = await userController.updateUser(data);
-        console.log(data);
-        response.status === 201
-          ? alert("Edicion exitosa")
-          : alert("Error al editar el usuario");
+        if(response.status === 201){
+          alert("Edicion exitosa");
           userController.createCookie("jwt", "cerrarseision");
           window.location.reload();
+        }else{
+          alert("Error al editar el usuario");
+        }
     } catch (error) {
         console.error(error);
         alert("Ocurrió un error al intentar editar el usuario");

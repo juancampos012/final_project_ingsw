@@ -18,8 +18,9 @@ export const SingupAddress = () => {
   const [departaments, setDepartaments] = React.useState("");
   const [municipalitys, setMunicipalitys] = React.useState("");
   const [data, setData] = React.useState("");
-  const [isEmpty, setIsEmpty] = React.useState(false); 
-  const [address, setAddress] = React.useState({});
+  const [departamentTheme, setDepartamentTheme] = React.useState(theme);
+  const [municipalityTheme, setMunicipalityTheme] = React.useState(theme);
+  const [nomenclatureTheme, setNomenclatureTheme] = React.useState(theme);
 
   const navigate = useNavigate();
 
@@ -40,38 +41,27 @@ export const SingupAddress = () => {
   }, []);
 
   const handleCreate = async () => {
-    if (departament !== "" && municipality !== "" && nomenclature !== "") {
+    if (handleEmpty()) {
       const address = {
         departament,
         municipality,
         nomenclature,
       }
-      userController.createCookie("address", JSON.stringify(address));
+      userController.createCookie("address", JSON.stringify(address)); 
       navigate('/singup-data-log');
-      window.location.reload();
-    } else {
-      
+    } else {      
+      alert('Por favor, rellene todos los campos antes de continuar.');
     }
-    const newAddress = {
-      departament,
-      municipality,
-      nomenclature,
-    }
-    setAddress(newAddress);
-    userController.createCookie("address", JSON.stringify(newAddress)); 
-    navigate('/singup-data-log');
-  };
-
-  const handleLoginClick = () => {
-    navigate('/login');
   };
 
   const handleChangeDepartament = (event) => {
     setDepartament(event.target.value);
+    event.target.value != "" ? setDepartamentTheme(theme) : setDepartamentTheme(themeRed);
   };
 
   const handleChangeMunicipality = (event) => {
     setMunicipality(event.target.value);
+    event.target.value != "" ? setMunicipalityTheme(theme) : setMunicipalityTheme(themeRed);
   };
 
   React.useEffect(() => {
@@ -83,36 +73,27 @@ export const SingupAddress = () => {
       setMunicipalitys(municipalitys);
     }  
   }, [departament]);
-  
-  const theme = createTheme({
-    components: {
-      MuiOutlinedInput: {
-        styleOverrides: {
-          root: {
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: isEmpty ? 'red' : 'black',
-            },
-            '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: isEmpty ? 'red' : 'black',
-            },
-            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: isEmpty ? 'red' : 'black',
-            },
-          },
-        },
-      },
-      MuiInputLabel: {
-        styleOverrides: {
-          root: {
-            '&.Mui-focused': {
-              color: 'black',
-            },
-          },
-        },
-      },
-    },
-  });
 
+  const handleEmpty = () => {
+    if(departament === "" || municipality === "" || nomenclature === ""){
+      if(departament === ""){
+        setDepartamentTheme(themeRed);
+      }if(municipality === ""){
+        setMunicipalityTheme(themeRed);
+      }if(nomenclature === ""){
+        setNomenclatureTheme(themeRed);
+      }
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  const handleNomenclature = (value) => {
+    setNomenclature(value);
+    value != "" ? setNomenclatureTheme(theme) : setNomenclatureTheme(themeRed);
+  }
+  
   return (
       <>
         <div className='div-login'>
@@ -125,7 +106,7 @@ export const SingupAddress = () => {
                 <h4>Direccion</h4>
               </div>
               <div>
-                <ThemeProvider theme={theme}>
+                <ThemeProvider theme={departamentTheme}>
                     <FormControl sx={{ width: '370px', marginTop: '35px' }}  variant="outlined">
                         <InputLabel id="demo-simple-select-label">Departamento</InputLabel>
                         <Select
@@ -143,7 +124,7 @@ export const SingupAddress = () => {
                 </ThemeProvider>
               </div>
               <div>
-                <ThemeProvider theme={theme}>
+                <ThemeProvider theme={municipalityTheme}>
                     <FormControl sx={{ width: '370px', marginTop: '35px' }}  variant="outlined">
                         <InputLabel id="demo-simple-select-label">Municipio</InputLabel>
                         <Select
@@ -161,8 +142,8 @@ export const SingupAddress = () => {
                 </ThemeProvider>
               </div>
               <div>
-                <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginTop: '35px' }} id="outlined-basic" label="Direccion" variant="outlined" value={nomenclature} onChange={(e) => setNomenclature(e.target.value.toLocaleLowerCase())}/>
+                <ThemeProvider theme={nomenclatureTheme}>
+                  <TextField sx={{ width: '370px', marginTop: '35px' }} id="outlined-basic" label="Direccion" variant="outlined" value={nomenclature} onChange={(e) => handleNomenclature(e.target.value)}/>
                 </ThemeProvider>
               </div>
               <div className="button-singup">
@@ -170,12 +151,11 @@ export const SingupAddress = () => {
                   variant="contained" 
                   disableElevation
                   onClick={handleCreate}
-                  style={{ backgroundColor: '#000000', width: '250px', borderRadius: '50px', marginTop:'35px' }}
+                  style={{ backgroundColor: '#000000', width: '270px',height: '40px', borderRadius: '15px', marginTop:'40px', borderBottom:'0' }}
                 >
                   Siguiente
                 </Button>
               </div>
-              <a onClick={handleLoginClick}>Iniciar sesión</a>
             </div>
           </div>
         </div>
@@ -209,6 +189,39 @@ const theme = createTheme({
         root: {
           '&.Mui-focused': {
             color: 'black',
+          },
+        },
+      },
+    },
+  },
+});
+
+const themeRed = createTheme({
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'red',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'red',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'red',
+          },
+          borderRadius: '15px', 
+          '& fieldset': {
+            borderRadius: '15px',
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focused': {
+            color: 'red',
           },
         },
       },

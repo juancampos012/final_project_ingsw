@@ -1,69 +1,100 @@
 import React from 'react';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { Truck } from '../request/trucks';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box } from '@mui/material';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 const truckController = new Truck();
 
-export const TableCars = () => {
-    const [trucks, setTrucks] = React.useState();
+function updateRowPosition(initialIndex, newIndex, rows) {
+  return new Promise((resolve) => {
+    setTimeout(
+      () => {
+        const rowsClone = [...rows];
+        const row = rowsClone.splice(initialIndex, 1)[0];
+        rowsClone.splice(newIndex, 0, row);
+        resolve(rowsClone);
+      },
+      Math.random() * 500 + 100,
+    ); 
+  });
+}
 
-    React.useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await truckController.getListTrucks();
-            const data = await response.json();
-            setTrucks(data);
-          } catch (error) {
-            console.error('Hubo un error al cargar los datos:', error);
+export default function Tablecars() {
+  const [trucks, setTrucks] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await truckController.getListTrucks();
+        const data = await response.json();
+        setTrucks(data);
+      } catch (error) {
+        console.error('Hubo un error al cargar los datos:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleRowOrderChange = async (params) => {
+    setLoading(true);
+    const newRows = await updateRowPosition(
+      params.oldIndex,
+      params.targetIndex,
+      trucks,
+    );
+
+    setTrucks(newRows);
+    setLoading(false);
+  };
+
+  const data = {
+    columns: [
+      { field: 'licensePlate', headerName: 'Placa', flex: 1 },
+      { field: 'brand', headerName: 'Marca', flex: 1 },
+      { field: 'model', headerName: 'Linea', flex: 1 },
+      { field: 'year', headerName: 'Modelo', flex: 1 },
+      { 
+        field: 'actualStatus', 
+        headerName: 'Estado actual', 
+        flex: 1,
+        renderCell: (params) => {
+          let color = "disabled";
+          if (params.value === 'En operación') {
+            color = "success";
+          } else if (params.value === 'En mantenimiento') {
+            color = "warning";
+          } else if (params.value === 'Fuera de servicio') {
+            color = "error";
           }
-        };
-        fetchData();
-      }, []);
+          return (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <FiberManualRecordIcon color={color} sx={{width: '15px'}}/>
+                {'\u00A0'}{params.value}
+              </div>
+            </>
+          );
+        }
+      },
+      { field: 'mileage', headerName: 'Kilometraje', flex: 1 },
+      { field: 'placa', headerName: 'M. Preventivo', flex: 1 },
+      { field: 'name', headerName: 'Legales', flex: 1 },
+    ],
+    rows: trucks,
+  };  
 
   return (
-    <Box sx={{ margin: '0 40px' }}>
-        <TableContainer component={Paper} >
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-            <TableRow className='table-head'>
-                <TableCell sx={{ color: 'white'}}>Placa</TableCell>
-                <TableCell sx={{ color: 'white'}}>Marca</TableCell>
-                <TableCell sx={{ color: 'white'}}>Linea</TableCell>
-                <TableCell sx={{ color: 'white'}}>Modelo</TableCell>
-                <TableCell sx={{ color: 'white'}}>Estado actual</TableCell>
-                <TableCell sx={{ color: 'white'}}>Kilometraje</TableCell>
-                <TableCell sx={{ color: 'white'}}>M. Preventivo</TableCell>
-                <TableCell sx={{ color: 'white'}}>Legales</TableCell>
-            </TableRow>
-            </TableHead>
-            <TableBody className='table-body'>
-                {trucks && trucks.map((row) => (
-                    <TableRow key={row.licensePlate}>
-                    <TableCell>{row.licensePlate}</TableCell>
-                    <TableCell>{row.brand}</TableCell>
-                    <TableCell>{row.model}</TableCell>
-                    <TableCell>{row.year}</TableCell>
-                    <TableCell>
-                        <Box display="flex" alignItems="center" >
-                        {row.estadoActual === 'En operación' && <FiberManualRecordIcon color="success" sx={{width: '20px'}}/>}
-                        {row.estadoActual === 'En mantenimiento' && <FiberManualRecordIcon color="warning" sx={{width: '20px'}}/>}
-                        {row.estadoActual === 'Fuera de servicio' && <FiberManualRecordIcon color="error" sx={{width: '20px'}}/>}
-                        {'\u00A0'}{row.estadoActual}
-                        </Box>
-                    </TableCell>
-                    <TableCell>{row.kilometraje1}</TableCell>
-                    <TableCell>{row.mPreventivo1}</TableCell>
-                    <TableCell>
-                        {row.legales1 ? <CheckCircleIcon color="success" /> : <CancelIcon color="error" />}
-                    </TableCell>
-                </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-        </TableContainer>
-    </Box>
-  );
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '72vh', width: '100%' }}>
+      <div style={{ height: '100%', width: '95%' }}>
+        <DataGridPro
+          {...data}
+          loading={loading}
+          rows={trucks}
+          rowReordering
+          onRowOrderChange={handleRowOrderChange}
+        />
+      </div>
+    </div>
+  );  
 }

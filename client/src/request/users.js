@@ -33,6 +33,17 @@ export class User {
     return response.json();
   }
 
+  async getListUser() {
+    const url = `${this.base_api}/${ENV.API_ROUTES_USER.LISTUSER}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { "Content-Type": "application/json" },
+    });
+    const users = await response.json();
+    return users;
+  }
+
+
   async getListIdentifications() {
     const url = `${this.base_api}/${ENV.API_ROUTES_USER.GETLISTUSER}`;
     const response = await fetch(url, {
