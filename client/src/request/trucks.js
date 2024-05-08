@@ -20,4 +20,23 @@ export class Truck {
         });
         return response;
       }
+
+      async getListLicensePlates() {
+        const url = `${this.base_api}/${ENV.API_ROUTES_TRUCK.GETLISTLICENSEPLATES}`;
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: { "Content-Type": "application/json" },
+        });
+        const licensePlates = await response.json();
+        return licensePlates;
+      }
+
+      async getTruckByLicencePlate(licensePlate) {
+        const url = `${this.base_api}/${ENV.API_ROUTES_TRUCK.GETTRUCKBYLICENCEPLATE}?licensePlate=${licensePlate}`;
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: { "Content-Type": "application/json" },
+        });
+        return response.json();
+      }
 }

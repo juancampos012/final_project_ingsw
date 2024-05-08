@@ -33,6 +33,15 @@ export class User {
     return response.json();
   }
 
+  async getUserById(id) {
+    const url = `${this.base_api}/${ENV.API_ROUTES_USER.GETUSERBYID}?id=${id}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { "Content-Type": "application/json" },
+    });
+    return response.json();
+  }
+
   async getListUser() {
     const url = `${this.base_api}/${ENV.API_ROUTES_USER.LISTUSER}`;
     const response = await fetch(url, {

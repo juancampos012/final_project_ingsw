@@ -1,32 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
+import TextField from '@mui/material/TextField';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GoogleMap, LoadScript, DirectionsRenderer, Autocomplete } from '@react-google-maps/api';
 
-const MapComponent = () => {
+
+export const MapComponent = () => {
   const [response, setResponse] = useState(null);
   const [origin, setOrigin] = useState();
   const [destination, setDestination] = useState();
   const autocompleteOriginRef = useRef(null);
   const autocompleteDestinationRef = useRef(null);
-
-  const handleLoad = () => {
-    const directionsService = new window.google.maps.DirectionsService();
-
-    directionsService.route(
-      {
-        origin: origin,
-        destination: destination,
-        travelMode: window.google.maps.TravelMode.DRIVING,
-      },
-      (result, status) => {
-        if (status === window.google.maps.DirectionsStatus.OK) {
-          setResponse(result);
-          console.log(result);
-        } else {
-          console.error(`error fetching directions ${result}`);
-        }
-      }
-    );
-  };
 
   const onLoadOrigin = (autocomplete) => {
     autocompleteOriginRef.current = autocomplete;
@@ -55,18 +38,46 @@ const MapComponent = () => {
   };  
 
   useEffect(() => {
+    const handleLoad = () => {
+      const directionsService = new window.google.maps.DirectionsService();
+  
+      directionsService.route(
+        {
+          origin: origin,
+          destination: destination,
+          travelMode: window.google.maps.TravelMode.DRIVING,
+        },
+        (result, status) => {
+          if (status === window.google.maps.DirectionsStatus.OK) {
+            setResponse(result);
+            console.log(result);
+          } else {
+            console.error(`error fetching directions ${result}`);
+          }
+        }
+      );
+    };
+  
     if (window.google) {
       handleLoad();
     }
   }, [origin, destination]);
 
   return (
-    <LoadScript googleMapsApiKey="AIzaSyAf2AHLtGvjMJouKecs0kkw1AQw2YTZfdc" libraries={["places"]} onLoad={handleLoad}>
+    <LoadScript googleMapsApiKey="AIzaSyAf2AHLtGvjMJouKecs0kkw1AQw2YTZfdc" libraries={["places"]}>
       <Autocomplete onLoad={onLoadOrigin} onPlaceChanged={onPlaceChangedOrigin}>
-        <input type="text" placeholder="Origen" />
+        <div>
+          <ThemeProvider theme={theme}>
+            <TextField sx={{ width: '370px' }} id="outlined-basic" label="Origen" variant="outlined"/>
+          </ThemeProvider>
+        </div>
       </Autocomplete>
       <Autocomplete onLoad={onLoadDestination} onPlaceChanged={onPlaceChangedDestination}>
-        <input type="text" placeholder="Destino" />
+        <div>
+          <ThemeProvider theme={theme}>
+            <TextField sx={{ width: '370px' }} id="outlined-basic" label="Destino" variant="outlined"/>
+          </ThemeProvider>
+        </div>
       </Autocomplete>
       <GoogleMap
         id='direction-example'
@@ -94,4 +105,35 @@ const MapComponent = () => {
   );
 };
 
-export default MapComponent;
+const theme = createTheme({
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'black',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'black',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'black',
+          },
+          borderRadius: '15px', 
+          '& fieldset': {
+            borderRadius: '15px',
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focused': {
+            color: 'black',
+          },
+        },
+      },
+    },
+  },
+});

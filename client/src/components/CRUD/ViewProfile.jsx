@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { User } from '../../request/users';
-import { createTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Cookies from 'js-cookie';
@@ -38,7 +37,7 @@ export const ViewProfile = () => {
         .catch(error => {
             console.error(error); 
         });
-    }, []);
+    }, [miCookiejwt]);
 
   const handleUpdate = async () => {
       navigate('/home');

@@ -56,12 +56,12 @@ export const SingupAddress = () => {
 
   const handleChangeDepartament = (event) => {
     setDepartament(event.target.value);
-    event.target.value != "" ? setDepartamentTheme(theme) : setDepartamentTheme(themeRed);
+    event.target.value !== "" ? setDepartamentTheme(theme) : setDepartamentTheme(themeRed);
   };
 
   const handleChangeMunicipality = (event) => {
     setMunicipality(event.target.value);
-    event.target.value != "" ? setMunicipalityTheme(theme) : setMunicipalityTheme(themeRed);
+    event.target.value !== "" ? setMunicipalityTheme(theme) : setMunicipalityTheme(themeRed);
   };
 
   React.useEffect(() => {
@@ -72,7 +72,7 @@ export const SingupAddress = () => {
       
       setMunicipalitys(municipalitys);
     }  
-  }, [departament]);
+  }, [data, departament]);
 
   const handleEmpty = () => {
     if(departament === "" || municipality === "" || nomenclature === ""){
@@ -91,7 +91,7 @@ export const SingupAddress = () => {
 
   const handleNomenclature = (value) => {
     setNomenclature(value);
-    value != "" ? setNomenclatureTheme(theme) : setNomenclatureTheme(themeRed);
+    value !== "" ? setNomenclatureTheme(theme) : setNomenclatureTheme(themeRed);
   }
   
   return (
