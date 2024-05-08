@@ -12,9 +12,11 @@ import { ViewProfile } from './components/CRUD/ViewProfile';
 import { SingupAddress } from './components/CRUD/SingupAddress';
 import { TopTable } from './components/TopTable';
 import Tablecars from './components/TableCars';
-import MapComponent from './components/map';
 import { TopTableDrivers } from './components/TopTableDirvers';
 import TableUsers from './components/TableDrivers';
+import { MapComponent } from './components/RoutesMap';
+import { TopRoutes } from './components/TopRoutes';
+import { DragAndDrop } from './components/prueba';
 
 function App() {
   return (
@@ -24,7 +26,7 @@ function App() {
         <Route path="/signup-personal-data" element={<SingupPersonalData/>} />
         <Route path="/signup-address" element={<SingupAddress/>} />
         <Route path='/singup-data-log' element={<SingupDataLog/>}/>
-        <Route path='/map' element={<MapComponent/>}/>
+        <Route path='/prueba' element={<DragAndDrop/>}/>
         <Route path="/update-personal-data" 
         element={
           <RequireAuth>
@@ -68,6 +70,16 @@ function App() {
           <RequireAuth>
             <div>
               <Navbar/>
+            </div>
+          </RequireAuth>
+        } />
+        <Route path="/routes-admin" 
+        element={
+          <RequireAuth>
+            <div>
+              <Navbar/>
+              <TopRoutes/>
+              <MapComponent/>
             </div>
           </RequireAuth>
         } />

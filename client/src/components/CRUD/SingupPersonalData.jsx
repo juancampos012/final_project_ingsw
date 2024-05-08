@@ -47,15 +47,15 @@ export const SingupPersonalData = () => {
   }
 
   const handleNameTheme = (value) => {
-    value != "" ? setNameTheme(theme) : setNameTheme(themeRed);
+    value !== "" ? setNameTheme(theme) : setNameTheme(themeRed);
   }
 
   const handleLastNameTheme = (value) => {
-    value != "" ? setLastNameTheme(theme) : setLastNameTheme(themeRed);
+    value !== "" ? setLastNameTheme(theme) : setLastNameTheme(themeRed);
   }
 
   const handleIdentificationTheme = (value) => {
-    value != "" ? setIdentificationTheme(theme) : setIdentificationTheme(themeRed);
+    value !== "" ? setIdentificationTheme(theme) : setIdentificationTheme(themeRed);
   }
   
   return (

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { User } from '../../request/users';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Cookies from 'js-cookie';
@@ -14,7 +13,6 @@ export const UpdatePersonalData = () => {
   const [identification, setIdentification] = React.useState("");
   const [email, setEmail] = React.useState("");
   const miCookie = Cookies.get('jwt');
-  const navigate = useNavigate();
 
   React.useEffect(() => {
       userController.verifyToken(miCookie)
@@ -32,7 +30,7 @@ export const UpdatePersonalData = () => {
       .catch(error => {
           console.error(error); 
       });
-  }, []);
+  }, [miCookie]);
 
   const handleUpdate = async () => {
     try {
