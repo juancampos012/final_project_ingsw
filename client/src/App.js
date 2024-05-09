@@ -18,6 +18,7 @@ import { WelcomeComponent } from './components/WelcomeHome';
 import { MapComponent } from './components/RoutesMap';
 import { TopRoutes } from './components/TopRoutes';
 import { DragAndDrop } from './components/prueba';
+import { Footer } from './components/HomeFooter';
 
 function App() {
   return (
@@ -72,6 +73,7 @@ function App() {
             <div>
               <Navbar/>
               <WelcomeComponent/>
+              <Footer/>
             </div>
           </RequireAuth>
         } />
