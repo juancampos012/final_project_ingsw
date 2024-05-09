@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 const createTruck = async (req, res) => {
     try{
-        const { licensePlate, brand, model, year, mileage, capacity, userId} = req.body;
+        const { licensePlate, brand, model, year, mileage, capacity, } = req.body;
         const truck = await prisma.truck.create({
             data: {
                 licensePlate,
@@ -12,7 +12,6 @@ const createTruck = async (req, res) => {
                 year, 
                 mileage,
                 capacity, 
-                userId,
             },
         });
         res.status(201).json({truck});
