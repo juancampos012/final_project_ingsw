@@ -10,6 +10,7 @@ const app = express();
 
 const userRoutes = require('./src/routes/UserRoutes')
 const truckRoutes = require('./src/routes/TruckRoutes')
+const tripRoutes = require('./src/routes/TripRoutes')
 
 const PORT = process.env.PORT || 4000;
 
@@ -32,6 +33,9 @@ app.use('/api/v1/users', userRoutes);
 
 // http://localhost:3006/api/v1/trucks
 app.use('/api/v1/trucks', truckRoutes);
+
+// http://localhost:3006/api/v1/trips
+app.use('/api/v1/trips', tripRoutes);
 
 //connect to mongo
 const getConnection = async () => {
