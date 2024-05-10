@@ -4,23 +4,40 @@ const prisma = new PrismaClient();
 
 const createTrip = async (req, res) => {
     try{
-        const { route, distance, originPlace, destinationPlace, time, truck} = req.body;
-        const trip = await prisma.trip.create({
+        const { originPlace, destinationPlace, distance, time, userId, truckId } = req.body;
+
+        // Aquí se crea la relación userTruck
+        const userTruck = await prisma.userTruck.create({
             data: {
-                route,
-                distance,
-                originPlace,
-                destinationPlace,
-                time, 
-                truck, 
+                userId: userId,
+                truckId: truckId
             },
         });
-        res.status(201).json({truck});
+
+        const trip = await prisma.trip.create({
+            data: {
+                originPlace,
+                destinationPlace,
+                distance,
+                time,
+                userTruckId: userTruck.id
+            },
+        });
+
+        // Aquí se añade el viaje al array de trips en el registro userTruck
+        await prisma.userTruck.update({
+            where: { id: userTruck.id },
+            data: { trips: { connect: { id: trip.id } } }
+        });
+
+        res.status(201).json({trip});
     }catch(error){
         console.error(error);
-        res.status(500).json({error: "Something went wrong"});
+        res.status(500).json({error: "Algo salió mal"});
     }
 };
+
+
 
 
 const getListTrips = async (req, res) => {
@@ -61,18 +78,36 @@ const deleteTrip = async (req, res) => {
     }
 }
 
-const updateTripById = async (req, res) => {
+const updateTrip = async (req, res) => {
     try{
-        const {id} = req.body;
-        const { route, distance, time, truck} = req.body;
-        const trip = await prisma.trip.update({
-            where: { id: id},
-            data: { brand, model, wear, truck},
+        const { id, originPlace, destinationPlace, distance, time, userId, truckId } = req.body;
+
+        // Aquí se actualiza la relación userTruck
+        const userTruck = await prisma.userTruck.update({
+            where: { id: userTruckId },
+            data: {
+                userId: userId,
+                truckId: truckId
+            },
         });
-        res.status(201).json(trip);
+
+        const trip = await prisma.trip.update({
+            where: { id: id },
+            data: {
+                originPlace,
+                destinationPlace,
+                distance,
+                time,
+                userTruckId: userTruck.id
+            },
+        });
+
+        res.status(200).json({trip});
     }catch(error){
-        res.status(400).json({message: error.message});
+        console.error(error);
+        res.status(500).json({error: "Algo salió mal"});
     }
-}
+};
+
 
 module.exports = {createTrip, getListTrips , getTripbyId , deleteTrip, updateTripById }
