@@ -1,27 +1,32 @@
-import React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
-import { Truck } from '../request/trucks';
+import React, { useState } from 'react';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import { Truck } from '../request/trucks';
 
 const truckController = new Truck();
 
-function updateRowPosition(initialIndex, newIndex, rows) {
-  return new Promise((resolve) => {
-    setTimeout(
-      () => {
-        const rowsClone = [...rows];
-        const row = rowsClone.splice(initialIndex, 1)[0];
-        rowsClone.splice(newIndex, 0, row);
-        resolve(rowsClone);
-      },
-      Math.random() * 500 + 100,
-    ); 
-  });
-}
+const columns = [
+  { id: 'licensePlate', label: 'Placa', minWidth: 170 },
+  { id: 'brand', label: 'Marca', minWidth: 170 },
+  { id: 'model', label: 'Linea', minWidth: 170 },
+  { id: 'year', label: 'Modelo', minWidth: 170 },
+  { id: 'actualStatus', label: 'Estado actual', minWidth: 170 },
+  { id: 'mileage', label: 'Kilometraje', minWidth: 170 },
+  { id: 'placa', label: 'M. Preventivo', minWidth: 170 },
+  { id: 'name', label: 'Legales', minWidth: 170 },
+];
 
-export default function Tablecars() {
-  const [trucks, setTrucks] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+export const TableCars = () => {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [trucks, setTrucks] = useState([]);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -36,65 +41,109 @@ export default function Tablecars() {
     fetchData();
   }, []);
 
-  const handleRowOrderChange = async (params) => {
-    setLoading(true);
-    const newRows = await updateRowPosition(
-      params.oldIndex,
-      params.targetIndex,
-      trucks,
-    );
-
-    setTrucks(newRows);
-    setLoading(false);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
   };
 
-  const data = {
-    columns: [
-      { field: 'licensePlate', headerName: 'Placa', flex: 1 },
-      { field: 'brand', headerName: 'Marca', flex: 1 },
-      { field: 'model', headerName: 'Linea', flex: 1 },
-      { field: 'year', headerName: 'Modelo', flex: 1 },
-      { 
-        field: 'actualStatus', 
-        headerName: 'Estado actual', 
-        flex: 1,
-        renderCell: (params) => {
-          let color = "disabled";
-          if (params.value === 'En operación') {
-            color = "success";
-          } else if (params.value === 'En mantenimiento') {
-            color = "warning";
-          } else if (params.value === 'Fuera de servicio') {
-            color = "error";
-          }
-          return (
-            <>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <FiberManualRecordIcon color={color} sx={{width: '15px'}}/>
-                {'\u00A0'}{params.value}
-              </div>
-            </>
-          );
-        }
-      },
-      { field: 'mileage', headerName: 'Kilometraje', flex: 1 },
-      { field: 'placa', headerName: 'M. Preventivo', flex: 1 },
-      { field: 'name', headerName: 'Legales', flex: 1 },
-    ],
-    rows: trucks,
-  };  
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const startDrag = (evt, item) => {
+    evt.dataTransfer.setData('itemID', item.licensePlate);
+  };
+
+  const draggingOver = (evt) => {
+    evt.preventDefault();
+  };
+
+  const onDrop = (evt, licensePlate) => {
+    evt.preventDefault();
+    const itemID = evt.dataTransfer.getData('itemID');
+    const draggedItemIndex = trucks.findIndex((truck) => truck.licensePlate === itemID);
+    const draggedItem = trucks[draggedItemIndex];
+    const dropIndex = trucks.findIndex((truck) => truck.licensePlate === licensePlate);
+
+    const updatedTrucks = [...trucks];
+    updatedTrucks.splice(draggedItemIndex, 1);
+    updatedTrucks.splice(dropIndex, 0, draggedItem);
+
+    setTrucks(updatedTrucks);
+  };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '72vh', width: '100%' }}>
-      <div style={{ height: '100%', width: '95%' }}>
-        <DataGridPro
-          {...data}
-          loading={loading}
-          rows={trucks}
-          rowReordering
-          onRowOrderChange={handleRowOrderChange}
+    <div className="div-table-drivers">
+      <Paper sx={{ width: '92%', overflow: 'hidden' }}>
+        <TableContainer sx={{ maxHeight: 440 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    style={{
+                      minWidth: column.minWidth,
+                      width: column.minWidth,
+                      backgroundColor: 'rgb(54,54,54)',
+                      color: 'white',
+                    }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {trucks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((truck, index) => {
+                let statusColor = 'disabled';
+                if (truck.actualStatus === 'En operación') {
+                  statusColor = 'success';
+                } else if (truck.actualStatus === 'En mantenimiento') {
+                  statusColor = 'warning';
+                } else if (truck.actualStatus === 'Fuera de servicio') {
+                  statusColor = 'error';
+                }
+                return (
+                  <TableRow
+                    key={truck.licensePlate}
+                    draggable
+                    onDragStart={(evt) => startDrag(evt, truck)}
+                    onDragOver={draggingOver}
+                    onDrop={(evt) => onDrop(evt, truck.licensePlate)}
+                  >
+                    {columns.map((column) => {
+                      const value = truck[column.id];
+                      return (
+                        <TableCell key={column.id} style={{ minWidth: column.minWidth, width: column.minWidth }}>
+                          {column.id === 'actualStatus' ? (
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                              <FiberManualRecordIcon color={statusColor} sx={{ width: '15px' }} />
+                              {'\u00A0'}
+                              {value}
+                            </div>
+                          ) : (
+                            value
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25]}
+          component="div"
+          count={trucks.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      </div>
+      </Paper>
     </div>
-  );  
-}
+  );
+};

@@ -64,44 +64,52 @@ export const MapComponent = () => {
   }, [origin, destination]);
 
   return (
-    <LoadScript googleMapsApiKey="AIzaSyAf2AHLtGvjMJouKecs0kkw1AQw2YTZfdc" libraries={["places"]}>
-      <Autocomplete onLoad={onLoadOrigin} onPlaceChanged={onPlaceChangedOrigin}>
-        <div>
-          <ThemeProvider theme={theme}>
-            <TextField sx={{ width: '370px' }} id="outlined-basic" label="Origen" variant="outlined"/>
-          </ThemeProvider>
+    <div>
+      <LoadScript googleMapsApiKey="AIzaSyAf2AHLtGvjMJouKecs0kkw1AQw2YTZfdc" libraries={["places"]}>
+        <div className='div-autocomplete-map'>
+          <Autocomplete onLoad={onLoadOrigin} onPlaceChanged={onPlaceChangedOrigin}>
+            <div>
+              <h3>Origen</h3>
+              <ThemeProvider theme={theme}>
+                <TextField sx={{ width: '370px' }} id="outlined-basic" label="Origen" variant="outlined"/>
+              </ThemeProvider>
+            </div>
+          </Autocomplete>
+          <Autocomplete onLoad={onLoadDestination} onPlaceChanged={onPlaceChangedDestination}>
+            <div>
+              <h3>Destino</h3>
+              <ThemeProvider theme={theme}>
+                <TextField sx={{ width: '370px' }} id="outlined-basic" label="Destino" variant="outlined"/>
+              </ThemeProvider>
+            </div>
+          </Autocomplete>
         </div>
-      </Autocomplete>
-      <Autocomplete onLoad={onLoadDestination} onPlaceChanged={onPlaceChangedDestination}>
-        <div>
-          <ThemeProvider theme={theme}>
-            <TextField sx={{ width: '370px' }} id="outlined-basic" label="Destino" variant="outlined"/>
-          </ThemeProvider>
+        <div className='div-map-route'>  
+          <GoogleMap
+            id='direction-example'
+            mapContainerStyle={{
+              height: "70vh",
+              width: "70%"
+            }}
+            zoom={8}
+            center={{
+              lat: 5.06889,
+              lng: -75.51738
+            }}
+          >
+            {
+              response !== null && (
+                <DirectionsRenderer
+                  options={{
+                    directions: response
+                  }}
+                />
+              )
+            }
+          </GoogleMap>
         </div>
-      </Autocomplete>
-      <GoogleMap
-        id='direction-example'
-        mapContainerStyle={{
-          height: "400px",
-          width: "800px"
-        }}
-        zoom={8}
-        center={{
-          lat: 5.06889,
-          lng: -75.51738
-        }}
-      >
-        {
-          response !== null && (
-            <DirectionsRenderer
-              options={{
-                directions: response
-              }}
-            />
-          )
-        }
-      </GoogleMap>
-    </LoadScript>
+      </LoadScript>
+    </div>
   );
 };
 

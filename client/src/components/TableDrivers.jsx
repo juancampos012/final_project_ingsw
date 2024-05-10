@@ -1,26 +1,26 @@
 import React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
-import { User } from '../request/users';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
+import { User } from '../request/users'; 
 
 const userController = new User();
 
-function updateRowPosition(initialIndex, newIndex, rows) {
-  return new Promise((resolve) => {
-    setTimeout(
-      () => {
-        const rowsClone = [...rows];
-        const row = rowsClone.splice(initialIndex, 1)[0];
-        rowsClone.splice(newIndex, 0, row);
-        resolve(rowsClone);
-      },
-      Math.random() * 500 + 100,
-    ); 
-  });
-}
+const columns = [
+  { id: 'name', label: 'Nombre', minWidth: 170 },
+  { id: 'lastName', label: 'Apellido', minWidth: 170 },
+  { id: 'identification', label: 'Identificación', minWidth: 170 },
+];
 
-export default function TableUsers() {
-  const [users, setUsers] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+export const TableDrivers = () => {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [users, setUsers] = React.useState([]); 
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -34,39 +34,95 @@ export default function TableUsers() {
     fetchData();
   }, []);
 
-  const handleRowOrderChange = async (params) => {
-    setLoading(true);
-    const newRows = await updateRowPosition(
-      params.oldIndex,
-      params.targetIndex,
-      users,
-    );
-
-    setUsers(newRows);
-    setLoading(false);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
   };
 
-  const data = {
-    columns: [
-      { field: 'name', headerName: 'Nombre', flex: 1 },
-      { field: 'lastName', headerName: 'Apellido', flex: 1 },
-      { field: 'identification', headerName: 'Identificacion', flex: 1 },
-      { field: 'municipality', headerName: 'Ciudad', flex: 1 },
-    ],
-    rows: users,
-  };  
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const startDrag = (evt, item) => {
+    evt.dataTransfer.setData('itemID', item.identification); 
+  }
+
+  const draggingOver = (evt) => {
+    evt.preventDefault();
+  }
+
+  const onDrop = (evt, identification) => {
+    evt.preventDefault();
+    const itemID = evt.dataTransfer.getData('itemID');
+    const draggedItemIndex = users.findIndex(user => user.identification === itemID); 
+    const draggedItem = users[draggedItemIndex];
+    const dropIndex = users.findIndex(user => user.identification === identification); 
+    
+    const updatedUsers = [...users];
+    updatedUsers.splice(draggedItemIndex, 1);
+    updatedUsers.splice(dropIndex, 0, draggedItem); 
+
+    setUsers(updatedUsers);
+  }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '72vh', width: '100%' }}>
-      <div style={{ height: '100%', width: '95%' }}>
-        <DataGridPro
-          {...data}
-          loading={loading}
-          rows={users}
-          rowReordering
-          onRowOrderChange={handleRowOrderChange}
+    <div className='div-table-drivers'>
+      <Paper sx={{ width: '92%', overflow: 'hidden', }}>
+        <TableContainer sx={{ maxHeight: 440 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    style={{ minWidth: column.minWidth, width: column.minWidth, backgroundColor: 'rgb(54,54,54)', color: 'white' }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((user) => {
+                  return (
+                    <TableRow 
+                      hover 
+                      role="checkbox" 
+                      tabIndex={-1} 
+                      key={user.identification} 
+                      draggable 
+                      onDragStart={(evt) => startDrag(evt, user)}
+                      onDragOver={draggingOver}
+                      onDrop={(evt) => onDrop(evt, user.identification)} 
+                    >
+                      {columns.map((column) => {
+                        const value = user[column.id];
+                        return (
+                          <TableCell key={column.id} style={{ minWidth: column.minWidth, width: column.minWidth }}> 
+                            {column.format && typeof value === 'number'
+                              ? column.format(value)
+                              : value}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25]}
+          component="div"
+          count={users.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      </div>
+      </Paper>
     </div>
-  );  
+  );
 }

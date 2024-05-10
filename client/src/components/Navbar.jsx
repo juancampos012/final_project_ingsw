@@ -127,6 +127,7 @@ export const Navbar = () => {
 
     const handleRoutes = () => {
       navigate('/routes-admin');
+      handleDrawerClose();
     };
 
     const handleViewProfile = () => {
@@ -169,7 +170,7 @@ export const Navbar = () => {
 
     return (
         <>
-          <Box sx={{ display: 'flex', marginTop: '80px' }}>
+          <Box sx={{ display: 'flex', marginTop: '70px' }}>
             <CssBaseline />
             <AppBar position="fixed" open={open} sx={{bgcolor:'black'}}>
               <Toolbar>
@@ -182,9 +183,6 @@ export const Navbar = () => {
                 >
                   <MenuIcon />
                 </IconButton>
-                {/*<Typography variant="h6" noWrap component="div">
-                  Persistent drawer
-                </Typography> */}
                 <Box sx={{ flexGrow: 1 }} /> 
                 <IconButton color="inherit" onClick={handleOpenNotifMenu} sx={{ mr: 4 }}> 
                   <NotificationsIcon />

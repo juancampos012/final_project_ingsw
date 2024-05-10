@@ -11,13 +11,12 @@ import { UpdateDataLog } from './components/CRUD/UpdateDataLog';
 import { ViewProfile } from './components/CRUD/ViewProfile';
 import { SingupAddress } from './components/CRUD/SingupAddress';
 import { TopTable } from './components/TopTable';
-import Tablecars from './components/TableCars';
 import { TopTableDrivers } from './components/TopTableDirvers';
-import TableUsers from './components/TableDrivers';
 import { WelcomeComponent } from './components/WelcomeHome';
 import { MapComponent } from './components/RoutesMap';
 import { TopRoutes } from './components/TopRoutes';
-import { DragAndDrop } from './components/prueba';
+import { TableDrivers } from './components/TableDrivers';
+import { TableCars } from './components/TableCars'
 
 function App() {
   return (
@@ -27,7 +26,6 @@ function App() {
         <Route path="/signup-personal-data" element={<SingupPersonalData/>} />
         <Route path="/signup-address" element={<SingupAddress/>} />
         <Route path='/singup-data-log' element={<SingupDataLog/>}/>
-        <Route path='/prueba' element={<DragAndDrop/>}/>
         <Route path="/update-personal-data" 
         element={
           <RequireAuth>
@@ -52,7 +50,7 @@ function App() {
             <div>
               <Navbar/>
               <TopTable/>
-              <Tablecars/>
+              <TableCars/>
             </div>
           </RequireAuth>
         } />
@@ -62,7 +60,7 @@ function App() {
             <div>
               <Navbar/>
               <TopTableDrivers/>
-              <TableUsers/>
+              <TableDrivers/>
             </div>
           </RequireAuth>
         } />

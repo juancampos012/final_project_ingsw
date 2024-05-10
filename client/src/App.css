@@ -3,6 +3,7 @@
 body{
     margin: 0;
     padding: 0;
+    font-family: 'Lato', sans-serif;
 }
 
 .div-login{
@@ -194,4 +195,50 @@ margin-bottom: 1em;
     background-color: orange;
     border: none;
     cursor: pointer;
+}
+
+.div-table-drivers{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.div-top-routes h4{
+    font-family: 'Lato', sans-serif;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    font-size: 300%;
+    margin-left: 5%;
+    text-align: center;
+}
+
+.div-div-top-routes{
+    display: flex;
+    justify-content: space-around;
+}
+
+.div-top-routes h3{
+    font-family: 'Lato', sans-serif;    
+    margin-bottom: 20px;
+    font-size: 200%;
+    text-align: center;
+}
+
+.div-autocomplete-map{
+    display: flex;
+    justify-content: space-around;
+}
+
+.div-map-route{
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 50px;
+}
+
+.div-autocomplete-map h3{
+    font-family: 'Lato', sans-serif;    
+    margin-bottom: 20px;
+    font-size: 200%;
+    text-align: center;
 }
