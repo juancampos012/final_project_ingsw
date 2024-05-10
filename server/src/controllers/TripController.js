@@ -110,4 +110,4 @@ const updateTrip = async (req, res) => {
 };
 
 
-module.exports = {createTrip, getListTrips , getTripbyId , deleteTrip, updateTripById }
+module.exports = {createTrip, getListTrips , getTripbyId , deleteTrip }
