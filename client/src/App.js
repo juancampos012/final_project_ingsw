@@ -17,6 +17,7 @@ import { MapComponent } from './components/RoutesMap';
 import { TopRoutes } from './components/TopRoutes';
 import { TableDrivers } from './components/TableDrivers';
 import { TableCars } from './components/TableCars'
+import { Footer } from './components/HomeFooter';
 
 function App() {
   return (
@@ -70,6 +71,7 @@ function App() {
             <div>
               <Navbar/>
               <WelcomeComponent/>
+              <Footer/>
             </div>
           </RequireAuth>
         } />
