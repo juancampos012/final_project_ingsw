@@ -109,6 +109,7 @@ export const MapComponent = () => {
           <Button
             variant="contained"
             disableElevation  
+            style={{ marginBottom: '100px' }}
           >
             Crear
           </Button>
