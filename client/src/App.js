@@ -52,6 +52,7 @@ function App() {
               <Navbar/>
               <TopTable/>
               <TableCars/>
+              <Footer/>
             </div>
           </RequireAuth>
         } />
@@ -62,6 +63,7 @@ function App() {
               <Navbar/>
               <TopTableDrivers/>
               <TableDrivers/>
+              <Footer/>
             </div>
           </RequireAuth>
         } />

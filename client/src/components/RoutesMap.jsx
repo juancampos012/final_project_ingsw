@@ -2,12 +2,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GoogleMap, LoadScript, DirectionsRenderer, Autocomplete } from '@react-google-maps/api';
-
+import Button from '@mui/material/Button';
 
 export const MapComponent = () => {
   const [response, setResponse] = useState(null);
   const [origin, setOrigin] = useState();
   const [destination, setDestination] = useState();
+  const [isMapsLoaded, setIsMapsLoaded] = useState(false);
   const autocompleteOriginRef = useRef(null);
   const autocompleteDestinationRef = useRef(null);
 
@@ -38,7 +39,7 @@ export const MapComponent = () => {
   };  
 
   useEffect(() => {
-    const handleLoad = () => {
+    if (isMapsLoaded && origin && destination && window.google && window.google.maps) {
       const directionsService = new window.google.maps.DirectionsService();
   
       directionsService.route(
@@ -56,16 +57,12 @@ export const MapComponent = () => {
           }
         }
       );
-    };
-  
-    if (window.google) {
-      handleLoad();
     }
-  }, [origin, destination]);
+  }, [isMapsLoaded, origin, destination]);
 
   return (
     <div>
-      <LoadScript googleMapsApiKey="AIzaSyAf2AHLtGvjMJouKecs0kkw1AQw2YTZfdc" libraries={["places"]}>
+      <LoadScript googleMapsApiKey="AIzaSyAf2AHLtGvjMJouKecs0kkw1AQw2YTZfdc" libraries={["places"]} onLoad={() => setIsMapsLoaded(true)}>
         <div className='div-autocomplete-map'>
           <Autocomplete onLoad={onLoadOrigin} onPlaceChanged={onPlaceChangedOrigin}>
             <div>
@@ -107,6 +104,14 @@ export const MapComponent = () => {
               )
             }
           </GoogleMap>
+        </div>
+        <div className="button-create-truck">
+          <Button
+            variant="contained"
+            disableElevation  
+          >
+            Crear
+          </Button>
         </div>
       </LoadScript>
     </div>
