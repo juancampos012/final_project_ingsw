@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 export const Tires = () => {
   const [hoveredWheel, setHoveredWheel] = useState(null);
-  const [clickedWheel, setClickedWheel] = useState(null);
 
   const Wheel = ({ onClick, isHovered, wheelNumber }) => (
     <div
@@ -16,7 +15,6 @@ export const Tires = () => {
       onMouseEnter={() => setHoveredWheel(wheelNumber)}
       onMouseLeave={() => setHoveredWheel(null)}
       onClick={() => {
-        setClickedWheel(wheelNumber);
         onClick();
       }}
     />

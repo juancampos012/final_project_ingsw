@@ -272,8 +272,6 @@ body{
     
 }
 
-
-
 .footer-social {
     width: 100%;
     text-align: center;
@@ -289,6 +287,9 @@ body{
 
 .button-create-truck{
     margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .div-map-footer{
@@ -319,7 +320,6 @@ body{
 .cards-title h1 {
     margin: 0;
 }
-
 
 .card {
     width: 300px;

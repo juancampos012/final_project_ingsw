@@ -1,6 +1,5 @@
 import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { User } from '../request/users';
 import { Truck } from '../request/trucks';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -25,7 +24,6 @@ export const TopTable = () => {
   const [open, setOpen] = React.useState(false);
   const [licensePlate, setLicensePlate] = React.useState("");
   const [mileage, setMileage ] = React.useState("");
-  const [userId, setUserId ] = React.useState("");
   const [brand, setBrand] = React.useState("");
   const [model, setModel] = React.useState("");
   const [year, setYear] = React.useState("");
@@ -45,7 +43,6 @@ export const TopTable = () => {
         year,
         capacity: capacityInt,
         mileage: mileageInt,
-        userId, 
       };
       console.log(data);
       const response = await truckController.newTrucK(data);
@@ -57,7 +54,6 @@ export const TopTable = () => {
       alert("Ocurrió un error al intentar crear el camion");
     }
   };  
-
 
   return (
     <div className='div-top-table'>
@@ -86,10 +82,10 @@ export const TopTable = () => {
                   <ThemeProvider theme={theme}>
                     <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Marca" variant="outlined" value={brand} onChange={(e) => setBrand(e.target.value)} />
                   </ThemeProvider>
-                  </div>
-                  <div>
+                </div>
+                <div>
                   <ThemeProvider theme={theme}>
-                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Capacidad" variant="outlined" value={capacity} onChange={(e) => setCapacity(e.target.value)} />
+                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Año" variant="outlined" value={year} onChange={(e) => setYear(e.target.value)} />
                   </ThemeProvider>
                 </div>
                 </div>
@@ -102,7 +98,7 @@ export const TopTable = () => {
                 </div>
                 <div>
                   <ThemeProvider theme={theme}>
-                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Año" variant="outlined" value={year} onChange={(e) => setYear(e.target.value)} />
+                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Capacidad" variant="outlined" value={capacity} onChange={(e) => setCapacity(e.target.value)} />
                   </ThemeProvider>
                 </div>
                 <div>
@@ -112,7 +108,7 @@ export const TopTable = () => {
                 </div>
               </div>
             </div>
-            <div className="button-create-route">
+            <div className="button-create-truck">
               <Button
                 variant="contained"
                 disableElevation
