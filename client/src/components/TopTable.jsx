@@ -6,10 +6,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 
 const style = {
   position: 'relative',
@@ -23,7 +19,6 @@ const style = {
   borderRadius: 3,
 };
 
-const userController = new User();
 const truckController = new Truck();
 
 export const TopTable = () => {
@@ -35,25 +30,9 @@ export const TopTable = () => {
   const [model, setModel] = React.useState("");
   const [year, setYear] = React.useState("");
   const [capacity, setCapacity] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [identification, setIdentification] = React.useState("");
-  const [identifications, setIdentifications] = React.useState("");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await userController.getListIdentifications();
-        setIdentifications(response);
-      } catch (error) {
-        console.error('Hubo un error al cargar los datos:', error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const handleCreate = async () => {
     const mileageInt = parseInt(mileage);
@@ -79,25 +58,6 @@ export const TopTable = () => {
     }
   };  
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      if (identification) {
-        try {
-          const response = await userController.getUserByIdentification(identification);
-          setUserId(response.id);
-          setName(response.name);
-          setLastName(response.lastName);
-        } catch (error) {
-          console.error('Hubo un error al obtener los datos del usuario:', error);
-        }
-      }
-    };
-    fetchData();
-  }, [identification]);  
-
-  const handleChangeIdentification = (event) => {
-    setIdentification(event.target.value);
-  };
 
   return (
     <div className='div-top-table'>
@@ -120,39 +80,16 @@ export const TopTable = () => {
               <div className='div-create-truck-left'>
                 <div>
                   <ThemeProvider theme={theme}>
-                      <FormControl sx={{ width: '370px'}}  variant="outlined">
-                          <InputLabel id="demo-simple-select-label">Identificacion</InputLabel>
-                          <Select
-                              labelId="demo-simple-select-label"
-                              id="demo-simple-select"
-                              value={identification}
-                              label="Identificacion"
-                              onChange={handleChangeIdentification}
-                          >
-                              {identifications && identifications.map((identification) => (
-                              <MenuItem key={identification.identification} value={identification.identification}>{identification.identification}</MenuItem>
-                              ))}
-                          </Select>
-                      </FormControl>
-                  </ThemeProvider>
-                </div>
-                <div>
-                  <ThemeProvider theme={theme}>
-                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Nombre" variant="outlined" value={name} />
-                  </ThemeProvider>
-                </div>
-                <div>
-                  <ThemeProvider theme={theme}>
-                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Apellido" variant="outlined" value={lastName} />
-                  </ThemeProvider>
-                </div>
-                <div>
-                  <ThemeProvider theme={theme}>
-                    <TextField sx={{ width: '370px', marginTop: '40px' }}id="outlined-basic" label="Placa" variant="outlined" value={licensePlate} onChange={(e) => setLicensePlate(e.target.value)} />
+                    <TextField sx={{ width: '370px' }}id="outlined-basic" label="Placa" variant="outlined" value={licensePlate} onChange={(e) => setLicensePlate(e.target.value)} />
                   </ThemeProvider>
                   <div>
                   <ThemeProvider theme={theme}>
                     <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Marca" variant="outlined" value={brand} onChange={(e) => setBrand(e.target.value)} />
+                  </ThemeProvider>
+                  </div>
+                  <div>
+                  <ThemeProvider theme={theme}>
+                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Capacidad" variant="outlined" value={capacity} onChange={(e) => setCapacity(e.target.value)} />
                   </ThemeProvider>
                 </div>
                 </div>
@@ -170,17 +107,12 @@ export const TopTable = () => {
                 </div>
                 <div>
                   <ThemeProvider theme={theme}>
-                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Capacidad" variant="outlined" value={capacity} onChange={(e) => setCapacity(e.target.value)} />
-                  </ThemeProvider>
-                </div>
-                <div>
-                  <ThemeProvider theme={theme}>
                     <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Kilometraje" variant="outlined" value={mileage} onChange={(e) => setMileage(e.target.value)} />
                   </ThemeProvider>
                 </div>
               </div>
             </div>
-            <div className="button-create-truck">
+            <div className="button-create-route">
               <Button
                 variant="contained"
                 disableElevation
