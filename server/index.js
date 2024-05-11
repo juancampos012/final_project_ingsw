@@ -8,9 +8,10 @@ require('dotenv').config();
 
 const app = express();
 
-const userRoutes = require('./src/routes/UserRoutes')
-const truckRoutes = require('./src/routes/TruckRoutes')
-const tripRoutes = require('./src/routes/TripRoutes')
+const userRoutes = require('./src/routes/UserRoutes');
+const truckRoutes = require('./src/routes/TruckRoutes');
+const tripRoutes = require('./src/routes/TripRoutes');
+const tireRoutes = require('./src/routes/TireRoutes');
 
 const PORT = process.env.PORT || 4000;
 
@@ -36,6 +37,9 @@ app.use('/api/v1/trucks', truckRoutes);
 
 // http://localhost:3006/api/v1/trips
 app.use('/api/v1/trips', tripRoutes);
+
+// http://localhost:3006/api/v1/tires
+app.use('/api/v1/tires', tireRoutes);
 
 //connect to mongo
 const getConnection = async () => {
