@@ -232,7 +232,6 @@ body{
     display: flex;
     justify-content: center;
     margin-top: 40px;
-    margin-bottom: 50px;
 }
 
 .div-autocomplete-map h3{
@@ -284,8 +283,18 @@ body{
 .social-icons{
     height: 50px;
     width: 50px;
-    object-fit: cover;
+    object-fit: cover;  
     margin: 10px;
+}
+
+.button-create-truck{
+    margin-bottom: 40px;
+}
+
+.div-map-footer{
+    display: flex;
+    justify-content: center;
+    margin-top: -15px;
 }
 
 .cards-comp-container {
@@ -338,4 +347,3 @@ body{
 .card-content h2 {
     margin-top: 0;
 }
-
