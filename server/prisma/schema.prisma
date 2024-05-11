@@ -70,9 +70,8 @@ model address{
 model tire {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   brand       String
-  wear        Float?
-  mileage     Int?
-  position    Int
+  model       String
+  wear        Float
   truck       truck     @relation(fields: [truckId], references: [id])
   truckId     String    @db.ObjectId
 }
@@ -100,8 +99,7 @@ model fuel {
 model maintenance {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   type        String
-  startDate   DateTime
-  finalDate   DateTime
+  date        DateTime
   cost        Float
   truck       truck     @relation(fields: [truckId], references: [id])
   truckId     String    @db.ObjectId
