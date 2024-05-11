@@ -18,6 +18,7 @@ import { TopRoutes } from './components/TopRoutes';
 import { TableDrivers } from './components/TableDrivers';
 import { TableCars } from './components/TableCars'
 import { Footer } from './components/HomeFooter';
+import { CardsComponent } from './components/CardsComponent'; 
 
 function App() {
   return (
@@ -71,6 +72,9 @@ function App() {
             <div>
               <Navbar/>
               <WelcomeComponent/>
+              <div id="about">
+                <CardsComponent />
+              </div>
               <Footer/>
             </div>
           </RequireAuth>
@@ -85,6 +89,7 @@ function App() {
             </div>
           </RequireAuth>
         } />
+        <Route path="/about" element={<RequireAuth><CardsComponent /></RequireAuth>} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
