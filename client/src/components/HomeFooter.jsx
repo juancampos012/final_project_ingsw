@@ -46,21 +46,9 @@ export const Footer = () => {
             </ul>
         </div>
         <div className="footer-map">
-        {/*<GoogleMap
-        <LoadScript googleMapsApiKey="AIzaSyAf2AHLtGvjMJouKecs0kkw1AQw2YTZfdc">
-        <div className='div-map-footer'>  
-            id='direction-example'
-            mapContainerStyle={{
-                height: "23vh",
-                width: "95%"
-            }}
-            zoom={8}
-            center={defaultCenter} 
-            >
-            <Marker position={defaultCenter} />
-        </div>
-        </LoadScript>
-        </GoogleMap>*/}
+            {/* <GoogleMap>
+
+            </GoogleMap> */}
         </div>
         <div className="footer-social">
             <InstagramIcon className='social-icons'></InstagramIcon>
