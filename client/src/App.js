@@ -19,7 +19,6 @@ import { TableDrivers } from './components/TableDrivers';
 import { TableCars } from './components/TableCars'
 import { Footer } from './components/HomeFooter';
 import { CardsComponent } from './components/CardsComponent'; 
-import { Tires } from './components/Tires';
 
 function App() {
   return (
@@ -54,7 +53,6 @@ function App() {
               <Navbar/>
               <TopTable/>
               <TableCars/>
-              <Footer/>
             </div>
           </RequireAuth>
         } />
@@ -65,7 +63,6 @@ function App() {
               <Navbar/>
               <TopTableDrivers/>
               <TableDrivers/>
-              <Footer/>
             </div>
           </RequireAuth>
         } />
@@ -89,20 +86,10 @@ function App() {
               <Navbar/>
               <TopRoutes/>
               <MapComponent/>
-              <Footer/>
             </div>
           </RequireAuth>
         } />
-        <Route path="/tires-admin" 
-        element={
-          <RequireAuth>
-            <div>
-              <Navbar/>
-              <Tires/>
-              <Footer/>
-            </div>
-          </RequireAuth>
-        } />
+        <Route path="/about" element={<RequireAuth><CardsComponent /></RequireAuth>} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
