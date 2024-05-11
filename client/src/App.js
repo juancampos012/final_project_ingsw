@@ -87,7 +87,6 @@ function App() {
           <RequireAuth>
             <div>
               <Navbar/>
-              <TopRoutes/>
               <MapComponent/>
               <Footer/>
             </div>
