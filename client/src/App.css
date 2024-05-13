@@ -339,3 +339,12 @@ body{
     margin-top: 0;
 }
 
+.column {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow-y: scroll;
+}
+
+.column::-webkit-scrollbar {
+    display: none;
+}

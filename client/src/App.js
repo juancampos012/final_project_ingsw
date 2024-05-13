@@ -19,6 +19,7 @@ import { TableDrivers } from './components/TableDrivers';
 import { TableCars } from './components/TableCars'
 import { Footer } from './components/HomeFooter';
 import { CardsComponent } from './components/CardsComponent'; 
+import KanbaBoard from './components/Kanba/KanbaBoard';
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
               <Navbar/>
               <TopTableDrivers/>
               <TableDrivers/>
+              <KanbaBoard/>
             </div>
           </RequireAuth>
         } />
