@@ -14,28 +14,28 @@ export const CardsComponent = () => {
         </div>
         <div className="cards-container">
             <div className="card">
-            <img src={truckimg} alt="Background image" />
+            <img src={truckimg} alt="Background" />
                 <div className="card-content">
                     <h2>Flota</h2>
                     <p className="card-text">Rápidez y eficacia en <br/> la carga y entrega</p>
                 </div>
             </div>
             <div className="card">
-            <img src={boximg} alt="Background image" />
+            <img src={boximg} alt="Background" />
                 <div className="card-content">
                     <h2>Paquetes</h2>
                     <p className="card-text">Todo tipo de paquetes <br/>requeridos para transportar.</p>
                 </div>
             </div>
             <div className="card">
-            <img src={mapimg} alt="Background image" />
+            <img src={mapimg} alt="Background" />
                 <div className="card-content">
                     <h2>Presencia</h2>
                     <p className="card-text">Ofrecemos nuestros servicios <br/> a nivel nacional.</p>
                 </div>
             </div>
             <div className="card">
-            <img src={trackingimg} alt="Background image" />
+            <img src={trackingimg} alt="Background" />
                 <div className="card-content">
                     <h2>Tracking</h2>
                     <p className="card-text">Rastreo disponible del <br/> paquete transportado.</p>

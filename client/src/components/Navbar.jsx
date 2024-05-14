@@ -130,6 +130,11 @@ export const Navbar = () => {
       handleDrawerClose();
     };
 
+    const handleTires = () => {
+      navigate('/tires-admin');
+      handleDrawerClose();
+    };
+
     const handleViewProfile = () => {
         navigate('/view-profile');
     };
@@ -306,7 +311,7 @@ export const Navbar = () => {
                   </ListItemButtonStyled>
                 </ListItem>
                 <ListItem key={'Neumaticos'} disablePadding>
-                  <ListItemButtonStyled onClick={handlePrincipal}>
+                  <ListItemButtonStyled onClick={handleTires}>
                     <ListItemIcon>
 
                     </ListItemIcon>

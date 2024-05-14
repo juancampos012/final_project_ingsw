@@ -14,12 +14,12 @@ import { TopTable } from './components/TopTable';
 import { TopTableDrivers } from './components/TopTableDirvers';
 import { WelcomeComponent } from './components/WelcomeHome';
 import { MapComponent } from './components/RoutesMap';
-import { TopRoutes } from './components/TopRoutes';
 import { TableDrivers } from './components/TableDrivers';
 import { TableCars } from './components/TableCars'
 import { Footer } from './components/HomeFooter';
 import { CardsComponent } from './components/CardsComponent'; 
 import KanbaBoard from './components/Kanba/KanbaBoard';
+import { Tires } from './components/Tires';
 
 function App() {
   return (
@@ -54,6 +54,7 @@ function App() {
               <Navbar/>
               <TopTable/>
               <TableCars/>
+              <Footer/>
             </div>
           </RequireAuth>
         } />
@@ -65,6 +66,7 @@ function App() {
               <TopTableDrivers/>
               <TableDrivers/>
               <KanbaBoard/>
+              <Footer/>
             </div>
           </RequireAuth>
         } />
@@ -86,12 +88,21 @@ function App() {
           <RequireAuth>
             <div>
               <Navbar/>
-              <TopRoutes/>
               <MapComponent/>
+              <Footer/>
             </div>
           </RequireAuth>
         } />
-        <Route path="/about" element={<RequireAuth><CardsComponent /></RequireAuth>} />
+        <Route path="/tires-admin" 
+        element={
+          <RequireAuth>
+            <div>
+              <Navbar/>
+              <Tires/>
+              <Footer/>
+            </div>
+          </RequireAuth>
+        } />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
