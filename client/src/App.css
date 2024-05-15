@@ -357,3 +357,16 @@ body{
 .column::-webkit-scrollbar {
     display: none;
 }
+
+.div-top-tires{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Lato', sans-serif;
+}
+
+.div-top-tires h3{
+    font-size: 250%;
+    font-family: 'Lato', sans-serif;
+}

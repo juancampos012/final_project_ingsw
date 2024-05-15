@@ -44,6 +44,9 @@ export default function KanbaBoard  () {
             case "4":
                 setBacklog(removeItemById(taskId, backlog));
                 break;
+            default:
+                // Handle the case where destinationDroppableId doesn't match any of the specified cases
+                break;
         }
 
     }
@@ -66,14 +69,17 @@ export default function KanbaBoard  () {
                 updatedTask = { ...task, completed: false };
                 setBacklog([updatedTask, ...backlog]);
                 break;
+            default:
+                // Handle the case where destinationDroppableId doesn't match any of the specified cases
+                break;
         }
-    }
+    }    
     function findItemById(id, array) {
-        return array.find((item) => item.id == id);
+        return array.find((item) => item.id === id);
     }
 
     function removeItemById(id, array) {
-        return array.filter((item) => item.id != id);
+        return array.filter((item) => item.id !== id);
     }
 
     return (

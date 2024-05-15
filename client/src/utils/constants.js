@@ -25,5 +25,9 @@ export const ENV ={
     },
     API_ROUTES_TRIP:{
         NEWTRIP: "trips/new-trip",
+    },
+    API_ROUTES_TIRE:{
+        NEWTRIP: "trips/new-trip",
     }
+    
 }
