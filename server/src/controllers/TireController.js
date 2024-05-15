@@ -4,17 +4,17 @@ const prisma = new PrismaClient();
 
 const createTire = async (req, res) => {
     try{
-        const { brand, model, wear, truck} = req.body;
+        const { brand, mileage, position, wear, truckId} = req.body;
         const tire = await prisma.tire.create({
             data: {
                 brand,
-                model,
+                mileage,
+                position,
                 wear, 
-                truck, 
-                
+                truckId, 
             },
         });
-        res.status(201).json({truck});
+        res.status(201).json({tire});
     }catch(error){
         console.error(error);
         res.status(500).json({error: "Something went wrong"});
@@ -37,6 +37,21 @@ const getTirebyId = async (req, res) => {
         const {id} = req.query; 
         const tire = await prisma.tire.findUnique({
             where: { id: id },
+        });
+        res.status(200).json(tire);
+    }catch(error){
+        res.status(400).json({message: error.message});
+    }
+}
+
+const getTireByTruckId = async (req, res) => {
+    try{
+        const { truckId, position } = req.query; 
+        const tire = await prisma.tire.findFirst({
+            where: { 
+                truckId: truckId,
+                position: parseInt(position)
+            },
         });
         res.status(200).json(tire);
     }catch(error){
@@ -74,4 +89,4 @@ const updateTireById = async (req, res) => {
     }
 }
 
-module.exports = {createTire, getListTires , getTirebyId , deleteTire, updateTireById }
+module.exports = {createTire, getListTires , getTirebyId , deleteTire, updateTireById, getTireByTruckId }
