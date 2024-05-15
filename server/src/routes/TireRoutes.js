@@ -5,6 +5,7 @@ const userController = require("../controllers/TireController")
 router.post('/new-tire', userController.createTire);
 router.get("/list-tire", userController.getListTires); 
 router.get("/get-tire-id", userController.getTirebyId); 
+router.get("/get-tire-by-truck-id", userController.getTireByTruckId); 
 router.patch("/update-tire", userController.updateTireById); 
 router.delete("/delete-tire", userController.deleteTire); 
 
