@@ -43,7 +43,7 @@ model truck {
   capacity      Int
   actualStatus  String?   @default("En operación")
   tires         tire[]
-  fuel          fuel[]
+  refueling     refueling[]
   maintenances  maintenance[]
   userTrucks    userTruck[]
 }
@@ -88,7 +88,7 @@ model trip {
 }
 
 
-model fuel {
+model refueling {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   quantity    Float
   cost        Float
