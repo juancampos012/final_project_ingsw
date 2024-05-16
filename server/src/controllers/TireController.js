@@ -4,13 +4,15 @@ const prisma = new PrismaClient();
 
 const createTire = async (req, res) => {
     try{
-        const { brand, mileage, position, wear, truckId} = req.body;
+        const { brand, mileage, position, wear, velocityIndex, wetGrip, truckId} = req.body;
         const tire = await prisma.tire.create({
             data: {
                 brand,
                 mileage,
                 position,
                 wear, 
+                velocityIndex,
+                wetGrip,
                 truckId, 
             },
         });
@@ -78,10 +80,10 @@ const deleteTire = async (req, res) => {
 const updateTireById = async (req, res) => {
     try{
         const {id} = req.body;
-        const { brand, model, wear, truck} = req.body;
+        const { brand, mileage, wear, position, velocityIndex, wetGrip, truck} = req.body;
         const tire = await prisma.tire.update({
             where: { id: id},
-            data: { brand, model, wear, truck},
+            data: { brand, mileage, wear, position, velocityIndex, wetGrip, truck},
         });
         res.status(201).json(tire);
     }catch(error){

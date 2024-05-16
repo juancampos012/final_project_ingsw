@@ -73,6 +73,8 @@ model tire {
   wear        Float?
   mileage     Int?
   position    Int
+  velocityIndex Int
+  wetGrip     String
   truck       truck     @relation(fields: [truckId], references: [id])
   truckId     String    @db.ObjectId
 }
