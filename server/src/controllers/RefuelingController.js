@@ -4,17 +4,16 @@ const prisma = new PrismaClient();
 
 const createRefueling = async (req, res) => {
     try{
-        const { quantity, cost, efficiency, truck} = req.body;
+        const { quantity, cost, efficiency, truckId} = req.body;
         const refueling = await prisma.refueling.create({
             data: {
                 quantity,
                 cost,
                 efficiency, 
-                truck, 
-                
+                truckId, 
             },
         });
-        res.status(201).json({truck});
+        res.status(201).json(refueling);
     }catch(error){
         console.error(error);
         res.status(500).json({error: "Something went wrong"});
@@ -63,10 +62,10 @@ const deleteRefueling = async (req, res) => {
 const updateRefuelingById = async (req, res) => {
     try{
         const {id} = req.body;
-        const { quantity, cost, efficiency, truck} = req.body;
+        const { quantity, cost, efficiency, truckId} = req.body;
         const refueling = await prisma.refueling.update({
             where: { id: id},
-            data: { quantity, cost, efficiency, truck},
+            data: { quantity, cost, efficiency, truckId},
         });
         res.status(201).json(refueling);
     }catch(error){
