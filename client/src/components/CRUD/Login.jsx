@@ -49,11 +49,6 @@ export const Login = () => {
       }
   };
 
-  const handleSignupClick = () => {
-    navigate('/signup-personal-data');
-  };
-
-
   return (
     <>
         <div className='div-login'>
@@ -94,9 +89,6 @@ export const Login = () => {
                                 /> 
                             </FormControl>
                         </ThemeProvider>
-                        <Button onClick={handleSignupClick} style={{color: 'black'}} disableRipple sx={{ '&:hover': { backgroundColor: 'transparent', }}}>
-                          Crear usuario
-                        </Button>
                     </div>
                     <div className="button-login">
                         <Button 
