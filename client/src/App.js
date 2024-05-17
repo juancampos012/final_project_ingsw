@@ -18,8 +18,8 @@ import { TableDrivers } from './components/TableDrivers';
 import { TableCars } from './components/TableCars'
 import { Footer } from './components/HomeFooter';
 import { CardsComponent } from './components/CardsComponent'; 
-import KanbaBoard from './components/Kanba/KanbaBoard';
 import { Tires } from './components/Tires';
+import { Refueling } from './components/Refueling';
 
 function App() {
   return (
@@ -65,7 +65,6 @@ function App() {
               <Navbar/>
               <TopTableDrivers/>
               <TableDrivers/>
-              <KanbaBoard/>
               <Footer/>
             </div>
           </RequireAuth>
@@ -99,6 +98,16 @@ function App() {
             <div>
               <Navbar/>
               <Tires/>
+              <Footer/>
+            </div>
+          </RequireAuth>
+        } />
+        <Route path="/refueling-admin" 
+        element={
+          <RequireAuth>
+            <div>
+              <Navbar/>
+              <Refueling/>
               <Footer/>
             </div>
           </RequireAuth>
