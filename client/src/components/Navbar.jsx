@@ -130,6 +130,11 @@ export const Navbar = () => {
       handleDrawerClose();
     };
 
+    const handleRefueling = () => {
+      navigate('/refueling-admin');
+      handleDrawerClose();
+    };
+
     const handleTires = () => {
       navigate('/tires-admin');
       handleDrawerClose();
@@ -303,7 +308,7 @@ export const Navbar = () => {
                   </ListItemButtonStyled>
                 </ListItem>
                 <ListItem key={'Combustible'} disablePadding>
-                  <ListItemButtonStyled onClick={handlePrincipal}>
+                  <ListItemButtonStyled onClick={handleRefueling}>
                     <ListItemIcon>
 
                     </ListItemIcon>

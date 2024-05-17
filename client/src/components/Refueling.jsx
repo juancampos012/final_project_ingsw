@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Truck } from '../request/trucks';
-import { Tire } from '../request/tires';
+import { Refueling } from '../request/refuelings';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
@@ -12,15 +12,14 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 const truckController = new Truck();
-const tireController = new Tire();
+const refuelingController = new Refueling();
 
-export const Tires = () => {
+export const RefuelingComponent = () => {
   const [open, setOpen] = React.useState(false);
-  const [hoveredWheel, setHoveredWheel] = useState(null);
-  const [brandTruck, setBrandTruck] = React.useState("");
-  const [brand, setBrand] = React.useState("");
-  const [wear, setWear] = React.useState("");
-  const [mileage, setMileage] = React.useState("");
+  const [quantity, setQuantity] = useState("");
+  const [cost, setCost] = useState("");
+  const [efficiency, setEfficiency] = useState("");
+  const [brandTruck, setBrandTruck] = useState("");
   const [model, setModel] = React.useState("");
   const [licensePlates, setLicensePlates] = React.useState("");
   const [licensePlate, setLicensePlate] = React.useState("");
@@ -35,9 +34,9 @@ export const Tires = () => {
   }
   const handleClose = () =>{
     setOpen(false);
-    setBrand("");
-    setMileage("");
-    setWear("");
+    setCost("");
+    setEfficiency("");
+    setQuantity("");
   }
 
   React.useEffect(() => {
@@ -72,73 +71,37 @@ export const Tires = () => {
     setLicensePlate(event.target.value);
   };
 
-  const Wheel = ({ onClick, isHovered, wheelNumber }) => {
-
-    const handleClick = async () => {
-      onClick();
-    };
-
-    return (
-      <div style={{ position: 'relative', display: 'inline-block' }}>
-        <div
-          style={{
-            width: '40px',
-            height: '70px',
-            borderRadius: '7px',
-            backgroundColor: isHovered ? 'rgb(54, 54, 54)' : 'black',
-            cursor: 'pointer'
-          }}
-          onMouseEnter={() => setHoveredWheel(wheelNumber)}
-          onMouseLeave={() => setHoveredWheel(null)}
-          onClick={handleClick}
-        />
-      </div>
-    );
-  };
-
-  const Circle = () => (
-    <div style={{ width: '35px', height: '35px', borderRadius: '50%', backgroundColor: 'grey' }} />
-  );
-
-  const Stick = () => (
-    <div style={{ width: '180px', height: '10px', backgroundColor: 'grey', alignSelf: 'center' }} />
-  );
-
-  const VerticalStick = () => (
-    <div style={{ height: '100px', width: '10px', backgroundColor: 'grey', alignSelf: 'center' }} />
-  );
-
-  const VerticalStickLarge = () => (
-    <div style={{ height: '200px', width: '10px', backgroundColor: 'grey', alignSelf: 'center' }} />
-  );
-
   const handleCreate = async () => {
-    const mileageInt = parseInt(mileage);
-    const wearInt = parseInt(wear);
     try {
-      const data = {
-        brand,
-        position: hoveredWheel,
-        truckId, 
-        wear: wearInt,
-        mileage: mileageInt,
-      };
-      console.log(data);
-      const response = await tireController.newTire(data);
-      response.status === 201
-        ? alert("Creacion exitosa")
-        : alert("Error al crear la llanta");
-    } catch (error) {
-      console.error(error);
-      alert("Ocurrió un error al intentar crear el camion");
-    }
+        if (isNaN(cost) || isNaN(quantity) || isNaN(efficiency)) {
+          alert("Por favor, introduce solo números");
+        } else {
+          const cosInt = parseInt(cost);
+          const quantityInt = parseInt(quantity);
+          const efficiencyInt = parseInt(efficiency);
+          const data = {
+            cost: cosInt,
+            quantity: quantityInt,
+            efficiency: efficiencyInt, 
+            truckId
+          };
+          const response = await refuelingController.newRefueling(data);
+          response.status === 201
+          ? alert("Creacion exitosa")
+          : alert("Error al crear el reabastesimiento");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Ocurrió un error al intentar crear el camion");
+      }
+      
   };  
 
   return (
     <>
     
       <div className='div-top-tires'>
-        <h3>Llantas</h3>
+        <h3>Combustible</h3>
         <div>
                 <ThemeProvider theme={theme}>
                   <FormControl sx={{ width: '370px', marginBottom: '40px' }}  variant="outlined">
@@ -167,38 +130,17 @@ export const Tires = () => {
                   <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Modelo" variant="outlined" value={model} />
                 </ThemeProvider>
               </div>
+              <div className="button-create-truck">
+              <Button
+                variant="contained"
+                disableElevation
+                onClick={handleOpen}
+              >
+                Abastecer
+              </Button>
+            </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' , marginBottom: '200px' }}>
-        <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '-55px' }}>
-          <Circle />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '200px' }}>
-          <Wheel onClick={handleOpen} isHovered={hoveredWheel === 1} wheelNumber={1} />
-          <Stick />
-          <Wheel onClick={handleOpen} isHovered={hoveredWheel === 2} wheelNumber={2} />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '-40px' }}>
-          <VerticalStickLarge />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'row', marginTop: '-3px', marginBottom: '-23px' }}>
-          <Circle />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '200px', marginTop: '-30px' }}>
-          <Wheel onClick={handleOpen} isHovered={hoveredWheel === 3} wheelNumber={3} />
-          <Stick />
-          <Wheel onClick={handleOpen} isHovered={hoveredWheel === 4} wheelNumber={4} />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '-40px' }}>
-          <VerticalStick />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'row', marginTop: '-3px', marginBottom: '-23px' }}>
-          <Circle />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '200px', marginTop: '-30px' }}>
-          <Wheel onClick={handleOpen} isHovered={hoveredWheel === 5} wheelNumber={5} />
-          <Stick />
-          <Wheel onClick={handleOpen} isHovered={hoveredWheel === 6} wheelNumber={6} />
-        </div>
         <div >
         <Modal
           open={open}
@@ -208,28 +150,23 @@ export const Tires = () => {
         >
           <Box sx={style}>
             <div className='text-login'>
-              <h2>Nueva llanta</h2>
+              <h2>Cargar combustible</h2>
             </div>
             <div className='div-create-truck'>
             <div className='div-create-truck-rigth'>
               <div>
                 <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Posición" variant="outlined" value={hoveredWheel} />
+                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Cantidad" variant="outlined" value={quantity} onChange={(e) => setQuantity(e.target.value)}/>
                 </ThemeProvider>
               </div>
               <div>
                 <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Desgaste" variant="outlined" value={wear} onChange={(e) => setWear(e.target.value)}/>
+                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Eficiencia" variant="outlined" value={efficiency} onChange={(e) => setEfficiency(e.target.value)}/>
                 </ThemeProvider>
               </div>
               <div>
                 <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Marca llanta" variant="outlined" value={brand} onChange={(e) => setBrand(e.target.value)}/>
-                </ThemeProvider>
-              </div>
-              <div>
-                <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Kilometraje" variant="outlined" value={mileage} onChange={(e) => setMileage(e.target.value)}/>
+                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Costo" variant="outlined" value={cost} onChange={(e) => setCost(e.target.value)}/>
                 </ThemeProvider>
               </div>
             </div>

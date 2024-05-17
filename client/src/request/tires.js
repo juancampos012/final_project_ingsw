@@ -1,6 +1,6 @@
 import { ENV } from "../utils/constants";
 
-export class Trip {
+export class Tire {
     base_api = ENV.BASE_API;
     async newTire(data) {
         const url = `${this.base_api}/${ENV.API_ROUTES_TIRE.NEWTIRE}`;
