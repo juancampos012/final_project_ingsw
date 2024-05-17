@@ -29,6 +29,8 @@ export const ENV ={
     API_ROUTES_TIRE:{
         NEWTIRE: "tires/new-tire",
         GETTIREBYTRUCKID: "tires/get-tire-by-truck-id",  
+    },
+    API_ROUTES_REFUELING:{
+        NEWREFUELING: "refueling/new-refueling",
     }
-    
 }
