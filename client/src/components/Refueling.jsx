@@ -14,7 +14,7 @@ import Select from '@mui/material/Select';
 const truckController = new Truck();
 const refuelingController = new Refueling();
 
-export const Refueling = () => {
+export const RefuelingComponent = () => {
   const [open, setOpen] = React.useState(false);
   const [quantity, setQuantity] = useState("");
   const [cost, setCost] = useState("");

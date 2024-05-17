@@ -19,7 +19,7 @@ import { TableCars } from './components/TableCars'
 import { Footer } from './components/HomeFooter';
 import { CardsComponent } from './components/CardsComponent'; 
 import { Tires } from './components/Tires';
-import { Refueling } from './components/Refueling';
+import { RefuelingComponent } from './components/Refueling';
 
 function App() {
   return (
@@ -107,7 +107,7 @@ function App() {
           <RequireAuth>
             <div>
               <Navbar/>
-              <Refueling/>
+              <RefuelingComponent/>
               <Footer/>
             </div>
           </RequireAuth>
