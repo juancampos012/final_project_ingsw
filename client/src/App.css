@@ -371,6 +371,14 @@ body{
     font-family: 'Lato', sans-serif;
 }
 
+.h1-kanba{
+    text-align: center;
+}
+
+.drag-and-drop{
+    justify-content: center;
+}
+
 .column{
     display: flex;
     flex-direction: column;

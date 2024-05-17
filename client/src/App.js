@@ -18,6 +18,7 @@ import { TableDrivers } from './components/TableDrivers';
 import { TableCars } from './components/TableCars'
 import { Footer } from './components/HomeFooter';
 import { CardsComponent } from './components/CardsComponent'; 
+import { KanbaBoard } from './components/KanbaBoard';
 import { Tires } from './components/Tires';
 import { RefuelingComponent } from './components/Refueling';
 
