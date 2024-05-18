@@ -30,6 +30,7 @@ model user{
   avatar          String?
   role            String? @default("user")
   address         address?
+  createdAt DateTime @default(now())
   userTrucks      userTruck[]
 }
 
@@ -68,15 +69,16 @@ model address{
 }
 
 model tire {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
   brand       String
   wear        Float?
   mileage     Int?
   position    Int
   velocityIndex Int
   wetGrip     String
-  truck       truck     @relation(fields: [truckId], references: [id])
-  truckId     String    @db.ObjectId
+  createdAt   DateTime    @default(now())
+  truck       truck       @relation(fields: [truckId], references: [id])
+  truckId     String      @db.ObjectId
 }
 
 model trip {
@@ -85,6 +87,7 @@ model trip {
   destinationPlace  String
   distance          Float
   time              Float
+  completed         Boolean    @default(false)
   userTruck         userTruck  @relation(fields: [userTruckId], references: [id])
   userTruckId       String     @db.ObjectId
 }
@@ -105,6 +108,7 @@ model maintenance {
   startDate   DateTime
   finalDate   DateTime
   cost        Float
+  completed   Boolean   @default(false)
   truck       truck     @relation(fields: [truckId], references: [id])
   truckId     String    @db.ObjectId
 }
