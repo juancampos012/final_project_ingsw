@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-d
 import { Login } from './components/CRUD/Login';
 import React from 'react';
 import { Navbar } from './components/Navbar';
-import RequireAuth from './components/RequireAuth';
+import RequireAuthAdmin from './components/REQUIREAUTH/RequireAuthAdmin';
+import RequireAuthUser from './components/REQUIREAUTH/RequireAuthUser';
+import RequireAuth from './components/REQUIREAUTH/RequireAuth'
 import { SingupPersonalData } from './components/CRUD/SingupPersonalData';
 import { SingupDataLog } from './components/CRUD/SingupDataLog';
 import { UpdatePersonalData } from './components/CRUD/UpdatePersonalData';
@@ -50,29 +52,29 @@ function App() {
         } />
         <Route path="/trucks-admin" 
         element={
-          <RequireAuth>
+          <RequireAuthAdmin>
             <div>
               <Navbar/>
               <TopTable/>
               <TableCars/>
               <Footer/>
             </div>
-          </RequireAuth>
+          </RequireAuthAdmin>
         } />
         <Route path="/drivers-admin" 
         element={
-          <RequireAuth>
+          <RequireAuthAdmin>
             <div>
               <Navbar/>
               <TopTableDrivers/>
               <TableDrivers/>
               <Footer/>
             </div>
-          </RequireAuth>
+          </RequireAuthAdmin>
         } />
         <Route path="/home" 
         element={
-          <RequireAuth>
+          <RequireAuthAdmin>
             <div>
               <Navbar/>
               <WelcomeComponent/>
@@ -81,37 +83,37 @@ function App() {
               </div>
               <Footer/>
             </div>
-          </RequireAuth>
+          </RequireAuthAdmin>
         } />
         <Route path="/routes-admin" 
         element={
-          <RequireAuth>
+          <RequireAuthAdmin>
             <div>
               <Navbar/>
               <MapComponent/>
               <Footer/>
             </div>
-          </RequireAuth>
+          </RequireAuthAdmin>
         } />
         <Route path="/tires-admin" 
         element={
-          <RequireAuth>
+          <RequireAuthAdmin>
             <div>
               <Navbar/>
               <Tires/>
               <Footer/>
             </div>
-          </RequireAuth>
+          </RequireAuthAdmin>
         } />
         <Route path="/refueling-admin" 
         element={
-          <RequireAuth>
+          <RequireAuthAdmin>
             <div>
               <Navbar/>
               <RefuelingComponent/>
               <Footer/>
             </div>
-          </RequireAuth>
+          </RequireAuthAdmin>
         } />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>

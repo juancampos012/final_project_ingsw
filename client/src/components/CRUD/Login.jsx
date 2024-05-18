@@ -36,6 +36,7 @@ export const Login = () => {
           const response = await userController.login(data);
           const responseData = await response.json();
           if(response.status === 200){
+            const role = responseData.user.role;
             const token = responseData.token; 
             await userController.createCookie("jwt", token);
             navigate('/home');
