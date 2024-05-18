@@ -392,27 +392,27 @@ body{
 }
 
 .column--1{
-    border-color: #FF9E4A;
+    border-color: #0e0505;
 }
 
 .column--1 .title{
-    color: #FF9E4A;
+    color: #6a6968;
 }
 
 .column--2{
-    border-color: #C56BE2;
+    border-color: #878488;
 }
 
 .column--2 .title{
-    color: #C56BE2;
+    color: #010101;
 }
 
 .column--3{
-    border-color: #6FD2AF;
+    border-color: #000000;
 }
 
 .column--3 .title{
-    color: #6FD2AF;
+    color: #878488;
 }
 
 /* DRAG AND DROP */
