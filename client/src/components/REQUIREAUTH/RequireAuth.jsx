@@ -5,37 +5,27 @@ import Cookies from 'js-cookie';
 
 const userController = new User();
 
-const RequireAuth = ({ children }) => {
+const RequireAuth =  ({ children }) => {
     const miCookie = Cookies.get('jwt');
-    const [status, setStatus] = React.useState(null);
-    const [loading, setLoading] = React.useState(true);
+    const [status, setStatus] = React.useState(null); 
+    const [loading, setLoading] = React.useState(true); 
 
     React.useEffect(() => {
-        if (!miCookie) {
-            setStatus(401);
-            setLoading(false);
-            return;
-        }
-
         userController.verifyToken(miCookie)
-            .then(response => response.json())
-            .then(data => {
-                setStatus(data.status);
-            })
-            .catch(error => {
-                console.error(error);
-                setStatus(401);
-                setLoading(false);
-            });
-    }, [miCookie]);
+        .then(data => {
+            setStatus(data.status);
+            setLoading(false);
+        }).catch(error => {
+            console.error(error); 
+            setLoading(false); 
+        });
+    }, [miCookie]); 
 
     if (loading) {
-        return null;
-    }
-    if (status === 401) {
+        return null; 
+    } else if (status === 401) {
         return <Navigate to="/login" />;
     }
-
     return children;
 };
 

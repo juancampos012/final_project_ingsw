@@ -8,6 +8,8 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { User } from '../request/users'; 
+import { DeleteOutlined } from '@ant-design/icons';
+import IconButton from '@mui/material/IconButton';
 
 const userController = new User();
 
@@ -15,6 +17,7 @@ const columns = [
   { id: 'name', label: 'Nombre', minWidth: 170 },
   { id: 'lastName', label: 'Apellido', minWidth: 170 },
   { id: 'identification', label: 'Identificación', minWidth: 170 },
+  { id: 'actions', label: '', minWidth: 50 },
 ];
 
 export const TableDrivers = () => {
@@ -43,6 +46,10 @@ export const TableDrivers = () => {
     setPage(0);
   };
 
+  const handleDelete = (identification) => {
+    setUsers(users.filter(user => user.identification !== identification));
+  };
+
   const startDrag = (evt, item) => {
     evt.dataTransfer.setData('itemID', item.identification); 
   }
@@ -66,9 +73,10 @@ export const TableDrivers = () => {
   }
 
   return (
+    <>
     <div className='div-table-drivers'>
       <Paper sx={{ width: '92%', overflow: 'hidden', marginBottom: '100px' }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
+        <TableContainer sx={{ maxHeight: 800 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -97,7 +105,7 @@ export const TableDrivers = () => {
                       onDragOver={draggingOver}
                       onDrop={(evt) => onDrop(evt, user.identification)} 
                     >
-                      {columns.map((column) => {
+                      {columns.slice(0, -1).map((column) => {
                         const value = user[column.id];
                         return (
                           <TableCell key={column.id} style={{ minWidth: column.minWidth, width: column.minWidth }}> 
@@ -107,6 +115,11 @@ export const TableDrivers = () => {
                           </TableCell>
                         );
                       })}
+                      <TableCell key="actions" style={{ minWidth: 50, width: 50 }}>
+                        <IconButton onClick={() => handleDelete(user.id)}>
+                          <DeleteOutlined />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -124,5 +137,6 @@ export const TableDrivers = () => {
         />
       </Paper>
     </div>
+    </>
   );
 }
