@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,6 +9,8 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { Truck } from '../request/trucks';
+import { DeleteOutlined } from '@ant-design/icons';
+import IconButton from '@mui/material/IconButton';
 
 const truckController = new Truck();
 
@@ -19,8 +21,7 @@ const columns = [
   { id: 'year', label: 'Modelo', minWidth: 170 },
   { id: 'actualStatus', label: 'Estado actual', minWidth: 170 },
   { id: 'mileage', label: 'Kilometraje', minWidth: 170 },
-  { id: 'placa', label: 'M. Preventivo', minWidth: 170 },
-  { id: 'name', label: 'Legales', minWidth: 170 },
+  { id: 'actions', label: '', minWidth: 120 }
 ];
 
 export const TableCars = () => {
@@ -28,7 +29,7 @@ export const TableCars = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [trucks, setTrucks] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await truckController.getListTrucks();
@@ -48,6 +49,10 @@ export const TableCars = () => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleDelete = async (licensePlate) => {
+    setTrucks(trucks.filter(truck => truck.licensePlate !== licensePlate));
   };
 
   const startDrag = (evt, item) => {
@@ -95,7 +100,7 @@ export const TableCars = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {trucks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((truck, index) => {
+              {trucks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((truck) => {
                 let statusColor = 'disabled';
                 if (truck.actualStatus === 'En operación') {
                   statusColor = 'success';
@@ -112,7 +117,7 @@ export const TableCars = () => {
                     onDragOver={draggingOver}
                     onDrop={(evt) => onDrop(evt, truck.licensePlate)}
                   >
-                    {columns.map((column) => {
+                    {columns.slice(0, -1).map((column) => {
                       const value = truck[column.id];
                       return (
                         <TableCell key={column.id} style={{ minWidth: column.minWidth, width: column.minWidth }}>
@@ -128,6 +133,11 @@ export const TableCars = () => {
                         </TableCell>
                       );
                     })}
+                    <TableCell key="actions" style={{ minWidth: 120, width: 120 }}>
+                      <IconButton onClick={() => handleDelete(truck.id)}>
+                        <DeleteOutlined />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 );
               })}

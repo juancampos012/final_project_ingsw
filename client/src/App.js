@@ -18,11 +18,12 @@ import { WelcomeComponent } from './components/WelcomeHome';
 import { MapComponent } from './components/RoutesMap';
 import { TableDrivers } from './components/TableDrivers';
 import { TableCars } from './components/TableCars'
-import { Footer } from './components/HomeFooter';
+import { Footer } from './components/Footer';
 import { CardsComponent } from './components/CardsComponent'; 
 import { KanbaBoard } from './components/KanbaBoard';
 import { Tires } from './components/Tires';
 import { RefuelingComponent } from './components/Refueling';
+import { NavbarUser } from './components/NavBarUser';
 
 function App() {
   return (
@@ -72,6 +73,19 @@ function App() {
             </div>
           </RequireAuthAdmin>
         } />
+        <Route path="/home-user" 
+        element={
+          <RequireAuthUser>
+            <div>
+              <NavbarUser/>
+              <WelcomeComponent/>
+              <div id="about">
+                <CardsComponent />
+              </div>
+              <Footer/>
+            </div>
+          </RequireAuthUser>
+        } />
         <Route path="/home" 
         element={
           <RequireAuthAdmin>
@@ -94,6 +108,16 @@ function App() {
               <Footer/>
             </div>
           </RequireAuthAdmin>
+        } />
+        <Route path="/tip-user" 
+        element={
+          <RequireAuthUser>
+            <div>
+              <NavbarUser/>
+              <KanbaBoard/>
+              <Footer/>
+            </div>
+          </RequireAuthUser>
         } />
         <Route path="/tires-admin" 
         element={

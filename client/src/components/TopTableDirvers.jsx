@@ -28,6 +28,7 @@ export const TopTableDrivers = () => {
   const [identificationTheme, setIdentificationTheme] = React.useState(theme);
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState("");
+  const [role, setRole] = React.useState("");
   const [departament, setDepartament] = React.useState("");
   const [municipality, setMunicipality] = React.useState("");
   const [nomenclature, setNomenclature] = React.useState("");
@@ -269,6 +270,23 @@ export const TopTableDrivers = () => {
               </div>
               </div>
               <div className='div-create-truck-rigth'>
+              <div>
+                <ThemeProvider theme={departamentTheme}>
+                    <FormControl sx={{ width: '370px', marginTop: '35px' }}  variant="outlined">
+                        <InputLabel id="demo-simple-select-label">Role</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={role}
+                            label="Role"
+                            onChange={handleChangeDepartament}
+                        >
+                          <MenuItem key={"user"} value={"user"}>User</MenuItem>
+                          <MenuItem key={"admin"} value={"admin"}>Admin</MenuItem>
+                        </Select>
+                    </FormControl>
+                </ThemeProvider>
+              </div>
               <div>
                 <ThemeProvider theme={emailTheme}>
                   <TextField sx={{ width: '370px'}} id="outlined-basic" label="Email" variant="outlined" value={email} onChange={(e) => handleEmail(e.target.value.toLowerCase())}/>

@@ -39,7 +39,11 @@ export const Login = () => {
             const role = responseData.user.role;
             const token = responseData.token; 
             await userController.createCookie("jwt", token);
-            navigate('/home');
+            if(role === 'user'){
+              navigate("/home-user");
+            }else{
+              navigate('/home');
+            }
           }else if(response.status === 401){
             alert("user not login");
           }else if(response.status === 500){

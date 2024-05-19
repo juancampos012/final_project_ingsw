@@ -40,7 +40,11 @@ export const ViewProfile = () => {
     }, [miCookiejwt]);
 
   const handleUpdate = async () => {
+    if(role === 'admin'){
       navigate('/home');
+    }else{
+      navigate('/home-user');
+    }
   };
 
   return (
@@ -52,7 +56,7 @@ export const ViewProfile = () => {
             <div className='div-login-info'>
               <div className='text-login'>
                 <h2>Mis datos</h2>
-                <Avatar alt="Remy Sharp" src={avatar} sx={{ border: '2px solid #4DA05F', width:'70px', height:'70px', marginBottom:'10px' }} />
+                <Avatar alt="Remy Sharp" src={avatar} sx={{ border: '2px solid #4DA05F', width:'70px', height:'70px', marginBottom:'10px', backgroundColor:'black' }} />
                 <h4>{name} {lastName}</h4>
                 <p style={{margin:'0px', marginTop:'40px'}}>Email: {email}</p>
                 <p style={{margin:'0px', marginTop:'20px'}}>Identificacion: {identification}</p>
