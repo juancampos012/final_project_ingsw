@@ -16,6 +16,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import IconButton from '@mui/material/IconButton';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../slices/userSlice';
 
 const userController = new User();
 
@@ -44,6 +46,7 @@ export const TopTableDrivers = () => {
   const [uploadSuccess, setUploadSuccess] = React.useState(false);
   const [passwordHashTheme, setPasswordHashTheme] = React.useState(theme);
   const [emailTheme, setEmailTheme] = React.useState(theme);
+  const dispatch = useDispatch();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -180,6 +183,9 @@ export const TopTableDrivers = () => {
           municipality,
           nomenclature,
         };
+
+        dispatch(addUser(data));
+
         const response = await userController.newUser(data, image);
         response.status === 201
           ? alert("Creación exitosa")

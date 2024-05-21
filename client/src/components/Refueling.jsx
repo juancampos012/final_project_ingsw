@@ -10,6 +10,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { useDispatch } from 'react-redux';
+import { addRefueling } from '../slices/refuelingSlice';
 
 const truckController = new Truck();
 const refuelingController = new Refueling();
@@ -24,6 +26,8 @@ export const RefuelingComponent = () => {
   const [licensePlates, setLicensePlates] = React.useState("");
   const [licensePlate, setLicensePlate] = React.useState("");
   const [truckId, setTruckId] = React.useState("");
+  const dispatch = useDispatch();
+
 
   const handleOpen = () =>{
     if(truckId){
@@ -85,6 +89,9 @@ export const RefuelingComponent = () => {
             efficiency: efficiencyInt, 
             truckId
           };
+
+          dispatch(addRefueling(data));
+
           const response = await refuelingController.newRefueling(data);
           response.status === 201
           ? alert("Creacion exitosa")

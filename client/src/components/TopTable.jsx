@@ -5,6 +5,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
+import { useDispatch } from 'react-redux';
+import { addTruck } from '../slices/truckSlice';
 
 const style = {
   position: 'relative',
@@ -29,6 +31,8 @@ export const TopTable = () => {
   const [year, setYear] = React.useState("");
   const [capacity, setCapacity] = React.useState("");
 
+  const dispatch = useDispatch();
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -44,6 +48,9 @@ export const TopTable = () => {
         capacity: capacityInt,
         mileage: mileageInt,
       };
+
+      dispatch(addTruck(data));
+
       console.log(data);
       const response = await truckController.newTrucK(data);
       response.status === 201

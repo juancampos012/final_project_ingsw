@@ -10,12 +10,15 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { useDispatch } from 'react-redux';
+import { addTrip } from '../slices/tripSlice'; 
 
 const userController = new User();
 const truckController = new Truck();
 const tripController = new Trip();
 
 export const MapComponent = () => {
+  const dispatch = useDispatch();
   const [licensePlate, setLicensePlate] = React.useState("");
   const [name, setName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
@@ -165,6 +168,9 @@ export const MapComponent = () => {
       userId, 
       truckId 
     };
+
+    dispatch(addTrip(data));
+
     console.log(data);
     const response = await tripController.newTrip(data);
     console.log(response);
