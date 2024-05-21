@@ -10,6 +10,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { addTire } from '../slices/tireSlice';
+import { useDispatch } from 'react-redux';
 
 const truckController = new Truck();
 const tireController = new Tire();
@@ -22,9 +24,13 @@ export const Tires = () => {
   const [wear, setWear] = React.useState("");
   const [mileage, setMileage] = React.useState("");
   const [model, setModel] = React.useState("");
+  const [velocityIndex, setVelocityIndex] = React.useState("");
+  const [wetGrip, setWetGrip] = React.useState("");
   const [licensePlates, setLicensePlates] = React.useState("");
   const [licensePlate, setLicensePlate] = React.useState("");
   const [truckId, setTruckId] = React.useState("");
+
+  const dispatch = useDispatch();
 
   const handleOpen = () =>{
     if(truckId){
@@ -38,6 +44,8 @@ export const Tires = () => {
     setBrand("");
     setMileage("");
     setWear("");
+    setVelocityIndex()
+    setWetGrip("")
   }
 
   React.useEffect(() => {
@@ -122,7 +130,12 @@ export const Tires = () => {
         truckId, 
         wear: wearInt,
         mileage: mileageInt,
+        velocityIndex,
+        wetGrip,
       };
+
+      dispatch(addTire(data));
+
       console.log(data);
       const response = await tireController.newTire(data);
       response.status === 201

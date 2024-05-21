@@ -65,7 +65,7 @@ export const KanbaBoard = () => {
   return (
     <>
             <h1 className="h1-kanba">
-                Tareas: Viajes y Mantenimientos
+                Tareas: Viajes
                 <img className='icon-react' src="src/assets/react.svg" alt="" />
             </h1>
             <br/>
