@@ -1,18 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  id: "",
   licensePlate: "",
   brand: "",
   model: "",
   year: "",
   mileage: 0,
   capacity: 0,
-  actualStatus: "",
-  tires: [],
-  refueling: [],
-  maintenances: [],
-  userTrucks: [],
+  actualStatus: "En operacion",
+  trucks: [],
 };
 
 export const truckSlice = createSlice({
@@ -26,22 +22,35 @@ export const truckSlice = createSlice({
         model,
         year,
         mileage,
+        actualStatus,
         capacity,
       } = action.payload;
-
       state.licensePlate = licensePlate;
       state.brand = brand;
       state.model = model;
       state.year = year;
+      state.actualStatus= actualStatus;
       state.mileage = mileage;
       state.capacity = capacity;
+      state.trucks.push({
+        licensePlate,
+        brand,
+        model,
+        year,
+        mileage,
+        actualStatus,
+        capacity,
+      });
     },
+
     getTrucks: (state, action) => {
       state.trucks = action.payload;
     },
+
     getTruckByLicencePlate: (state, action) => {
       console.log("getTruckByLicencePlate action triggered with licensePlate:", action.payload);
     },
+
     updateTruckByLicencePlate: (state, action) => {
       const { updatedTruckData } = action.payload;
       return {
@@ -49,11 +58,16 @@ export const truckSlice = createSlice({
         ...updatedTruckData, 
       };
     },
-    deleteTruckByLicencePlate: (state, action) => {
-      state.trucks = state.trucks.filter(truck => truck.licensePlate !== action.payload);
+
+    deleteTruckById: (state, action) => {
+      state.trucks = state.trucks.filter(truck => truck.id !== action.payload);
+    },
+
+    updateTrucksOrder: (state, action) => {
+      state.trucks = action.payload;
     },
   },
 });
 
-export const { addTruck, getTrucks, getTruckByLicencePlate, updateTruckByLicencePlate, deleteTruckByLicencePlate } = truckSlice.actions;
+export const { addTruck, getTrucks, getTruckByLicencePlate, updateTruckByLicencePlate, deleteTruckById, updateTrucksOrder } = truckSlice.actions;
 export default truckSlice.reducer;

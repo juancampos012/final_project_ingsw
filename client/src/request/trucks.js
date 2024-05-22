@@ -2,15 +2,23 @@ import { ENV } from "../utils/constants";
 
 export class Truck {
     base_api = ENV.BASE_API;
-    async newTrucK(data) {
-        const url = `${this.base_api}/${ENV.API_ROUTES_TRUCK.NEWTRUCK}`;
-        const response = await fetch(url,{
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {"content-type": "application/json"},
-          })
-        return response;
-    }
+    async newTrucK(truckData) {
+      try {
+          const URL = `${this.base_api}/${ENV.API_ROUTES_TRUCK.NEWTRUCK}`;
+          const params = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(truckData),
+          };
+          const response = await fetch(URL, params);
+          return response;
+      } catch (error) {
+          console.error(error);
+          throw error;
+      }
+  }
 
     async getListTrucks() {
         const url = `${this.base_api}/${ENV.API_ROUTES_TRUCK.GETLISTTRUCKS}`;
@@ -18,7 +26,8 @@ export class Truck {
           method: 'GET',
           headers: { "Content-Type": "application/json" },
         });
-        return response;
+        const trucks = await response.json();
+        return trucks;
       }
 
       async getListLicensePlates() {
