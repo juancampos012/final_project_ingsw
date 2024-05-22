@@ -19,6 +19,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import IconButton from '@mui/material/IconButton';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../slices/userSlice';
 
 const userController = new User();
 
@@ -156,7 +158,6 @@ export const TopTableDrivers = () => {
       console.error("Error al crear usuario:", error);
     }
   };
-
 
   return (
     <div className='div-top-table'>
