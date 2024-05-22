@@ -59,6 +59,58 @@ const deleteTruckByLicencePlate = async (req, res) => {
     }
 }
 
+const deleteTruckById = async (req, res) => {
+    try {
+        const { id } = req.query;
+n
+        await prisma.userTruck.deleteMany({
+            where: {
+                truckId: id,
+            },
+        });
+
+        await prisma.tire.deleteMany({
+            where: {
+                truckId: id,
+            },
+        });
+
+        await prisma.trip.deleteMany({
+            where: {
+                userTruck: {
+                    truckId: id,
+                },
+            },
+        });
+
+        await prisma.refueling.deleteMany({
+            where: {
+                truckId: id,
+            },
+        });
+
+        await prisma.maintenance.deleteMany({
+            where: {
+                truckId: id,
+            },
+        });
+
+        const deletedTruck = await prisma.truck.delete({
+            where: {
+                id: id,
+            },
+        });
+
+        if (deletedTruck) {
+            res.status(200).json({ message: "Truck deleted successfully" });
+        } else {
+            throw new Error("Truck not found");
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 const updateTruckByLicencePlate = async (req, res) => {
     try{
         const { licensePlate, brand, model, year, capacity } = req.body;
@@ -86,4 +138,4 @@ const getListLicensePlate= async (req, res) => {
     }
 };
 
-module.exports = { createTruck, getListTruck, getTruckByLicencePlate, deleteTruckByLicencePlate, updateTruckByLicencePlate, getListLicensePlate }
+module.exports = { createTruck, getListTruck, getTruckByLicencePlate, deleteTruckByLicencePlate, updateTruckByLicencePlate, getListLicensePlate, deleteTruckById}
