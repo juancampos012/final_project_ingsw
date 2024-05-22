@@ -66,7 +66,7 @@ export const Login = () => {
                     </div>
                     <div>
                         <ThemeProvider theme={theme}>
-                            <TextField sx={{ width: '370px', marginTop: '40px' , borderRadius: '100px'}} id="outlined-basic" label="Email" variant="outlined" value={email} onChange={(e) => setEmail(e.target.value.toLocaleLowerCase())} />
+                            <TextField sx={{ width: '370px', marginTop: '40px' , borderRadius: '100px'}} id="outlined-basic" label="Email" variant="outlined" value={email} onChange={(e) => setEmail(e.target.value)} />
                         </ThemeProvider>
                     </div>
                     <div>
