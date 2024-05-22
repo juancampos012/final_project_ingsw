@@ -39,4 +39,13 @@ export class Truck {
         });
         return response.json();
       }
+
+      async deleteTruckById(id) {
+        const url = `${this.base_api}/${ENV.API_ROUTES_TRUCK.DELETETRUCKBYID}?id=${id}`;
+        const response = await fetch(url, {
+          method: 'DELETE',
+          headers: { "Content-Type": "application/json" },
+        });
+        return response;
+      }
 }
