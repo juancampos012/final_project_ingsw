@@ -8,5 +8,6 @@ router.get("/get-truck", userController.getTruckByLicencePlate);
 router.get("/list-license-plate", userController.getListLicensePlate); 
 router.patch("/update-truck", userController.updateTruckByLicencePlate); 
 router.delete("/delete-truck", userController.deleteTruckByLicencePlate); 
+router.delete("/delete-by-id", userController.deleteTruckById); 
 
 module.exports = router;
