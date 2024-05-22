@@ -6,12 +6,9 @@ import { Navbar } from './components/Navbar';
 import RequireAuthAdmin from './components/REQUIREAUTH/RequireAuthAdmin';
 import RequireAuthUser from './components/REQUIREAUTH/RequireAuthUser';
 import RequireAuth from './components/REQUIREAUTH/RequireAuth'
-import { SingupPersonalData } from './components/CRUD/SingupPersonalData';
-import { SingupDataLog } from './components/CRUD/SingupDataLog';
 import { UpdatePersonalData } from './components/CRUD/UpdatePersonalData';
 import { UpdateDataLog } from './components/CRUD/UpdateDataLog';
 import { ViewProfile } from './components/CRUD/ViewProfile';
-import { SingupAddress } from './components/CRUD/SingupAddress';
 import { TopTable } from './components/TopTable';
 import { TopTableDrivers } from './components/TopTableDirvers';
 import { WelcomeComponent } from './components/WelcomeHome';
@@ -30,9 +27,6 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={ <Login/> } />
-        <Route path="/signup-personal-data" element={<SingupPersonalData/>} />
-        <Route path="/signup-address" element={<SingupAddress/>} />
-        <Route path='/singup-data-log' element={<SingupDataLog/>}/>
         <Route path="/update-personal-data" 
         element={
           <RequireAuth>
@@ -135,6 +129,15 @@ function App() {
             <div>
               <Navbar/>
               <RefuelingComponent/>
+              <Footer/>
+            </div>
+          </RequireAuthAdmin>
+        } />
+        <Route path="/maintenance-admin" 
+        element={
+          <RequireAuthAdmin>
+            <div>
+              <Navbar/>
               <Footer/>
             </div>
           </RequireAuthAdmin>

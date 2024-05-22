@@ -11,4 +11,14 @@ export class Trip {
           })
         return response;
     }
+
+    async getListTrip(userId) {
+        const url = `${this.base_api}/${ENV.API_ROUTES_TRIP.GETLISTTRIP}?userId=${userId}`;
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: { "Content-Type": "application/json" },
+        });
+        const trip = await response.json();
+        return trip;
+      }
 }

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import * as React from 'react';
 import { User } from '../../request/users';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Modal as AntdModal } from 'antd';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -45,12 +46,16 @@ export const Login = () => {
               navigate('/home');
             }
           }else if(response.status === 401){
-            alert("user not login");
+            AntdModal.error({
+              content: 'Contraseña o correo incorrecto.',
+            });
           }else if(response.status === 500){
             alert("err");
           }
       } catch (error) {
-          alert("Ocurrió un error al intentar crear el usuario");
+        AntdModal.error({
+          content: 'User not login.',
+        });
       }
   };
 

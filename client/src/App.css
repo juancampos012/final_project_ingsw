@@ -393,32 +393,38 @@ body{
 
 .column--1{
     border-color: #0e0505;
+    width: 35%;
+}
+
+.column--1 h3{
+    border-color: #0e0505;
+    text-align: center;
 }
 
 .column--1 .title{
     color: #6a6968;
+    text-align: center;
 }
 
 .column--2{
     border-color: #878488;
+    width: 35%;
+}
+
+.column--2 h3{
+    border-color: #878488;
+    text-align: center;
 }
 
 .column--2 .title{
     color: #010101;
 }
 
-.column--3{
-    border-color: #000000;
-}
-
-.column--3 .title{
-    color: #878488;
-}
-
-/* DRAG AND DROP */
 .drag-and-drop{
     display: flex;
     grid-gap: 40px;
+    margin-top: 40px;
+    margin-bottom: 100px;
 }
 
 .dd-zone{
