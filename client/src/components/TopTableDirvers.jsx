@@ -1,10 +1,13 @@
 import React from 'react';
+import { useDispatch } from "react-redux";
+import { addUser, getUsers } from "../slices/userSlice";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import { User } from '../request/users';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import Modal from '@mui/material/Modal';
+import { Modal as AntdModal } from 'antd';
+import { Modal as MuiModal } from '@mui/material';
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -22,69 +25,55 @@ import { addUser } from '../slices/userSlice';
 const userController = new User();
 
 export const TopTableDrivers = () => {
-  const [name, setName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [identification, setIdentification] = React.useState("");
-  const [nameTheme, setNameTheme] = React.useState(theme);
-  const [lastNameTheme, setLastNameTheme] = React.useState(theme);
-  const [identificationTheme, setIdentificationTheme] = React.useState(theme);
-  const [open, setOpen] = React.useState(false);
-  const [data, setData] = React.useState("");
-  const [role, setRole] = React.useState("");
-  const [departament, setDepartament] = React.useState("");
-  const [municipality, setMunicipality] = React.useState("");
-  const [nomenclature, setNomenclature] = React.useState("");
-  const [departaments, setDepartaments] = React.useState("");
-  const [municipalitys, setMunicipalitys] = React.useState("");
-  const [departamentTheme, setDepartamentTheme] = React.useState(theme);
-  const [municipalityTheme, setMunicipalityTheme] = React.useState(theme);
-  const [nomenclatureTheme, setNomenclatureTheme] = React.useState(theme);
-  const [passwordHash, setPasswordHash] = React.useState(""); 
-  const [email, setEmail] = React.useState("");
-  const [image, setImage] = React.useState(null); 
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [uploadSuccess, setUploadSuccess] = React.useState(false);
-  const [passwordHashTheme, setPasswordHashTheme] = React.useState(theme);
-  const [emailTheme, setEmailTheme] = React.useState(theme);
   const dispatch = useDispatch();
+  const [open, setOpen] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [departaments, setDepartaments] = React.useState([]);
+  const [municipalitys, setMunicipalitys] = React.useState([]);
+  const [data, setData] = React.useState([]);
+  const [formData, setFormData] = React.useState({
+    name: "",
+    lastName: "",
+    identification: "",
+    password: "",
+    email: "",
+    isActive: false,
+    avatar: "",
+    role: "",
+    department: "",
+    municipality: "",
+    nomenclature: "",
+  });
+
+  const handleChange = (event) => {
+    setFormData({ ...formData, [event.target.id]: event.target.value });
+  };
+
+  const handleAvatarChange = (event) => {
+    setFormData({ ...formData, avatar: event.target.files[0] });
+  };
+
+  const handleChangeRole = (event) => {
+    setFormData({ ...formData, role: event.target.value });
+  };
+
+  const handleChangeDepartament = (event) => {
+    const selectedDepartament = event.target.value;
+    setFormData({ ...formData, department: selectedDepartament });
+  
+    const municipalitys = data
+      .filter(item => item.departamento === selectedDepartament)
+      .map(item => item.municipio);
+    
+    setMunicipalitys(municipalitys);
+  };
+  
+  const handleChangeMunicipality = (event) => {
+    setFormData({ ...formData, municipality: event.target.value });
+  };
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setName("");
-    setLastName("");
-    setIdentification("")
-    setPasswordHash("");
-    setEmail("");
-    setDepartament("");
-    setMunicipality("");
-    setNomenclature("");
-    setOpen(false);
-  }
-
-  const handleEmpty = () => {
-    if(name === "" || lastName === "" || identification === "" || departament === "" || municipality === "" || nomenclature === "" || email === "" || passwordHash === ""){
-      if(name === ""){
-        setNameTheme(themeRed);
-      }if(lastName === ""){
-        setLastNameTheme(themeRed);
-      }if(identification === ""){
-        setIdentificationTheme(themeRed);
-      }if(departament === ""){
-        setDepartamentTheme(themeRed);
-      }if(municipality === ""){
-        setMunicipalityTheme(themeRed);
-      }if(nomenclature === ""){
-        setNomenclatureTheme(themeRed);
-      }if(email === ""){
-        setEmailTheme(themeRed);
-      }if(passwordHash === ""){
-        setPasswordHashTheme(themeRed);
-      }
-      return false;
-    }else{
-      return true;
-    }
-  }
+  const handleClose = () => setOpen(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -92,112 +81,83 @@ export const TopTableDrivers = () => {
     event.preventDefault();
   };
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
-
-    if (file && validImageTypes.includes(file.type)) {
-        setImage(file);
-        setUploadSuccess(true);
-        setTimeout(() => {
-          setUploadSuccess(false);
-        }, 1600);
-    } else {
-        alert("Por favor, selecciona un archivo de imagen válido.");
+  const fetchData = async () => {
+    try {
+      const response = await fetch('https://www.datos.gov.co/resource/xdk5-pm3f.json');
+      const data = await response.json();
+      const departaments = data.map(item => item.departamento);
+      const departamentsUniques = [...new Set(departaments)];
+      setDepartaments(departamentsUniques);
+      setData(data);
+    } catch (error) {
+      console.error('Hubo un error al cargar los datos:', error);
     }
   };
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('https://www.datos.gov.co/resource/xdk5-pm3f.json');
-        const data = await response.json();
-        const departaments = data.map(item => item.departamento);
-        const departamentsUniques = [...new Set(departaments)];
-        setDepartaments(departamentsUniques);
-        setData(data);
-      } catch (error) {
-        console.error('Hubo un error al cargar los datos:', error);
-      }
-    };
     fetchData();
   }, []);
 
   React.useEffect(() => {
     if (Array.isArray(data)) {
       const municipalitys = data
-        .filter(item => item.departamento === departament)
+        .filter(item => item.departamento === formData.department)
         .map(item => item.municipio);
       
       setMunicipalitys(municipalitys);
     }  
-  }, [data, departament]);
+  }, [data, formData.department]);
 
-  const handleNameTheme = (value) => {
-    value !== "" ? setNameTheme(theme) : setNameTheme(themeRed);
-  }
-
-  const handleLastNameTheme = (value) => {
-    value !== "" ? setLastNameTheme(theme) : setLastNameTheme(themeRed);
-  }
-
-  const handleIdentificationTheme = (value) => {
-    value !== "" ? setIdentificationTheme(theme) : setIdentificationTheme(themeRed);
-  }
-
-  const handleChangeDepartament = (event) => {
-    setDepartament(event.target.value);
-    event.target.value !== "" ? setDepartamentTheme(theme) : setDepartamentTheme(themeRed);
-  };
-
-  const handleChangeMunicipality = (event) => {
-    setMunicipality(event.target.value);
-    event.target.value !== "" ? setMunicipalityTheme(theme) : setMunicipalityTheme(themeRed);
-  };
-
-  const handleNomenclature = (value) => {
-    setNomenclature(value);
-    value !== "" ? setNomenclatureTheme(theme) : setNomenclatureTheme(themeRed);
-  }
-
-  const handleEmail = (value) => {
-    setEmail(value);
-    value !== "" ? setEmailTheme(theme) : setEmailTheme(themeRed);
-  }
-
-  const handlePassword = (value) => {
-    setPasswordHash(value);
-    value !== "" ? setPasswordHashTheme(theme) : setPasswordHashTheme(themeRed);
-  }
-
-  const handleCreate = async () => {
+  const handleCreateUser = async (e) => {
+    e.preventDefault();
     try {
-      if (handleEmpty()) {
-        const data = {
-          name,
-          lastName,
-          identification,
-          passwordHash,
-          email,
-          department: departament,
-          municipality,
-          nomenclature,
-        };
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", formData.name); 
+      formDataToSend.append("lastName", formData.lastName); 
+      formDataToSend.append("identification", formData.identification); 
+      formDataToSend.append("avatar", formData.avatar);
+      formDataToSend.append("password", formData.password); 
+      formDataToSend.append("email", formData.email); 
+      formDataToSend.append("role", formData.role); 
+      formDataToSend.append("department", formData.department); 
+      formDataToSend.append("municipality", formData.municipality); 
+      formDataToSend.append("nomenclature", formData.nomenclature); 
 
-        dispatch(addUser(data));
+      console.log(formDataToSend)
 
-        const response = await userController.newUser(data, image);
-        response.status === 201
-          ? alert("Creación exitosa")
-          : alert("Error al crear el usuario");
+      const response = await userController.newUser(formDataToSend);
+      dispatch(addUser(formData));
+      if(response.status == 201){
+        AntdModal.success({
+          content: 'Usuario creado correctamente.',
+        });
       }else{
-        alert('Por favor, rellene todos los campos antes de continuar.');
+        AntdModal.error({
+          content: 'Ocurrio un error al crear el usuario.',
+        });
       }
-      } catch (error) {
-        console.error(error);
-        alert("Ocurrió un error al intentar crear el usuario");
+
+      const usersData = await userController.getListUser();
+      dispatch(getUsers(usersData));
+
+      setFormData({
+        name: "",
+        lastName: "",
+        identification: "",
+        password: "",
+        email: "",
+        isActive: false,
+        avatar: "",
+        role: "",
+        department: "",
+        municipality: "",
+        nomenclature: "",
+      });
+      setOpen(false); 
+    } catch (error) {
+      console.error("Error al crear usuario:", error);
     }
-};
+  };
 
   return (
     <div className='div-top-table'>
@@ -206,7 +166,7 @@ export const TopTableDrivers = () => {
       </div>
       <div >
         <Button onClick={handleOpen} sx={{ color: 'black', mr: '10px', marginBottom: '0'}}>Crear conductor</Button>
-        <Modal
+        <MuiModal
           open={open}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
@@ -219,73 +179,73 @@ export const TopTableDrivers = () => {
             <div className='div-create-truck'>
               <div className='div-create-truck-left'>
               <div>
-                <ThemeProvider theme={nameTheme}>
-                  <TextField sx={{ width: '370px' }}  id="outlined-basic" label="Nombre" variant="outlined" value={name} onChange={(e) => {setName(e.target.value); handleNameTheme(e.target.value)}}/>
+                <ThemeProvider theme={theme}>
+                  <TextField sx={{ width: '370px' }} id="name" label="Nombre" variant="outlined" value={formData.name} onChange={handleChange} />
                 </ThemeProvider>
               </div>
               <div>
-                <ThemeProvider theme={lastNameTheme}>
-                  <TextField sx={{ width: '370px', marginTop: '35px' }} id="outlined-basic" label="Apellido" variant="outlined" value={lastName} onChange={(e) => {setLastName(e.target.value); handleLastNameTheme(e.target.value)}}/>
+                <ThemeProvider theme={theme}>
+                  <TextField sx={{ width: '370px', marginTop: '35px' }} id="lastName" label="Apellido" variant="outlined" value={formData.lastName} onChange={handleChange}/>
                 </ThemeProvider>
               </div>
               <div>
-                <ThemeProvider theme={identificationTheme}>
-                  <TextField sx={{ width: '370px', marginTop: '35px' }} id="outlined-basic" label="Cedula" variant="outlined" value={identification} onChange={(e) => {setIdentification(e.target.value); handleIdentificationTheme(e.target.value)}}/>
+                <ThemeProvider theme={theme}>
+                  <TextField sx={{ width: '370px', marginTop: '35px' }} id="identification" label="Identificacion" variant="outlined" value={formData.identification} onChange={handleChange}/>
                 </ThemeProvider>
               </div>
               <div>
-                <ThemeProvider theme={departamentTheme}>
-                    <FormControl sx={{ width: '370px', marginTop: '35px' }}  variant="outlined">
-                        <InputLabel id="demo-simple-select-label">Departamento</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={departament}
-                            label="Departamento"
-                            onChange={handleChangeDepartament}
-                        >
-                            {departaments && departaments.map((departament) => (
-                            <MenuItem key={departament} value={departament}>{departament}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                <ThemeProvider theme={theme}>
+                  <FormControl sx={{ width: '370px', marginTop: '35px' }}  variant="outlined">
+                    <InputLabel id="demo-simple-select-label">Departamento</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="department"
+                      value={formData.department}
+                      label="Departamento"
+                      onChange={handleChangeDepartament}
+                    >
+                      {departaments && departaments.map((departament) => (
+                        <MenuItem key={departament} value={departament}>{departament}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </ThemeProvider>
               </div>
               <div>
-                <ThemeProvider theme={municipalityTheme}>
-                    <FormControl sx={{ width: '370px', marginTop: '35px' }}  variant="outlined">
-                        <InputLabel id="demo-simple-select-label">Municipio</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={municipality}
-                            label="Municipio"
-                            onChange={handleChangeMunicipality}
-                        >
-                            {municipalitys && municipalitys.map((municipality) => (
-                            <MenuItem key={municipality} value={municipality}>{municipality}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                <ThemeProvider theme={theme}>
+                  <FormControl sx={{ width: '370px', marginTop: '35px' }}  variant="outlined">
+                    <InputLabel id="demo-simple-select-label">Municipio</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="municipality"
+                      value={formData.municipality}
+                      label="Municipio"
+                      onChange={handleChangeMunicipality}
+                    >
+                      {municipalitys && municipalitys.map((municipality) => (
+                        <MenuItem key={municipality} value={municipality}>{municipality}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </ThemeProvider>
               </div>
               <div>
-                <ThemeProvider theme={nomenclatureTheme}>
-                  <TextField sx={{ width: '370px', marginTop: '35px' }} id="outlined-basic" label="Direccion" variant="outlined" value={nomenclature} onChange={(e) => handleNomenclature(e.target.value)}/>
+                <ThemeProvider theme={theme}>
+                  <TextField sx={{ width: '370px', marginTop: '35px' }} id="nomenclature" label="Direccion" variant="outlined" value={formData.nomenclature} onChange={handleChange}/>
                 </ThemeProvider>
               </div>
               </div>
               <div className='div-create-truck-rigth'>
               <div>
-                <ThemeProvider theme={departamentTheme}>
-                    <FormControl sx={{ width: '370px', marginTop: '35px' }}  variant="outlined">
+                <ThemeProvider theme={theme}>
+                    <FormControl sx={{ width: '370px' }}  variant="outlined">
                         <InputLabel id="demo-simple-select-label">Role</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={role}
+                            id="role"
+                            value={formData.role}
                             label="Role"
-                            onChange={handleChangeDepartament}
+                            onChange={handleChangeRole}
                         >
                           <MenuItem key={"user"} value={"user"}>User</MenuItem>
                           <MenuItem key={"admin"} value={"admin"}>Admin</MenuItem>
@@ -294,12 +254,12 @@ export const TopTableDrivers = () => {
                 </ThemeProvider>
               </div>
               <div>
-                <ThemeProvider theme={emailTheme}>
-                  <TextField sx={{ width: '370px'}} id="outlined-basic" label="Email" variant="outlined" value={email} onChange={(e) => handleEmail(e.target.value.toLowerCase())}/>
+                <ThemeProvider theme={theme}>
+                  <TextField sx={{ width: '370px', marginTop: '35px'}} id="email" label="Email" variant="outlined" value={formData.email} onChange={handleChange}/>
                 </ThemeProvider>
               </div>
               <div>
-                <ThemeProvider theme={passwordHashTheme}>
+                <ThemeProvider theme={theme}>
                   <FormControl sx={{ width: '370px', marginTop: '35px' }}  variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                       <OutlinedInput
@@ -317,8 +277,8 @@ export const TopTableDrivers = () => {
                             </IconButton>
                           </InputAdornment>
                         }
-                        value={passwordHash}
-                        onChange={(e) => handlePassword(e.target.value)}
+                        value={formData.password}
+                        onChange={handleChange}
                         label="Password"
                       /> 
                   </FormControl>
@@ -331,10 +291,10 @@ export const TopTableDrivers = () => {
                   variant="contained"
                   tabIndex={-1}
                   startIcon={<CloudUploadIcon />}
-                  style={{ backgroundColor: '#000000', borderRadius: '50px', marginTop:'35px' }}
+                  style={{ backgroundColor: '#000000', borderRadius: '50px', marginTop:'35px'}}
                 >
                   Cargar foto
-                  <VisuallyHiddenInput type="file" accept='image/*' onChange={handleImageUpload}/>
+                  <VisuallyHiddenInput id="avatar" type="file" accept='image/*' onChange={handleAvatarChange}/>
                 </Button>
               </div>
               </div>
@@ -343,14 +303,13 @@ export const TopTableDrivers = () => {
               <Button
                 variant="contained"
                 disableElevation
-                onClick={handleCreate}
+                onClick={handleCreateUser}
               >
                 Crear usuario
               </Button>
-              {uploadSuccess && <p>La foto se ha cargado exitosamente.</p>}
             </div>
           </Box>
-        </Modal>
+        </MuiModal>
       </div>
     </div>
   );
@@ -382,39 +341,6 @@ const theme = createTheme({
         root: {
           '&.Mui-focused': {
             color: 'black',
-          },
-        },
-      },
-    },
-  },
-});
-
-const themeRed = createTheme({
-  components: {
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'red',
-          },
-          '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'red',
-          },
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'red',
-          },
-          borderRadius: '15px', 
-          '& fieldset': {
-            borderRadius: '15px',
-          },
-        },
-      },
-    },
-    MuiInputLabel: {
-      styleOverrides: {
-        root: {
-          '&.Mui-focused': {
-            color: 'red',
           },
         },
       },

@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  id: "",
   name: "",
   lastName: "",
   identification: "",
@@ -10,8 +9,10 @@ const initialState = {
   isActive: false,
   avatar: "",
   role: "",
-  address: null,
-  userTrucks: [],
+  department: "",
+  municipality: "",
+  nomenclature: "",
+  users: [],
 };
 
 export const userSlice = createSlice({
@@ -20,41 +21,65 @@ export const userSlice = createSlice({
   reducers: {
     addUser: (state, action) => {
       const {
-        email,
         name,
         lastName,
         identification,
-        isActive,
-        role,
         password,
+        email,
+        isActive,
+        avatar,
+        role,
+        department,
+        municipality,
+        nomenclature,
       } = action.payload;
+      console.log(action.payload);
 
       state.email = email;
       state.name = name;
       state.lastName = lastName;
+      state.avatar = avatar;
       state.identification = identification;
+      state.password = password;
       state.isActive = isActive;
       state.role = role;
-      state.password = password;
+      state.department = department;
+      state.municipality = municipality;
+      state.nomenclature = nomenclature;
     },
+
     getUsers: (state, action) => {
       state.users = action.payload;
     },
+
     getUserById: (state, action) => {
       console.log("getUserById action triggered with id:", action.payload);
     },
-    updateUserByEmail: (state, action) => {
+
+    editUserById: (state, action) => {
       const { updatedUserData } = action.payload;
       return {
         ...state,
-        ...updatedUserData, 
+        ...updatedUserData,
       };
     },
-    deleteUser: (state, action) => {
+
+    deleteUserById: (state, action) => {
       state.users = state.users.filter(user => user.id !== action.payload);
+    },
+
+    updateUsersOrder: (state, action) => {
+      state.users = action.payload;
     },
   },
 });
 
-export const { addUser, getUsers, getUserById, updateUserByEmail, deleteUser } = userSlice.actions;
+export const {
+  addUser,
+  getUserById,
+  editUserById,
+  deleteUserById,
+  getUsers,
+  updateUsersOrder
+} = userSlice.actions;
 export default userSlice.reducer;

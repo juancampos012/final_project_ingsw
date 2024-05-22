@@ -80,7 +80,7 @@ export const TableCars = () => {
   return (
     <div className="div-table-drivers">
       <Paper sx={{ width: '92%', overflow: 'hidden', marginBottom: '100px' }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
+        <TableContainer sx={{ maxHeight: 800, minHeight: 500}}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>

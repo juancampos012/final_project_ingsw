@@ -2,18 +2,23 @@ import { ENV } from "../utils/constants";
 
 export class User {
   base_api = ENV.BASE_API;
-  async newUser(data, imageFile) {
-    const url = `${this.base_api}/${ENV.API_ROUTES_USER.NEWUSER}`;
-    const formData = new FormData();
-    Object.keys(data).forEach(key => formData.append(key, data[key]));
-    formData.append('avatar', imageFile);
-    const response = await fetch(url,{
-        method: 'POST',
+  async newUser(formData) {
+    try {
+      console.log("api", formData);
+      const URL = `${this.base_api}/${ENV.API_ROUTES_USER.NEWUSER}`;
+      console.log(URL);
+      const params = {
+        method: "POST",
         body: formData,
-    })
-    return response;
-  }
-
+      };
+      const response = await fetch(URL, params);
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error; 
+    }
+  };
+  
   async updateUser(data) {
     const url = `${this.base_api}/${ENV.API_ROUTES_USER.UPDATEUSER}`;
     const response = await fetch(url,{
@@ -40,6 +45,15 @@ export class User {
       headers: { "Content-Type": "application/json" },
     });
     return response.json();
+  }
+
+  async deleteUser(id) {
+    const url = `${this.base_api}/${ENV.API_ROUTES_USER.DELETEUSER}?id=${id}`;
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: { "Content-Type": "application/json" },
+    });
+    return response;
   }
 
   async getListUser() {
