@@ -78,6 +78,9 @@ const getListUsers = async (req, res) => {
 const getListIdentifications = async (req, res) => {
     try {
         const identifications = await prisma.user.findMany({
+            where: {
+                role: "user"
+            },
             select: {
                 identification: true
             }

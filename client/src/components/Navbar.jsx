@@ -32,6 +32,7 @@ import Popover from '@mui/material/Popover';
 import Cookies from 'js-cookie';
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
+import EngineeringIcon from '@mui/icons-material/Engineering';
 
 const drawerWidth = 240;
 const userController = new User();
@@ -115,6 +116,11 @@ export const Navbar = () => {
 
     const handlePrincipal = () => {
       navigate('/home');
+      handleDrawerClose();
+    };
+
+    const handleMaintenance = () => {
+      navigate('/maintenance-admin')
       handleDrawerClose();
     };
 
@@ -324,6 +330,14 @@ export const Navbar = () => {
                       <TireRepairIcon/>
                     </ListItemIcon>
                     <ListItemText primary={'Neumaticos'} />
+                  </ListItemButtonStyled>
+                </ListItem>
+                <ListItem key={'Mantenimiento'} disablePadding>
+                  <ListItemButtonStyled onClick={handleMaintenance}>
+                    <ListItemIcon>
+                      <EngineeringIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Mantenimiento'} />
                   </ListItemButtonStyled>
                 </ListItem>
               </List>

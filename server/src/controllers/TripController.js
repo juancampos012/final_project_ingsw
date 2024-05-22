@@ -37,16 +37,25 @@ const createTrip = async (req, res) => {
     }
 };
 
-
-
-
 const getListTrips = async (req, res) => {
-    try{
-        const trips = await prisma.trip.findMany();
+    const userId = req.query.userId;
+
+    try {
+        const userTrucks = await prisma.userTruck.findMany({
+            where: {
+                userId: userId
+            },
+            include: {
+                trips: true 
+            }
+        });
+
+        const trips = userTrucks.flatMap(userTruck => userTruck.trips);
+
         res.status(200).json(trips);
-    }catch(error){
-        console.log(error.message);
-        res.status(400).json({message: error.message});
+    } catch (error) {
+        console.error(error.message);
+        res.status(400).json({ message: error.message });
     }
 };
 
