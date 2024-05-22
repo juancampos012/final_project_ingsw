@@ -4,9 +4,7 @@ export class User {
   base_api = ENV.BASE_API;
   async newUser(formData) {
     try {
-      console.log("api", formData);
       const URL = `${this.base_api}/${ENV.API_ROUTES_USER.NEWUSER}`;
-      console.log(URL);
       const params = {
         method: "POST",
         body: formData,

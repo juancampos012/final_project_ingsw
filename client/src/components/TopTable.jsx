@@ -1,12 +1,13 @@
 import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Modal as AntdModal } from 'antd';
 import { Truck } from '../request/trucks';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
 import { useDispatch } from 'react-redux';
-import { addTruck } from '../slices/truckSlice';
+import { addTruck, getTrucks } from '../slices/truckSlice';
 
 const style = {
   position: 'relative',
@@ -23,44 +24,68 @@ const style = {
 const truckController = new Truck();
 
 export const TopTable = () => {
-  const [open, setOpen] = React.useState(false);
-  const [licensePlate, setLicensePlate] = React.useState("");
-  const [mileage, setMileage ] = React.useState("");
-  const [brand, setBrand] = React.useState("");
-  const [model, setModel] = React.useState("");
-  const [year, setYear] = React.useState("");
-  const [capacity, setCapacity] = React.useState("");
-
   const dispatch = useDispatch();
+  const [open, setOpen] = React.useState(false);
+  const [formData, setFormData] = React.useState({
+    licensePlate: "",
+    brand: "",
+    model: "",  
+    year: "",
+    mileage: 0,
+    capacity: 0,
+    actualStatus: "En operacion"
+  });
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleCreate = async () => {
-    const mileageInt = parseInt(mileage);
-    const capacityInt = parseInt(capacity);
+  const handleChange = (event) => {
+    setFormData({ ...formData, [event.target.id]: event.target.value });
+  };
+
+  const handleCreateTruck = async (e) => {
+    e.preventDefault();
     try {
-      const data = {
-        licensePlate,
-        brand,
-        model,
-        year,
-        capacity: capacityInt,
-        mileage: mileageInt,
-      };
+        const truckData = {
+            licensePlate: formData.licensePlate,
+            brand: formData.brand,
+            model: formData.model,
+            year: formData.year,
+            mileage: Number(formData.mileage),  
+            capacity: Number(formData.capacity),
+            actualStatus: "En operacion",
+        };
 
-      dispatch(addTruck(data));
+        const response = await truckController.newTrucK(truckData); 
 
-      console.log(data);
-      const response = await truckController.newTrucK(data);
-      response.status === 201
-        ? alert("Creacion exitosa")
-        : alert("Error al crear el camion");
+        dispatch(addTruck(truckData));
+        const data = await truckController.getListTrucks();
+        dispatch(getTrucks(data));
+
+        if (response.status === 201) {
+            AntdModal.success({
+                content: 'Camión creado correctamente.',
+            });
+        } else {
+            AntdModal.error({
+                content: 'Ocurrió un error al crear el camión.',
+            });
+        }
+
+        setFormData({
+            licensePlate: "",
+            brand: "",
+            model: "",
+            year: "",
+            mileage: 0,
+            capacity: 0,
+            actualStatus: "En operacion",
+        });
+        setOpen(false);
     } catch (error) {
-      console.error(error);
-      alert("Ocurrió un error al intentar crear el camion");
+        console.error("Error al crear camión:", error);
     }
-  };  
+};
 
   return (
     <div className='div-top-table'>
@@ -83,16 +108,16 @@ export const TopTable = () => {
               <div className='div-create-truck-left'>
                 <div>
                   <ThemeProvider theme={theme}>
-                    <TextField sx={{ width: '370px' }}id="outlined-basic" label="Placa" variant="outlined" value={licensePlate} onChange={(e) => setLicensePlate(e.target.value)} />
+                    <TextField sx={{ width: '370px' }}id="licensePlate" label="Placa" variant="outlined" value={formData.licensePlate} onChange={handleChange} />
                   </ThemeProvider>
                   <div>
                   <ThemeProvider theme={theme}>
-                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Marca" variant="outlined" value={brand} onChange={(e) => setBrand(e.target.value)} />
+                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="brand" label="Marca" variant="outlined" value={formData.brand} onChange={handleChange}/>
                   </ThemeProvider>
                 </div>
                 <div>
                   <ThemeProvider theme={theme}>
-                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Año" variant="outlined" value={year} onChange={(e) => setYear(e.target.value)} />
+                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="year" label="Año" variant="outlined" value={formData.year} onChange={handleChange}/>
                   </ThemeProvider>
                 </div>
                 </div>
@@ -100,17 +125,17 @@ export const TopTable = () => {
               <div className='div-create-truck-rigth'>
                 <div>
                   <ThemeProvider theme={theme}>
-                    <TextField sx={{ width: '370px' }} id="outlined-basic" label="Linea" variant="outlined" value={model} onChange={(e) => setModel(e.target.value)} />
+                    <TextField sx={{ width: '370px' }} id="model" label="Linea" variant="outlined" value={formData.model} onChange={handleChange} />
                   </ThemeProvider>              
                 </div>
                 <div>
                   <ThemeProvider theme={theme}>
-                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Capacidad" variant="outlined" value={capacity} onChange={(e) => setCapacity(e.target.value)} />
+                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="capacity" label="Capacidad" variant="outlined" value={formData.capacity} onChange={handleChange} />
                   </ThemeProvider>
                 </div>
                 <div>
                   <ThemeProvider theme={theme}>
-                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="outlined-basic" label="Kilometraje" variant="outlined" value={mileage} onChange={(e) => setMileage(e.target.value)} />
+                    <TextField sx={{ width: '370px', marginTop: '40px' }} id="mileage" label="Kilometraje" variant="outlined" value={formData.mileage} onChange={handleChange} />
                   </ThemeProvider>
                 </div>
               </div>
@@ -119,7 +144,7 @@ export const TopTable = () => {
               <Button
                 variant="contained"
                 disableElevation
-                onClick={handleCreate}
+                onClick={handleCreateTruck}
               >
                 Crear
               </Button>

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { getTrucks, deleteTruckById, updateTrucksOrder } from "../slices/truckSlice";
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,6 +11,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { Truck } from '../request/trucks';
+import { Modal } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import IconButton from '@mui/material/IconButton';
 
@@ -25,22 +28,22 @@ const columns = [
 ];
 
 export const TableCars = () => {
+  const dispatch = useDispatch();
+  const trucks = useSelector((state) => state.truck.trucks);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [trucks, setTrucks] = useState([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await truckController.getListTrucks();
-        const data = await response.json();
-        setTrucks(data);
+        dispatch(getTrucks(response));
       } catch (error) {
         console.error('Hubo un error al cargar los datos:', error);
       }
     };
     fetchData();
-  }, []);
+  }, [dispatch]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -51,8 +54,31 @@ export const TableCars = () => {
     setPage(0);
   };
 
-  const handleDelete = async (licensePlate) => {
-    setTrucks(trucks.filter(truck => truck.licensePlate !== licensePlate));
+  const handleDelete = async (id) => {
+    Modal.confirm({
+      title: 'Confirmación',
+      content: '¿Estás seguro de que quieres eliminar este usuario?',
+      onOk: async () => {
+        try {
+          const response = await truckController.deleteTruckById(id);
+          if (response.status === 200) {
+            dispatch(deleteTruckById(id));
+            Modal.success({
+              content: 'Usuario eliminado correctamente.',
+            });
+          } else {
+            Modal.error({
+              content: 'Ocurrió un error al eliminar el usuario.',
+            });
+          }
+        } catch (error) {
+          console.error("Failed to delete user", error);
+          Modal.error({
+            content: 'Ocurrió un error al eliminar el usuario.',
+          });
+        }
+      },
+    });
   };
 
   const startDrag = (evt, item) => {
@@ -74,7 +100,7 @@ export const TableCars = () => {
     updatedTrucks.splice(draggedItemIndex, 1);
     updatedTrucks.splice(dropIndex, 0, draggedItem);
 
-    setTrucks(updatedTrucks);
+    dispatch(updateTrucksOrder(updatedTrucks));
   };
 
   return (

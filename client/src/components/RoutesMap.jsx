@@ -4,6 +4,7 @@ import { User } from '../request/users';
 import { Truck } from '../request/trucks';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GoogleMap, LoadScript, DirectionsRenderer, Autocomplete } from '@react-google-maps/api';
+import { Modal as AntdModal } from 'antd';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
@@ -169,11 +170,17 @@ export const MapComponent = () => {
       truckId 
     };
 
-    dispatch(addTrip(data));
-
-    console.log(data);
     const response = await tripController.newTrip(data);
-    console.log(response);
+    dispatch(addTrip(data));
+    if (response.status === 201) {
+      AntdModal.success({
+          content: 'Ruta creada correctamente.',
+      });
+  } else {
+      AntdModal.error({
+          content: 'Ocurrió un error al crear la ruta.',
+      });
+  }
   }  
 
   return (

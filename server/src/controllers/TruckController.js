@@ -2,22 +2,23 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const createTruck = async (req, res) => {
-    try{
-        const { licensePlate, brand, model, year, mileage, capacity, } = req.body;
+    try {
+        const { licensePlate, brand, model, year, mileage, capacity } = req.body;
+        console.log(req.body);
         const truck = await prisma.truck.create({
             data: {
                 licensePlate,
                 brand,
                 model,
-                year, 
+                year,
                 mileage,
-                capacity, 
+                capacity,
             },
         });
-        res.status(201).json({truck});
-    }catch(error){
+        res.status(201).json({ truck });
+    } catch (error) {
         console.error(error);
-        res.status(500).json({error: "Something went wrong"});
+        res.status(500).json({ error: "Something went wrong" });
     }
 };
 
@@ -62,7 +63,7 @@ const deleteTruckByLicencePlate = async (req, res) => {
 const deleteTruckById = async (req, res) => {
     try {
         const { id } = req.query;
-n
+
         await prisma.userTruck.deleteMany({
             where: {
                 truckId: id,

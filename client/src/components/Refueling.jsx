@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Truck } from '../request/trucks';
 import { Refueling } from '../request/refuelings';
+import { Modal as AntdModal } from 'antd';
+import { Modal as MuiModal } from '@mui/material';
 import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
@@ -93,9 +94,15 @@ export const RefuelingComponent = () => {
           dispatch(addRefueling(data));
 
           const response = await refuelingController.newRefueling(data);
-          response.status === 201
-          ? alert("Creacion exitosa")
-          : alert("Error al crear el reabastesimiento");
+          if (response.status === 201) {
+            AntdModal.success({
+                content: 'Abastecimiento creado correctamente.',
+            });
+        } else {
+            AntdModal.error({
+                content: 'Ocurrió un error al crear el abastecimiento.',
+            });
+        }
         }
       } catch (error) {
         console.error(error);
@@ -149,7 +156,7 @@ export const RefuelingComponent = () => {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' , marginBottom: '200px' }}>
         <div >
-        <Modal
+        <MuiModal
           open={open}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
@@ -188,7 +195,7 @@ export const RefuelingComponent = () => {
               </Button>
             </div>
           </Box>
-          </Modal>
+          </MuiModal>
       </div>
       </div>
     </>

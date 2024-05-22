@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
+import TireRepairIcon from '@mui/icons-material/TireRepair';
+import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
+import MapIcon from '@mui/icons-material/Map';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -302,7 +305,7 @@ export const Navbar = () => {
                 <ListItem key={'Rutas'} disablePadding>
                   <ListItemButtonStyled onClick={handleRoutes}>
                     <ListItemIcon>
-
+                      <MapIcon/>
                     </ListItemIcon>
                     <ListItemText primary={'Rutas'} />
                   </ListItemButtonStyled>
@@ -310,7 +313,7 @@ export const Navbar = () => {
                 <ListItem key={'Combustible'} disablePadding>
                   <ListItemButtonStyled onClick={handleRefueling}>
                     <ListItemIcon>
-
+                      <LocalGasStationIcon/>
                     </ListItemIcon>
                     <ListItemText primary={'Combustible'} />
                   </ListItemButtonStyled>
@@ -318,7 +321,7 @@ export const Navbar = () => {
                 <ListItem key={'Neumaticos'} disablePadding>
                   <ListItemButtonStyled onClick={handleTires}>
                     <ListItemIcon>
-
+                      <TireRepairIcon/>
                     </ListItemIcon>
                     <ListItemText primary={'Neumaticos'} />
                   </ListItemButtonStyled>

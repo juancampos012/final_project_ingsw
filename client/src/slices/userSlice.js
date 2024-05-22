@@ -33,7 +33,6 @@ export const userSlice = createSlice({
         municipality,
         nomenclature,
       } = action.payload;
-      console.log(action.payload);
 
       state.email = email;
       state.name = name;

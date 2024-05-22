@@ -121,8 +121,6 @@ export const TopTableDrivers = () => {
       formDataToSend.append("municipality", formData.municipality); 
       formDataToSend.append("nomenclature", formData.nomenclature); 
 
-      console.log(formDataToSend)
-
       const response = await userController.newUser(formDataToSend);
       dispatch(addUser(formData));
       if(response.status == 201){
