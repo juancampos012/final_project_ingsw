@@ -3,8 +3,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Truck } from '../request/trucks';
 import { Tire } from '../request/tires';
 import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import { Modal as AntdModal } from 'antd';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';

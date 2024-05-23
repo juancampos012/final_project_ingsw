@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const userController = require("../controllers/TripController")
+const userController = require("../controllers/TripController");
 
 router.post('/new-trip', userController.createTrip);
 router.get("/list-trips", userController.getListTrips); 
