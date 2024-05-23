@@ -78,23 +78,48 @@ export const RefuelingComponent = () => {
 
   const handleCreate = async () => {
     try {
-        if (isNaN(cost) || isNaN(quantity) || isNaN(efficiency)) {
-          alert("Por favor, introduce solo números");
-        } else {
-          const cosInt = parseInt(cost);
-          const quantityInt = parseInt(quantity);
-          const efficiencyInt = parseInt(efficiency);
-          const data = {
-            cost: cosInt,
+        if (isNaN(cost) || isNaN(quantity) || isNaN(efficiency) || cost === "" || quantity === "" || efficiency === "") {
+            AntdModal.error({
+                content: 'Por favor, introduce solo números y asegúrate de que todos los campos estén completos.',
+            });
+            return;
+        }
+
+        const costInt = parseInt(cost);
+        const quantityInt = parseInt(quantity);
+        const efficiencyInt = parseInt(efficiency);
+
+        if (costInt <= 0) {
+            AntdModal.error({
+                content: 'El costo debe ser mayor a cero.',
+            });
+            return;
+        }
+
+        if (quantityInt <= 0) {
+            AntdModal.error({
+                content: 'La cantidad debe ser mayor a cero.',
+            });
+            return;
+        }
+
+        if (efficiencyInt <= 0) {
+            AntdModal.error({
+                content: 'La eficiencia debe ser mayor a cero.',
+            });
+            return;
+        }
+
+        const data = {
+            cost: costInt,
             quantity: quantityInt,
-            efficiency: efficiencyInt, 
+            efficiency: efficiencyInt,
             truckId
-          };
+        };
 
-          dispatch(addRefueling(data));
-
-          const response = await refuelingController.newRefueling(data);
-          if (response.status === 201) {
+        const response = await refuelingController.newRefueling(data);
+        if (response.status === 201) {
+            dispatch(addRefueling(data));
             AntdModal.success({
                 content: 'Abastecimiento creado correctamente.',
             });
@@ -103,13 +128,14 @@ export const RefuelingComponent = () => {
                 content: 'Ocurrió un error al crear el abastecimiento.',
             });
         }
-        }
-      } catch (error) {
+    } catch (error) {
         console.error(error);
-        alert("Ocurrió un error al intentar crear el camion");
-      }
-      
-  };  
+        AntdModal.error({
+            content: 'Ocurrió un error al intentar crear el abastecimiento.',
+        });
+    }
+};
+
 
   return (
     <>
@@ -170,17 +196,17 @@ export const RefuelingComponent = () => {
             <div className='div-create-truck-rigth'>
               <div>
                 <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Cantidad" variant="outlined" value={quantity} onChange={(e) => setQuantity(e.target.value)}/>
+                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Cantidad (Galones)" variant="outlined" value={quantity} onChange={(e) => setQuantity(e.target.value)}/>
                 </ThemeProvider>
               </div>
               <div>
                 <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Eficiencia" variant="outlined" value={efficiency} onChange={(e) => setEfficiency(e.target.value)}/>
+                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Eficiencia (Km)" variant="outlined" value={efficiency} onChange={(e) => setEfficiency(e.target.value)}/>
                 </ThemeProvider>
               </div>
               <div>
                 <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Costo" variant="outlined" value={cost} onChange={(e) => setCost(e.target.value)}/>
+                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Costo ($)" variant="outlined" value={cost} onChange={(e) => setCost(e.target.value)}/>
                 </ThemeProvider>
               </div>
             </div>

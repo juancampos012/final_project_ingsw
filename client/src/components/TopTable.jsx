@@ -55,14 +55,41 @@ export const TopTable = () => {
             capacity: Number(formData.capacity),
             actualStatus: "En operacion",
         };
+        const currentYear = new Date().getFullYear();
 
+        if (truckData.licensePlate === "" || truckData.brand === "" || truckData.model === "" || 
+            truckData.year === "" || truckData.mileage === "" || truckData.capacity === "") {
+            AntdModal.error({
+                content: 'Todos los campos son obligatorios.',
+            });
+            return;
+        }
+
+        if (truckData.year < 2010 || truckData.year > currentYear) {
+            AntdModal.error({
+                content: `El año debe estar entre 2010 y ${currentYear}.`,
+            });
+            return;
+        }
+
+        if (truckData.mileage <= 0) {
+            AntdModal.error({
+                content: 'El kilometraje debe ser mayor a cero.',
+            });
+            return;
+        }
+
+        if (truckData.capacity <= 0) {
+            AntdModal.error({
+                content: 'La capacidad debe ser mayor a cero.',
+            });
+            return;
+        }
         const response = await truckController.newTrucK(truckData); 
-
-        dispatch(addTruck(truckData));
-        const data = await truckController.getListTrucks();
-        dispatch(getTrucks(data));
-
-        if (response.status === 201) {
+          if (response.status === 201) {
+            dispatch(addTruck(truckData));
+            const data = await truckController.getListTrucks();
+            dispatch(getTrucks(data));
             AntdModal.success({
                 content: 'Camión creado correctamente.',
             });
