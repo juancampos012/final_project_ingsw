@@ -114,10 +114,10 @@ const deleteTruckById = async (req, res) => {
 
 const updateTruckByLicencePlate = async (req, res) => {
     try{
-        const { licensePlate, brand, model, year, capacity } = req.body;
+        const { licensePlate, brand, model, year, capacity, actualStatus } = req.body;
         const truck = await prisma.truck.update({
             where: { licensePlate: licensePlate},
-            data: { brand, model, year, capacity },
+            data: { brand, model, year, capacity, actualStatus },
         });
         res.status(201).json(truck);
     }catch(error){
