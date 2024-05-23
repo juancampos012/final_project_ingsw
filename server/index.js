@@ -14,6 +14,7 @@ const tripRoutes = require('./src/routes/TripRoutes');
 const tireRoutes = require('./src/routes/TireRoutes');
 const refuelingRoutes = require('./src/routes/RefuelingRoutes');
 const maintenanceRoutes = require('./src/routes/MaintenanceRoutes');
+const usertruckRoutes = require('./src/routes/UserTruckRoutes');
 
 const PORT = process.env.PORT || 4000;
 
@@ -48,6 +49,9 @@ app.use('/api/v1/refueling', refuelingRoutes);
 
 // http://localhost:3006/api/v1/maintenance
 app.use('/api/v1/maintenance', maintenanceRoutes);
+
+// http://localhost:3006/api/v1/usertrucks
+app.use('/api/v1/usertrucks', usertruckRoutes);
 
 //connect to mongo
 const getConnection = async () => {
