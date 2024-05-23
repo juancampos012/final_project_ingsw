@@ -34,7 +34,9 @@ export const RefuelingComponent = () => {
     if(truckId){
       setOpen(true);
     }else{
-      alert("Selecciona un camion.")
+      AntdModal.error({
+        content: 'Ocurrió un error al crear el abastecimiento.',
+      });
     }
   }
   const handleClose = () =>{

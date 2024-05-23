@@ -139,6 +139,11 @@ export const Navbar = () => {
       handleDrawerClose();
     };
 
+    const handleSeeRoutes = () => {
+      navigate('/see-routes-admin');
+      handleDrawerClose();
+    };
+
     const handleRefueling = () => {
       navigate('/refueling-admin');
       handleDrawerClose();
@@ -308,12 +313,20 @@ export const Navbar = () => {
                     <ListItemText primary={'Camiones'} />
                   </ListItemButtonStyled>
                 </ListItem>
-                <ListItem key={'Rutas'} disablePadding>
+                <ListItem key={'Crear rutas'} disablePadding>
                   <ListItemButtonStyled onClick={handleRoutes}>
                     <ListItemIcon>
                       <MapIcon/>
                     </ListItemIcon>
-                    <ListItemText primary={'Rutas'} />
+                    <ListItemText primary={'Crear utas'} />
+                  </ListItemButtonStyled>
+                </ListItem>
+                <ListItem key={'verrutas'} disablePadding>
+                  <ListItemButtonStyled onClick={handleSeeRoutes}>
+                    <ListItemIcon>
+                      <MapIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Ver rutas'} />
                   </ListItemButtonStyled>
                 </ListItem>
                 <ListItem key={'Combustible'} disablePadding>
