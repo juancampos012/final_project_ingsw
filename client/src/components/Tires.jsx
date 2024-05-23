@@ -3,6 +3,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Truck } from '../request/trucks';
 import { Tire } from '../request/tires';
 import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import { Modal as AntdModal } from 'antd';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
@@ -31,7 +33,17 @@ export const Tires = () => {
   const [licensePlate, setLicensePlate] = React.useState("");
   const [truckId, setTruckId] = React.useState("");
 
+
   const dispatch = useDispatch();
+
+  const positionLabels = {
+    1: 'Delantera izquierda',
+    2: 'Delantera derecha',
+    3: 'Trasera izquierda',
+    4: 'Trasera derecha',
+    5: 'Central izquierda',
+    6: 'Central derecha'
+  };
 
   const handleOpen = () =>{
     if(truckId){
@@ -126,7 +138,30 @@ export const Tires = () => {
   const handleCreate = async () => {
     const mileageInt = parseInt(mileage);
     const wearInt = parseInt(wear);
+
     try {
+
+      if (!brand || !hoveredWheel || !truckId || isNaN(wearInt) || isNaN(mileageInt)) {
+        AntdModal.error({
+            content: 'Todos los campos son obligatorios y deben tener valores válidos.',
+        });
+        return;
+    }
+
+    if (wearInt < 0 || wearInt > 100) {
+        AntdModal.error({
+            content: 'El desgaste debe estar entre 0 y 100.',
+        });
+        return;
+    }
+
+    if (mileageInt < 0) {
+        AntdModal.error({
+            content: 'El kilometraje debe ser mayor a cero.',
+        });
+        return;
+    }
+
       const data = {
         brand,
         position: hoveredWheel,
@@ -150,6 +185,7 @@ export const Tires = () => {
             });
         }
     } catch (error) {
+      console.error(error);
       alert("Ocurrió un error al intentar crear la llanta");
     }
   };  
@@ -234,12 +270,12 @@ export const Tires = () => {
             <div className='div-create-truck-rigth'>
               <div>
                 <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Posición" variant="outlined" value={hoveredWheel} />
+                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Posición" variant="outlined" value={positionLabels[hoveredWheel]} />
                 </ThemeProvider>
               </div>
               <div>
                 <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Desgaste" variant="outlined" value={wear} onChange={(e) => setWear(e.target.value)}/>
+                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Desgaste (%)" variant="outlined" value={wear} onChange={(e) => setWear(e.target.value)}/>
                 </ThemeProvider>
               </div>
               <div>

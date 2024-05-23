@@ -105,11 +105,9 @@ model refueling {
 model maintenance {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   type        String
-  startDate   DateTime
-  finalDate   DateTime
+  startDate   DateTime  @default(now())
+  nextDate    DateTime
   cost        Float
-  completed   Boolean   @default(false)
   truck       truck     @relation(fields: [truckId], references: [id])
   truckId     String    @db.ObjectId
 }
-

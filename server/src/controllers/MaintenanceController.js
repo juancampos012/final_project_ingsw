@@ -4,16 +4,17 @@ const prisma = new PrismaClient();
 
 const createMaintenance = async (req, res) => {
     try{
-        const { type, date, cost, truck} = req.body;
+        const { type, nextDate, cost, truckId} = req.body;
+
         const maintenance = await prisma.maintenance.create({
             data: {
                 type,
-                date,
+                nextDate: new Date(nextDate).toISOString(),
                 cost, 
-                truck, 
+                truckId, 
             },
         });
-        res.status(201).json({truck});
+        res.status(201).json({maintenance});
     }catch(error){
         console.error(error);
         res.status(500).json({error: "Something went wrong"});
@@ -62,10 +63,10 @@ const deleteMaintenance = async (req, res) => {
 const updateMaintenanceById = async (req, res) => {
     try{
         const {id} = req.body;
-        const { type, date, cots, truck} = req.body;
+        const { type, date, cost, truckId} = req.body;
         const maintenance = await prisma.maintenance.update({
             where: { id: id},
-            data: { type, date, cots, truck},
+            data: { type, date, cots, truckId},
         });
         res.status(201).json(maintenance);
     }catch(error){

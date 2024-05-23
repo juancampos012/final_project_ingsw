@@ -97,35 +97,22 @@ const deleteTrip = async (req, res) => {
 }
 
 const updateTrip = async (req, res) => {
-    try{
-        const { id, originPlace, destinationPlace, distance, time, userId, truckId } = req.body;
-
-        // Aquí se actualiza la relación userTruck
-        const userTruck = await prisma.userTruck.update({
-            where: { id: userTruckId },
-            data: {
-                userId: userId,
-                truckId: truckId
-            },
-        });
+    try {
+        const { id, completed } = req.body;
 
         const trip = await prisma.trip.update({
             where: { id: id },
             data: {
-                originPlace,
-                destinationPlace,
-                distance,
-                time,
-                userTruckId: userTruck.id
+                completed: completed,
             },
         });
 
-        res.status(200).json({trip});
-    }catch(error){
+        res.status(200).json({ trip });
+    } catch (error) {
         console.error(error);
-        res.status(500).json({error: "Algo salió mal"});
+        res.status(500).json({ error: "Algo salió mal" });
     }
 };
 
 
-module.exports = {createTrip, getListTrips , getTripbyId , deleteTrip, getList }
+module.exports = {createTrip, getListTrips , getTripbyId , deleteTrip, updateTrip }
