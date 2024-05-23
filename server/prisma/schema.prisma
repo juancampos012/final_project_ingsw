@@ -30,7 +30,7 @@ model user{
   avatar          String?
   role            String? @default("user")
   address         address?
-  createdAt DateTime @default(now())
+  createdAt       DateTime? @default(now())
   userTrucks      userTruck[]
 }
 
@@ -76,7 +76,7 @@ model tire {
   position    Int
   velocityIndex Int
   wetGrip     String
-  createdAt   DateTime    @default(now())
+  createdAt   DateTime?    @default(now())
   truck       truck       @relation(fields: [truckId], references: [id])
   truckId     String      @db.ObjectId
 }
