@@ -14,6 +14,31 @@ import { Truck } from '../request/trucks';
 import { Modal } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import IconButton from '@mui/material/IconButton';
+import { createApi } from 'unsplash-js';
+
+const unsplash = createApi({
+  accessKey: 'Ww_%QY73k}6m4?a',
+});
+
+const getImageForTruck = async (brand, model) => {
+  try {
+    const query = `${brand} ${model}`;
+    const result = await unsplash.search.getPhotos({
+      query: query,
+      page: 1,
+      perPage: 1,
+    });
+
+    if (result.response.results.length > 0) {
+      return result.response.results[0].urls.small;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching image from Unsplash:', error);
+    return null;
+  }
+};
 
 const truckController = new Truck();
 
@@ -28,10 +53,24 @@ const columns = [
 ];
 
 export const TableCars = () => {
+
+  const [truckImage, setTruckImage] = useState(null);
   const dispatch = useDispatch();
   const trucks = useSelector((state) => state.truck.trucks);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedTruck, setSelectedTruck] = useState(null);
+
+  useEffect(() => {
+    if (selectedTruck) {
+      const fetchImage = async () => {
+        const imageUrl = await getImageForTruck(selectedTruck.brand, selectedTruck.model);
+        setTruckImage(imageUrl);
+      };
+      fetchImage();
+    }
+  }, [selectedTruck]);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -53,6 +92,7 @@ export const TableCars = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+  
 
   const handleDelete = async (id) => {
     Modal.confirm({
@@ -88,6 +128,17 @@ export const TableCars = () => {
   const draggingOver = (evt) => {
     evt.preventDefault();
   };
+
+  const handleRowClick = (truck) => {
+    setSelectedTruck(truck);
+    setIsModalVisible(true);
+};
+
+const handleModalClose = () => {
+    setIsModalVisible(false);
+    setSelectedTruck(null);
+};
+
 
   const onDrop = (evt, licensePlate) => {
     evt.preventDefault();
@@ -142,6 +193,7 @@ export const TableCars = () => {
                     onDragStart={(evt) => startDrag(evt, truck)}
                     onDragOver={draggingOver}
                     onDrop={(evt) => onDrop(evt, truck.licensePlate)}
+                    onClick={() => handleRowClick(truck)}
                   >
                     {columns.slice(0, -1).map((column) => {
                       const value = truck[column.id];
@@ -180,6 +232,22 @@ export const TableCars = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      {selectedTruck && (
+        <Modal
+          title="Información del Camión"
+          visible={isModalVisible}
+          onCancel={handleModalClose}
+          footer={null}
+        >
+          {truckImage && <img src={truckImage} alt={`${selectedTruck.brand} ${selectedTruck.model}`} className="truck-image" />}
+          <p><strong>Placa:</strong> {selectedTruck.licensePlate}</p>
+          <p><strong>Marca:</strong> {selectedTruck.brand}</p>
+          <p><strong>Línea:</strong> {selectedTruck.model}</p>
+          <p><strong>Modelo:</strong> {selectedTruck.year}</p>
+          <p><strong>Kilometraje:</strong> {selectedTruck.mileage}</p>
+          <p><strong>Estado Actual:</strong> {selectedTruck.actualStatus}</p>
+        </Modal>
+      )}
     </div>
   );
 };
