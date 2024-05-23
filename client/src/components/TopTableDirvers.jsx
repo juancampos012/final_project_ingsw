@@ -123,7 +123,7 @@ export const TopTableDrivers = () => {
 
       const response = await userController.newUser(formDataToSend);
       dispatch(addUser(formData));
-      if(response.status == 201){
+      if(response.status === 201){
         AntdModal.success({
           content: 'Usuario creado correctamente.',
         });

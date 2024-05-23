@@ -27,19 +27,6 @@ export const KanbaBoard = () => {
         });
     }, [miCookie]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await tripController.getListTrip(userId);
-            setTrips(response);
-            await parseLocations(response);
-          } catch (error) {
-            console.error('Hubo un error al cargar los datos:', error);
-          }
-        };
-        fetchData();
-    }, [userId]);
-
     const parseLocation = async (location) => {
         try {
           const locObj = JSON.parse(location);
@@ -59,7 +46,7 @@ export const KanbaBoard = () => {
         }
     };
 
-    const parseLocations = async (trips) => {
+    const parseLocations = (async (trips) => {
         const locations = {};
         for (const trip of trips) {
             locations[trip.id] = {
@@ -68,7 +55,20 @@ export const KanbaBoard = () => {
             };
         }
         setParsedLocations(locations);
-    };
+    }, [parseLocation]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await tripController.getListTrip(userId);
+            setTrips(response);
+            await parseLocations(response);
+          } catch (error) {
+            console.error('Hubo un error al cargar los datos:', error);
+          }
+        };
+        fetchData();
+    }, [userId, parseLocations]);
 
     const startDrag = (evt, item) => {
         evt.dataTransfer.setData('itemID', item.id);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 import { Truck } from '../request/trucks';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Modal as AntdModal } from 'antd';
@@ -9,12 +9,10 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { useDispatch } from 'react-redux';
 
 const truckController = new Truck();
 
 export const Maintenance = () => {
-  const dispatch = useDispatch();
   const [licensePlate, setLicensePlate] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [brand, setBrand] = React.useState("");
