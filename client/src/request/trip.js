@@ -21,4 +21,14 @@ export class Trip {
         const trip = await response.json();
         return trip;
       }
+
+      async getList() {
+        const url = `${this.base_api}/${ENV.API_ROUTES_TRIP.GETLISTTRIP}`;
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: { "Content-Type": "application/json" },
+        });
+        const trip = await response.json();
+        return trip;
+      }
 }
