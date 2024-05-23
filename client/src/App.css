@@ -463,6 +463,13 @@ body{
     margin-bottom: 0;
 }
 
+.truck-image {
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 8px;  
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
 .div-top-maintenance h4{
     font-size: 300%;
     font-family: 'Lato', sans-serif;
