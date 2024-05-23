@@ -32,6 +32,7 @@ import Popover from '@mui/material/Popover';
 import Cookies from 'js-cookie';
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
+import EngineeringIcon from '@mui/icons-material/Engineering';
 
 const drawerWidth = 240;
 const userController = new User();
@@ -118,6 +119,11 @@ export const Navbar = () => {
       handleDrawerClose();
     };
 
+    const handleMaintenance = () => {
+      navigate('/maintenance-admin')
+      handleDrawerClose();
+    };
+
     const handleTrucks = () => {
       navigate('/trucks-admin');
       handleDrawerClose();
@@ -130,6 +136,11 @@ export const Navbar = () => {
 
     const handleRoutes = () => {
       navigate('/routes-admin');
+      handleDrawerClose();
+    };
+
+    const handleSeeRoutes = () => {
+      navigate('/see-routes-admin');
       handleDrawerClose();
     };
 
@@ -302,12 +313,20 @@ export const Navbar = () => {
                     <ListItemText primary={'Camiones'} />
                   </ListItemButtonStyled>
                 </ListItem>
-                <ListItem key={'Rutas'} disablePadding>
+                <ListItem key={'Crear rutas'} disablePadding>
                   <ListItemButtonStyled onClick={handleRoutes}>
                     <ListItemIcon>
                       <MapIcon/>
                     </ListItemIcon>
-                    <ListItemText primary={'Rutas'} />
+                    <ListItemText primary={'Crear utas'} />
+                  </ListItemButtonStyled>
+                </ListItem>
+                <ListItem key={'verrutas'} disablePadding>
+                  <ListItemButtonStyled onClick={handleSeeRoutes}>
+                    <ListItemIcon>
+                      <MapIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Ver rutas'} />
                   </ListItemButtonStyled>
                 </ListItem>
                 <ListItem key={'Combustible'} disablePadding>
@@ -324,6 +343,14 @@ export const Navbar = () => {
                       <TireRepairIcon/>
                     </ListItemIcon>
                     <ListItemText primary={'Neumaticos'} />
+                  </ListItemButtonStyled>
+                </ListItem>
+                <ListItem key={'Mantenimiento'} disablePadding>
+                  <ListItemButtonStyled onClick={handleMaintenance}>
+                    <ListItemIcon>
+                      <EngineeringIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Mantenimiento'} />
                   </ListItemButtonStyled>
                 </ListItem>
               </List>
