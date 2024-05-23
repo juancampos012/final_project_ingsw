@@ -6,7 +6,6 @@ const createTrip = async (req, res) => {
     try{
         const { originPlace, destinationPlace, distance, time, userId, truckId } = req.body;
 
-        // Aquí se crea la relación userTruck
         const userTruck = await prisma.userTruck.create({
             data: {
                 userId: userId,
@@ -24,7 +23,6 @@ const createTrip = async (req, res) => {
             },
         });
 
-        // Aquí se añade el viaje al array de trips en el registro userTruck
         await prisma.userTruck.update({
             where: { id: userTruck.id },
             data: { trips: { connect: { id: trip.id } } }
@@ -52,6 +50,17 @@ const getListTrips = async (req, res) => {
 
         const trips = userTrucks.flatMap(userTruck => userTruck.trips);
 
+        res.status(200).json(trips);
+    } catch (error) {
+        console.error(error.message);
+        res.status(400).json({ message: error.message });
+    }
+};
+
+const getList = async (req, res) => {
+    try {
+        const trips = await prisma.trip.findMany();
+        
         res.status(200).json(trips);
     } catch (error) {
         console.error(error.message);
@@ -119,4 +128,4 @@ const updateTrip = async (req, res) => {
 };
 
 
-module.exports = {createTrip, getListTrips , getTripbyId , deleteTrip }
+module.exports = {createTrip, getListTrips , getTripbyId , deleteTrip, getList }

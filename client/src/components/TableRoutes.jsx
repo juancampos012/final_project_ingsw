@@ -1,6 +1,4 @@
 import React from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import { getUsers, deleteUserById, updateUsersOrder } from "../slices/userSlice";
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,37 +7,44 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import IconButton from '@mui/material/IconButton';
-import { Modal } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
-import { User } from '../request/users';
+import { Trip } from '../request/trip';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { GoogleMap, LoadScript, DirectionsRenderer } from '@react-google-maps/api';
 
-const userController = new User();
+const tripController = new Trip();
 
 const columns = [
-  { id: 'name', label: 'Nombre', minWidth: 170 },
-  { id: 'lastName', label: 'Apellido', minWidth: 170 },
-  { id: 'identification', label: 'Identificación', minWidth: 170 },
-  { id: 'actions', label: '', minWidth: 50 },
+  { id: 'originPlace', label: 'Origen', minWidth: 170 },
+  { id: 'destinationPlace', label: 'Destino', minWidth: 170 },
+  { id: 'completed', label: 'Estado', minWidth: 170 },
 ];
 
 export const TableRoutes = () => {
-  const dispatch = useDispatch();
-  const users = useSelector((state) => state.user.users);
+  const [trips, setTrips] = React.useState([]);
+  const [tripsReal, setTripsReal] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [open, setOpen] = React.useState(false);
+  const [selectedTrip, setSelectedTrip] = React.useState(null);
+  const [response, setResponse] = React.useState(null);
+  const [mapIsLoaded, setIsMapsLoaded] = React.useState(false);
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const usersData = await userController.getListUser();
-        dispatch(getUsers(usersData));
+        const tripData = await tripController.getList();
+        setTrips(tripData);
+        setTripsReal(tripData);
       } catch (error) {
         console.error('Hubo un error al cargar los datos:', error);
       }
     };
     fetchData();
-  }, [dispatch]);
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -50,53 +55,90 @@ export const TableRoutes = () => {
     setPage(0);
   };
 
-  const handleDelete = async (id) => {
-    Modal.confirm({
-      title: 'Confirmación',
-      content: '¿Estás seguro de que quieres eliminar este usuario?',
-      onOk: async () => {
-        try {
-          const response = await userController.deleteUser(id);
-          if (response.status === 200) {
-            dispatch(deleteUserById(id));
-            Modal.success({
-              content: 'Usuario eliminado correctamente.',
-            });
-          } else {
-            Modal.error({
-              content: 'Ocurrió un error al eliminar el usuario.',
-            });
-          }
-        } catch (error) {
-          console.error("Failed to delete user", error);
-          Modal.error({
-            content: 'Ocurrió un error al eliminar el usuario.',
-          });
+  const handleOpen = (tripId) => {
+    const selected = tripsReal.find(trip => trip.id === tripId);
+    setSelectedTrip(selected);
+    setOpen(true);
+    setResponse(null); 
+  };
+
+  const handleClose = () => {
+    setSelectedTrip(null);
+    setOpen(false);
+    setIsMapsLoaded(false);
+  };
+
+  React.useEffect(() => {
+    if (selectedTrip && window.google && window.google.maps ) {
+      const directionsService = new window.google.maps.DirectionsService();
+      try {
+        const origin = JSON.parse(selectedTrip.originPlace);
+        const destination = JSON.parse(selectedTrip.destinationPlace);
+  
+        if (origin && destination) {
+          console.log('Origin:', origin);
+          console.log('Destination:', destination);
+          directionsService.route(
+            {
+              origin: origin,
+              destination: destination,
+              travelMode: window.google.maps.TravelMode.DRIVING,
+            },
+            (result, status) => {
+              if (status === window.google.maps.DirectionsStatus.OK) {
+                setResponse(result);
+              } else {
+                console.error(`Error fetching directions: ${status}`);
+              }
+            }
+          );
+        } else {
+          console.error('Error: origin or destination is null or undefined');
         }
-      },
-    });
-  };
+      } catch (error) {
+        console.error('Error parsing origin or destination places', error);
+      }
+    } else {
+      console.log('Google Maps not available or selectedTrip is null or undefined');
+    }
+  }, [selectedTrip, mapIsLoaded]);  
 
-  const startDrag = (evt, item) => {
-    evt.dataTransfer.setData('itemID', item.identification);
-  };
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const tripData = await tripController.getList();
+        setTripsReal(tripData);
+        const tripsWithLocationNames = await Promise.all(tripData.map(async trip => {
+          const originName = await parseLocation(trip.originPlace);
+          const destinationName = await parseLocation(trip.destinationPlace);
+          const completed = await trip.completed;
+          return { ...trip, originPlace: originName, destinationPlace: destinationName, completed: completed };
+        }));
+        setTrips(tripsWithLocationNames);
+      } catch (error) {
+        console.error('Hubo un error al cargar los datos:', error);
+      }
+    };
+    fetchData();
+  }, []);
 
-  const draggingOver = (evt) => {
-    evt.preventDefault();
-  };
+  const parseLocation = async (location) => {
+    try {
+      const locObj = JSON.parse(location);
 
-  const onDrop = (evt, identification) => {
-    evt.preventDefault();
-    const itemID = evt.dataTransfer.getData('itemID');
-    const draggedItemIndex = users.findIndex(user => user.identification === itemID);
-    const draggedItem = users[draggedItemIndex];
-    const dropIndex = users.findIndex(user => user.identification === identification);
-
-    const updatedUsers = [...users];
-    updatedUsers.splice(draggedItemIndex, 1);
-    updatedUsers.splice(dropIndex, 0, draggedItem);
-
-    dispatch(updateUsersOrder(updatedUsers));
+      const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${locObj.lat},${locObj.lng}&key=AIzaSyAf2AHLtGvjMJouKecs0kkw1AQw2YTZfdc`);
+      const data = await response.json();
+  
+      if (data.status === 'OK') {
+        return data.results[0].formatted_address;
+      } else {
+        console.error('Error al obtener la dirección:', data.status);
+        return 'Error al obtener la dirección';
+      }
+    } catch (error) {
+      console.error('Error al analizar la ubicación:', error);
+      return 'Ubicación inválida';
+    }
   };
 
   return (
@@ -121,35 +163,31 @@ export const TableRoutes = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users
+                {trips
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((user) => {
+                  .map((trip) => {
                     return (
                       <TableRow
                         hover
                         role="checkbox"
                         tabIndex={-1}
-                        key={user.identification}
-                        draggable
-                        onDragStart={(evt) => startDrag(evt, user)}
-                        onDragOver={draggingOver}
-                        onDrop={(evt) => onDrop(evt, user.identification)}
+                        key={trip.id}
+                        onClick={() => handleOpen(trip.id)}
                       >
-                        {columns.slice(0, -1).map((column) => {
-                          const value = user[column.id];
+                        {columns.map((column) => {
+                          const value = trip[column.id];
                           return (
                             <TableCell key={column.id} style={{ minWidth: column.minWidth, width: column.minWidth }}>
-                              {column.format && typeof value === 'number'
-                                ? column.format(value)
-                                : value}
+                              {column.id === 'completed'
+                                ? value
+                                  ? <CheckCircleIcon />
+                                  : <CancelIcon />
+                                : column.format && typeof value === 'number'
+                                  ? column.format(value)
+                                  : value}
                             </TableCell>
                           );
                         })}
-                        <TableCell key="actions" style={{ minWidth: 50, width: 50 }}>
-                          <IconButton onClick={() => handleDelete(user.id)}>
-                            <DeleteOutlined />
-                          </IconButton>
-                        </TableCell>
                       </TableRow>
                     );
                   })}
@@ -159,7 +197,7 @@ export const TableRoutes = () => {
           <TablePagination
             rowsPerPageOptions={[10, 25]}
             component="div"
-            count={users.length}
+            count={trips.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -167,6 +205,65 @@ export const TableRoutes = () => {
           />
         </Paper>
       </div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Ruta
+          </Typography>
+          <Typography>
+            {selectedTrip && (
+              <p>Distancia de la ruta: {selectedTrip.distance}km</p>
+            )}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {selectedTrip && (
+             <LoadScript googleMapsApiKey="AIzaSyAf2AHLtGvjMJouKecs0kkw1AQw2YTZfdc" onLoad={() => setIsMapsLoaded(true)}>
+             <div className='div-map-route'>  
+               <GoogleMap
+                 id='direction-example'
+                 mapContainerStyle={{
+                   height: "70vh",
+                   width: "100%"
+                 }}
+                 zoom={8}
+                 center={{
+                   lat: 5.06889,
+                   lng: -75.51738
+                 }}
+               >
+                 {
+                   response !== null && (
+                     <DirectionsRenderer
+                       options={{
+                         directions: response
+                       }}
+                     />
+                   )
+                  }
+               </GoogleMap>
+             </div>
+           </LoadScript>
+            )}
+          </Typography>
+        </Box>
+      </Modal>
     </>
   );
+};
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '80%',
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 4,
+  borderRadius: 3,
 };
