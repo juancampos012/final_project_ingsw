@@ -1,4 +1,7 @@
 import React from 'react';
+import { Trip } from '../request/trip';
+import { User } from '../request/users';
+import { Truck } from '../request/trucks';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,7 +10,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Trip } from '../request/trip';
 import Button from '@mui/material/Button';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -16,6 +18,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { GoogleMap, LoadScript, DirectionsRenderer } from '@react-google-maps/api';
 
+const userController = new User();
+const truckController = new Truck();
 const tripController = new Trip();
 
 const columns = [
@@ -33,6 +37,8 @@ export const TableRoutes = () => {
   const [selectedTrip, setSelectedTrip] = React.useState(null);
   const [response, setResponse] = React.useState(null);
   const [mapIsLoaded, setIsMapsLoaded] = React.useState(false);
+  const [userSelected, setUserSelected] = React.useState("");
+  const [truckSelected, setTruckSelected] = React.useState("");
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -56,8 +62,13 @@ export const TableRoutes = () => {
     setPage(0);
   };
 
-  const handleOpen = (tripId) => {
+  const handleOpen = async (tripId) => {
     const selected = tripsReal.find(trip => trip.id === tripId);
+    const data = await tripController.getUserTruck(selected.userTruckId);
+    const userData = await userController.getUserById(data.userId);
+    const truckData = await truckController.get(data.userId);
+    setUserSelected(userData);
+    setTruckSelected(truckData);
     setSelectedTrip(selected);
     setOpen(true);
     setResponse(null); 
@@ -75,14 +86,14 @@ export const TableRoutes = () => {
       try {
         const origin = JSON.parse(selectedTrip.originPlace);
         const destination = JSON.parse(selectedTrip.destinationPlace);
+        const waypoints = selectedTrip.waypoints.map(wp => ({ location: JSON.parse(wp), stopover: true }));
   
         if (origin && destination) {
-          console.log('Origin:', origin);
-          console.log('Destination:', destination);
           directionsService.route(
             {
               origin: origin,
               destination: destination,
+              waypoints,
               travelMode: window.google.maps.TravelMode.DRIVING,
             },
             (result, status) => {
@@ -218,8 +229,26 @@ export const TableRoutes = () => {
           </Typography>
           <Typography>
             {selectedTrip && (
-              <p>Distancia de la ruta: {selectedTrip.distance}km</p>
+              <p>Nombre conductor: {userSelected.name}</p>
             )}
+            {selectedTrip && (
+              <p>Cedula conductor: {userSelected.identification}</p>
+            )}
+            {selectedTrip && (
+              <p>Placa camion: {truckSelected.licensePlate}</p>
+            )}
+            {selectedTrip && (
+              <p>Camion: {truckSelected.brand} {truckSelected.model}</p>
+            )}
+            {selectedTrip && (
+              <p>Distancia: {selectedTrip.distance}km</p>
+            )}
+            {selectedTrip && (() => {
+                let horas = Math.floor(selectedTrip.time);
+                let minutos = Math.round((selectedTrip.time - horas) * 60);
+                return <p>Tiempo aproximado: {horas} horas y {minutos} minutos</p>
+              })()
+            }
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {selectedTrip && (
@@ -260,11 +289,12 @@ export const TableRoutes = () => {
                 Cerrar
               </Button>
             </div>
-        </Box>
-      </Modal>
-    </>
-  );
-};
+          </Box>
+        </Modal>
+      </>
+    );
+  };
+  
 
 const style = {
   position: 'absolute',
