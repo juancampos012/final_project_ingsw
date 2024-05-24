@@ -105,10 +105,14 @@ export const Navbar = () => {
         setOpen(false);
     };
 
-    const handleLogout = () => {
-        userController.createCookie("jwt", "cerrarseision");
-        window.location.reload();
-    };
+    const handleLogout = async () => {
+      try {
+          await userController.createCookie("jwt", "cerrarseision");
+          setTimeout(() => window.location.reload(), 40);
+      } catch (error) {
+          console.error("Error al cerrar sesión: ", error);
+      }
+  };  
 
     const handleUpdate = () => {
       navigate('/update-personal-data');
