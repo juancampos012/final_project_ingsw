@@ -32,8 +32,6 @@ export const MapComponent = () => {
   const [truckId, setTruckId] = useState("");
   const [timeString, setTimeString] = useState("");
   const [distanceString, setDistanceString] = useState("");
-  const [time, setTime] = useState("");
-  const [distance, setDistance] = useState("");
   const [response, setResponse] = useState(null);
   const [originPlace, setOrigin] = useState("");
   const [destinationPlace, setDestination] = useState("");
@@ -110,8 +108,10 @@ export const MapComponent = () => {
         (result, status) => {
           if (status === window.google.maps.DirectionsStatus.OK) {
             setResponse(result);
-            setDistanceString(result.routes[0].legs.map(leg => leg.distance.text).join(", "));
-            setTimeString(result.routes[0].legs.map(leg => leg.duration.text).join(", "));
+            const distances = result.routes[0].legs.map(leg => leg.distance.text);
+            const times = result.routes[0].legs.map(leg => leg.duration.text);
+            setDistanceString(distances);
+            setTimeString(times);
           } else {
             console.error(`error fetching directions ${result}`);
           }
@@ -185,33 +185,41 @@ export const MapComponent = () => {
   };
 
   const handleCreate = async () => {
-    setDistance(parseFloat(distanceString.split(" ")[0]));
-    const parts = timeString.split(" ");
-    const hours = parseFloat(parts[0]);
-    const minutes = parseFloat(parts[2]);
-    setTime(hours + minutes / 60);
+    let totalDistance = 0;
+    let totalTime = 0;
+  
+    for(let i = 0; i < distanceString.length; i++) {
+      let distanceParts = distanceString[i].split(" ");
+      totalDistance += parseFloat(distanceParts[0]);
+  
+      let timeParts = timeString[i].split(" ");
+      let hours = parseFloat(timeParts[0]);
+      let minutes = parseFloat(timeParts[2]);
+      totalTime += hours + minutes / 60;
+    }
   
     const data = {
       originPlace: JSON.stringify(originPlace),
       destinationPlace: JSON.stringify(destinationPlace),
       waypoints: waypoints.map(wp => JSON.stringify(wp)),
-      distance, 
-      time, 
-      userId, 
+      distance: totalDistance,
+      time: totalTime,
+      userId,
       truckId 
     };
-
+  
     const response = await tripController.newTrip(data);
     dispatch(addTrip(data));
+  
     if (response.status === 201) {
       AntdModal.success({
-          content: 'Ruta creada correctamente.',
+        content: 'Ruta creada correctamente.',
       });
-  } else {
+    } else {
       AntdModal.error({
-          content: 'Ocurrió un error al crear la ruta.',
+        content: 'Ocurrió un error al crear la ruta.',
       });
-  }
+    }
   }  
 
   return (

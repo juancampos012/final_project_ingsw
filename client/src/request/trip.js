@@ -31,4 +31,14 @@ export class Trip {
         const trip = await response.json();
         return trip;
       }
+
+    async getUserTruck(id) {
+      const url = `${this.base_api}/${ENV.API_ROUTES_TRIP.GETUSERTTRUCKBYID}?id=${id}`;
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: { "Content-Type": "application/json" },
+      });
+      const trip = await response.json();
+      return trip;
+    }
 }
