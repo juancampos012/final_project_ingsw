@@ -6,7 +6,6 @@ const createTrip = async (req, res) => {
     try{
         const { originPlace, destinationPlace, distance, time, userId, truckId } = req.body;
 
-        // Aquí se crea la relación userTruck
         const userTruck = await prisma.userTruck.create({
             data: {
                 userId: userId,
@@ -24,10 +23,19 @@ const createTrip = async (req, res) => {
             },
         });
 
-        // Aquí se añade el viaje al array de trips en el registro userTruck
         await prisma.userTruck.update({
             where: { id: userTruck.id },
             data: { trips: { connect: { id: trip.id } } }
+        });
+
+        const truck = await prisma.truck.update({
+            where: { id: truckId },
+            data: { mileage: { increment: distance } },
+        });
+
+        await prisma.tire.updateMany({
+            where: { truckId: truckId },
+            data: { mileage: { increment: distance } },
         });
 
         res.status(201).json({trip});
