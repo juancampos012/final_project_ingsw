@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { getTrucks, deleteTruckById, updateTrucksOrder } from "../slices/truckSlice";

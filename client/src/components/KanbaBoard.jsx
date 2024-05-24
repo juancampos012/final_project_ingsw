@@ -47,9 +47,11 @@ export const KanbaBoard = () => {
         const parseLocations = async (trips) => {
             const locations = {};
             for (const trip of trips) {
+                const waypoints = trip.waypoints ? await Promise.all(trip.waypoints.map(parseLocation)) : [];
                 locations[trip.id] = {
                     origin: await parseLocation(trip.originPlace),
                     destination: await parseLocation(trip.destinationPlace),
+                    waypoints,
                 };
             }
             setParsedLocations(locations);
@@ -98,25 +100,33 @@ export const KanbaBoard = () => {
             console.error('Error al actualizar el viaje:', error);
         }
     }
-
+    
     const onDrop = (evt, completed) => {
         const itemID = evt.dataTransfer.getData('itemID');
         const item = trips.find(item => item.id === itemID);
     
         if (!item.completed && completed) {
-            item.completed = true; 
+            AntdModal.confirm({
+                title: '¿Estás seguro?',
+                content: '¿Quieres marcar este viaje como completado?',
+                onOk() {
+                    item.completed = true; 
     
-            const newState = trips.map(trip => {
-                if (trip.id === itemID) return item;
-                return trip;
+                    const newState = trips.map(trip => {
+                        if (trip.id === itemID) return item;
+                        return trip;
+                    });
+                    setTrips(newState);
+    
+                    updateTrip(item);
+                },
+                onCancel() {
+                    console.log('Cancelado');
+                },
             });
-            setTrips(newState);
-    
-            updateTrip(item);
         }
-    }
+    }    
     
-
     const formatTime = (timeInHours) => {
         const hours = Math.floor(timeInHours);
         const minutes = Math.round((timeInHours - hours) * 60);
@@ -141,6 +151,7 @@ export const KanbaBoard = () => {
                             <div className='dd-element' key={item.id} draggable onDragStart={(evt) => startDrag(evt, item)}>
                                 <strong className='title'>Viaje</strong>
                                 <p className='body'>Origen: {parsedLocations[item.id]?.origin || 'Cargando...'}</p>
+                                {parsedLocations[item.id]?.waypoints.map((waypoint, index) => <p key={index} className='body'>Parada {index + 1}: {waypoint}</p>)}                                
                                 <p className='body'>Destino: {parsedLocations[item.id]?.destination || 'Cargando...'}</p>
                                 <p className='body'>Distancia: {item.distance} km</p>
                                 <p className='body'>Tiempo: {formatTime(item.time)}</p>
@@ -158,6 +169,7 @@ export const KanbaBoard = () => {
                             <div className='dd-element' key={item.id} draggable onDragStart={(evt) => startDrag(evt, item)}>
                                 <strong className='title'>Viaje</strong>
                                 <p className='body'>Origen: {parsedLocations[item.id]?.origin || 'Cargando...'}</p>
+                                {parsedLocations[item.id]?.waypoints.map((waypoint, index) => <p key={index} className='body'>Parada {index + 1}: {waypoint}</p>)}                                
                                 <p className='body'>Destino: {parsedLocations[item.id]?.destination || 'Cargando...'}</p>
                                 <p className='body'>Distancia: {item.distance} km</p>
                                 <p className='body'>Tiempo: {formatTime(item.time)}</p>
