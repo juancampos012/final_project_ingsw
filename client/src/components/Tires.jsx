@@ -170,23 +170,35 @@ export const Tires = () => {
         wetGrip,
       };
 
-      dispatch(addTire(data));
-
       const response = await tireController.newTire(data);
-      if (response.status === 201) {
-        AntdModal.success({
-            content: 'Llanta creada correctamente.',
+
+      if (response.status === 400 && response.data.error === "Ya existe una llanta en esta posición. ¿Desea reemplazarla?") {
+        AntdModal.confirm({
+          title: 'Llanta existente',
+          content: response.data.error,
+          onOk: async () => {
+            const existingTireResponse = await tireController.getTiresByTruckId(truckId);
+            const existingTire = existingTireResponse.find(tire => tire.position === hoveredWheel);
+            const replaceResponse = await tireController.updateTire({ ...data, id: existingTire.id });
+            if (replaceResponse.status === 201) {
+              dispatch(addTire(replaceResponse.data.tire));
+              alert.success("Llanta reemplazada exitosamente");
+            } else {
+              alert.error("Error al reemplazar la llanta");
+            }
+          },
         });
-        } else {
-            AntdModal.error({
-                content: 'Ocurrió un error al crear la llanta.',
-            });
-        }
+      } else if (response.status === 201) {
+        dispatch(addTire(response.data.tire));
+        alert.success("Creación exitosa");
+      } else {
+        alert.error("Error al crear la llanta");
+      }
     } catch (error) {
       console.error(error);
-      alert("Ocurrió un error al intentar crear la llanta");
+      alert.error("Ocurrió un error al intentar crear la llanta");
     }
-  };  
+  };
 
   return (
     <>

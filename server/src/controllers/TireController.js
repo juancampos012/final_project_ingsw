@@ -5,6 +5,17 @@ const prisma = new PrismaClient();
 const createTire = async (req, res) => {
     try{
         const { brand, mileage, position, wear, velocityIndex, wetGrip, truckId} = req.body;
+
+        const existingTire = await prisma.tire.findFirst({
+            where: {
+                truckId: truckId,
+                position: position,
+            },
+        });
+        if (existingTire) {
+            return res.status(400).json({ error: "Ya existe una llanta en esta posición. ¿Desea reemplazarla?" });
+        }
+
         const tire = await prisma.tire.create({
             data: {
                 brand,

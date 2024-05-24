@@ -27,8 +27,18 @@ const createTrip = async (req, res) => {
             data: { trips: { connect: { id: trip.id } } }
         });
 
-        res.status(201).json({ trip });
-    } catch (error) {
+        const truck = await prisma.truck.update({
+            where: { id: truckId },
+            data: { mileage: { increment: distance } },
+        });
+
+        await prisma.tire.updateMany({
+            where: { truckId: truckId },
+            data: { mileage: { increment: distance } },
+        });
+
+        res.status(201).json({trip});
+    }catch(error){
         console.error(error);
         res.status(500).json({ error: "Algo salió mal" });
     }
