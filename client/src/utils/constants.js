@@ -35,5 +35,8 @@ export const ENV ={
     },
     API_ROUTES_REFUELING:{
         NEWREFUELING: "refueling/new-refueling",
+    },
+    API_ROUTES_MAINTENANCE:{
+        NEWMAINTENANCE: "maintenance/new-maintenance"
     }
 }

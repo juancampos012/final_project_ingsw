@@ -14,9 +14,7 @@ export const KanbaBoard = () => {
 
     React.useEffect(() => {
         userController.verifyToken(miCookie)
-        .then(data => {
-            return data.json();
-        })
+        .then(data => data.json())
         .then(response => {
             if(response.user){
                 setUserId(response.user.user.id);
@@ -27,48 +25,46 @@ export const KanbaBoard = () => {
         });
     }, [miCookie]);
 
-    const parseLocation = async (location) => {
-        try {
-          const locObj = JSON.parse(location);
-
-          const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${locObj.lat},${locObj.lng}&key=AIzaSyAf2AHLtGvjMJouKecs0kkw1AQw2YTZfdc`);
-          const data = await response.json();
-      
-          if (data.status === 'OK') {
-            return data.results[0].formatted_address;
-          } else {
-            console.error('Error al obtener la dirección:', data.status);
-            return 'Error al obtener la dirección';
-          }
-        } catch (error) {
-          console.error('Error al analizar la ubicación:', error);
-          return 'Ubicación inválida';
-        }
-    };
-
-    const parseLocations = (async (trips) => {
-        const locations = {};
-        for (const trip of trips) {
-            locations[trip.id] = {
-                origin: await parseLocation(trip.originPlace),
-                destination: await parseLocation(trip.destinationPlace),
-            };
-        }
-        setParsedLocations(locations);
-    }, [parseLocation]);
-
     useEffect(() => {
+        const parseLocation = async (location) => {
+            try {
+                const locObj = JSON.parse(location);
+                const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${locObj.lat},${locObj.lng}&key=AIzaSyAf2AHLtGvjMJouKecs0kkw1AQw2YTZfdc`);
+                const data = await response.json();
+                if (data.status === 'OK') {
+                    return data.results[0].formatted_address;
+                } else {
+                    console.error('Error al obtener la dirección:', data.status);
+                    return 'Error al obtener la dirección';
+                }
+            } catch (error) {
+                console.error('Error al analizar la ubicación:', error);
+                return 'Ubicación inválida';
+            }
+        };
+
+        const parseLocations = async (trips) => {
+            const locations = {};
+            for (const trip of trips) {
+                locations[trip.id] = {
+                    origin: await parseLocation(trip.originPlace),
+                    destination: await parseLocation(trip.destinationPlace),
+                };
+            }
+            setParsedLocations(locations);
+        };
+
         const fetchData = async () => {
-          try {
-            const response = await tripController.getListTrip(userId);
-            setTrips(response);
-            await parseLocations(response);
-          } catch (error) {
-            console.error('Hubo un error al cargar los datos:', error);
-          }
+            try {
+                const response = await tripController.getListTrip(userId);
+                setTrips(response);
+                await parseLocations(response);
+            } catch (error) {
+                console.error('Hubo un error al cargar los datos:', error);
+            }
         };
         fetchData();
-    }, [userId, parseLocations]);
+    }, [userId]);
 
     const startDrag = (evt, item) => {
         evt.dataTransfer.setData('itemID', item.id);

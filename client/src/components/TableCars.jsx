@@ -62,7 +62,7 @@ export const TableCars = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedTruck, setSelectedTruck] = useState(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (selectedTruck) {
       const fetchImage = async () => {
         const imageUrl = await getImageForTruck(selectedTruck.brand, selectedTruck.model);
