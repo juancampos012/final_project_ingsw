@@ -60,6 +60,18 @@ const deleteTruckByLicencePlate = async (req, res) => {
     }
 }
 
+const getTruckById = async (req, res) => {
+    try{
+        const {id} = req.query; 
+        const truck = await prisma.truck.findUnique({
+            where: { id: id },
+        });
+        res.status(200).json(truck);
+    }catch(error){
+        res.status(400).json({message: error.message});
+    }
+};
+
 const deleteTruckById = async (req, res) => {
     try {
         const { id } = req.query;
@@ -139,4 +151,4 @@ const getListLicensePlate= async (req, res) => {
     }
 };
 
-module.exports = { createTruck, getListTruck, getTruckByLicencePlate, deleteTruckByLicencePlate, updateTruckByLicencePlate, getListLicensePlate, deleteTruckById}
+module.exports = { createTruck, getListTruck, getTruckByLicencePlate, deleteTruckByLicencePlate, updateTruckByLicencePlate, getListLicensePlate, deleteTruckById, getTruckById}

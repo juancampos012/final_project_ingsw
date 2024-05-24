@@ -59,7 +59,7 @@ export class Truck {
       }
 
       async getTruckById(id) {
-        const url = `${this.base_api}/${ENV.API_ROUTES_TRIP.GETUSERTTRUCKBYID}?id=${id}`;
+        const url = `${this.base_api}/${ENV.API_ROUTES_TRUCK.GETTRUCKBYID}?id=${id}`;
         const response = await fetch(url, {
           method: 'GET',
           headers: { "Content-Type": "application/json" },

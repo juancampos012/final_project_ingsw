@@ -66,7 +66,7 @@ export const TableRoutes = () => {
     const selected = tripsReal.find(trip => trip.id === tripId);
     const data = await tripController.getUserTruck(selected.userTruckId);
     const userData = await userController.getUserById(data.userId);
-    const truckData = await truckController.get(data.userId);
+    const truckData = await truckController.getTruckById(data.truckId);
     setUserSelected(userData);
     setTruckSelected(truckData);
     setSelectedTrip(selected);
