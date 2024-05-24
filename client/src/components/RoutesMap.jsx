@@ -112,6 +112,7 @@ export const MapComponent = () => {
             const times = result.routes[0].legs.map(leg => leg.duration.text);
             setDistanceString(distances);
             setTimeString(times);
+            console.log(times);
           } else {
             console.error(`error fetching directions ${result}`);
           }
@@ -187,16 +188,27 @@ export const MapComponent = () => {
   const handleCreate = async () => {
     let totalDistance = 0;
     let totalTime = 0;
+    let totalHours = 0;
+    let totalMinutes = 0;
   
     for(let i = 0; i < distanceString.length; i++) {
       let distanceParts = distanceString[i].split(" ");
       totalDistance += parseFloat(distanceParts[0]);
-  
-      let timeParts = timeString[i].split(" ");
-      let hours = parseFloat(timeParts[0]);
-      let minutes = parseFloat(timeParts[2]);
-      totalTime += hours + minutes / 60;
     }
+    
+    for (let i = 0; i < timeString.length; i++) {
+      let timeParts = timeString[i].split(" ");
+      for (let j = 0; j < timeParts.length; j++) {
+          if (timeParts[j] === "h") {
+              totalHours += parseFloat(timeParts[j - 1]);
+          }
+          if (timeParts[j] === "min") {
+              totalMinutes += parseFloat(timeParts[j - 1]);
+          }
+      }
+    }
+    
+    totalTime = totalHours + totalMinutes / 60;
   
     const data = {
       originPlace: JSON.stringify(originPlace),

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Truck } from '../request/trucks';
 import { Tire } from '../request/tires';
+import { Modal as AntdModal } from 'antd';
+import { Modal as MuiModal } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -11,8 +13,6 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { addTire } from '../slices/tireSlice';
 import { useDispatch } from 'react-redux';
-import { Modal as AntdModal } from 'antd';
-import { Modal as MuiModal } from '@mui/material';
 
 const truckController = new Truck();
 const tireController = new Tire();
@@ -136,6 +136,7 @@ export const Tires = () => {
   const handleCreate = async () => {
     const mileageInt = parseInt(mileage);
     const wearInt = parseInt(wear);
+    const velocityIndexInt = parseInt(velocityIndex);
 
     try {
 
@@ -166,37 +167,55 @@ export const Tires = () => {
         truckId, 
         wear: wearInt,
         mileage: mileageInt,
-        velocityIndex,
+        velocityIndex: velocityIndexInt,
         wetGrip,
       };
 
       const response = await tireController.newTire(data);
 
-      if (response.status === 400 && response.data.error === "Ya existe una llanta en esta posición. ¿Desea reemplazarla?") {
+      if (response.status === 400) {
         AntdModal.confirm({
           title: 'Llanta existente',
-          content: response.data.error,
+          content: "Deseas reemplazarla?",
           onOk: async () => {
-            const existingTireResponse = await tireController.getTiresByTruckId(truckId);
-            const existingTire = existingTireResponse.find(tire => tire.position === hoveredWheel);
-            const replaceResponse = await tireController.updateTire({ ...data, id: existingTire.id });
+            const tire = await tireController.getTireByTruckId(truckId, hoveredWheel);
+            const dataTire = {
+              id: tire.id,
+              brand,
+              position: hoveredWheel,
+              truckId, 
+              wear: wearInt,
+              mileage: mileageInt,
+              velocityIndex: velocityIndexInt,
+              wetGrip,
+            };
+            const replaceResponse = await tireController.updateTireById(dataTire);
             if (replaceResponse.status === 201) {
-              dispatch(addTire(replaceResponse.data.tire));
-              alert.success("Llanta reemplazada exitosamente");
-            } else {
-              alert.error("Error al reemplazar la llanta");
+              setOpen(false);
+              AntdModal.success({
+                content: 'Llanta reemplazada exitosamente.',
+            });
+            return;
+            } else {         
+              setOpen(false);     
+              AntdModal.error({
+                content: 'Error al reemplazar llanta.',
+            });
+            return;
             }
           },
         });
-      } else if (response.status === 201) {
-        dispatch(addTire(response.data.tire));
-        alert.success("Creación exitosa");
-      } else {
-        alert.error("Error al crear la llanta");
+      }else {
+        setOpen(false);
+        AntdModal.success({
+          content: 'Llanta creada exitosamente.',
+         });
+         setOpen(false);
       }
     } catch (error) {
-      console.error(error);
-      alert.error("Ocurrió un error al intentar crear la llanta");
+      AntdModal.error({
+        content: 'Error al crear llanta.',
+      });
     }
   };
 
@@ -285,12 +304,22 @@ export const Tires = () => {
               </div>
               <div>
                 <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Desgaste (%)" variant="outlined" value={wear} onChange={(e) => setWear(e.target.value)}/>
+                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Marca llanta" variant="outlined" value={brand} onChange={(e) => setBrand(e.target.value)}/>
                 </ThemeProvider>
               </div>
               <div>
                 <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Marca llanta" variant="outlined" value={brand} onChange={(e) => setBrand(e.target.value)}/>
+                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Velocidad maxima(km)" variant="outlined" value={velocityIndex} onChange={(e) => setVelocityIndex(e.target.value)}/>
+                </ThemeProvider>
+              </div>
+              <div>
+                <ThemeProvider theme={theme}>
+                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Argarre mojado(A-F)" variant="outlined" value={wetGrip} onChange={(e) => setWetGrip(e.target.value)}/>
+                </ThemeProvider>
+              </div>
+              <div>
+                <ThemeProvider theme={theme}>
+                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Desgaste (%)" variant="outlined" value={wear} onChange={(e) => setWear(e.target.value)}/>
                 </ThemeProvider>
               </div>
               <div>

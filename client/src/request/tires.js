@@ -20,4 +20,14 @@ export class Tire {
         });
         return response.json();
     }
+
+    async updateTireById(data) {
+        const url = `${this.base_api}/${ENV.API_ROUTES_TIRE.UPDATETIREBYID}`;
+        const response = await fetch(url,{
+            method: 'PATCH',
+            body: JSON.stringify(data),
+            headers: {"content-type": "application/json"},
+          })
+        return response;
+    }
 }

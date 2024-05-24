@@ -2,6 +2,7 @@ import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Modal as AntdModal } from 'antd';
 import { Truck } from '../request/trucks';
+import { Tire } from '../request/tires';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -22,6 +23,7 @@ const style = {
 };
 
 const truckController = new Truck();
+const tireController = new Tire();
 
 export const TopTable = () => {
   const dispatch = useDispatch();
@@ -72,7 +74,7 @@ export const TopTable = () => {
             return;
         }
 
-        if (truckData.mileage <= 0) {
+        if (truckData.mileage < 0) {
             AntdModal.error({
                 content: 'El kilometraje debe ser mayor a cero.',
             });
@@ -90,6 +92,22 @@ export const TopTable = () => {
             dispatch(addTruck(truckData));
             const data = await truckController.getListTrucks();
             dispatch(getTrucks(data));
+            const responseData = await response.json();
+            const newTruckId = responseData.truck.id;
+
+            for (let i = 1; i <= 6; i++) {
+                const tireData = {
+                    truckId: newTruckId, 
+                    brand: "Pirelli",
+                    position: i, 
+                    wear: 0, 
+                    mileage: 0,
+                    velocityIndex: 100,
+                    wetGrip: "A",
+                };
+
+                await tireController.newTire(tireData);
+            }
             AntdModal.success({
                 content: 'Camión creado correctamente.',
             });
