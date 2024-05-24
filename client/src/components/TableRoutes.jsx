@@ -257,7 +257,7 @@ export const TableRoutes = () => {
                <GoogleMap
                  id='direction-example'
                  mapContainerStyle={{
-                   height: "50vh",
+                   height: "45vh",
                    width: "100%"
                  }}
                  zoom={8}
@@ -280,7 +280,7 @@ export const TableRoutes = () => {
            </LoadScript>
             )}
           </Typography>
-          <div className="button-create-truck">
+          <div className="button-table-route">
               <Button
                 variant="contained"
                 disableElevation

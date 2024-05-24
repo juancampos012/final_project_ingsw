@@ -30,6 +30,7 @@ export const ENV ={
         GETLISTTRIP: "trips/list-trips",
         GETTRIt: "trips/get-list",
         GETUSERTTRUCKBYID: "usertrucks/get-usertruck-id",
+        UPDATETRIP: "trips/update-trip"
     },
     API_ROUTES_TIRE:{
         NEWTIRE: "tires/new-tire",
