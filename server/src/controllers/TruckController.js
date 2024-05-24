@@ -42,7 +42,6 @@ const getTruckByLicencePlate = async (req, res) => {
         const {licensePlate} = req.query; 
         const truck = await prisma.truck.findUnique({
             where: { licensePlate: licensePlate},
-            include
         });
         res.status(200).json(truck);
     }catch(error){
@@ -132,14 +131,14 @@ const deleteTruckById = async (req, res) => {
 
 const updateTruckByLicencePlate = async (req, res) => {
     try{
-        const { licensePlate, brand, model, year, capacity, actualStatus } = req.body;
+        const { licensePlate, actualStatus} = req.body;
         const truck = await prisma.truck.update({
             where: { licensePlate: licensePlate},
-            data: { brand, model, year, capacity, actualStatus },
+            data: {actualStatus: actualStatus},
         });
-        res.status(201).json(truck);
+        res.status(200).json(truck);
     }catch(error){
-        res.status(400).json({message: error.message});
+        res.status(400).json({message: error.mesage});
     }
 }
 

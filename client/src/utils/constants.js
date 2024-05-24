@@ -24,6 +24,7 @@ export const ENV ={
         GETTRUCKBYLICENCEPLATE: "trucks/get-truck",  
         DELETETRUCKBYID: "trucks/delete-by-id",
         GETTRUCKBYID: "trucks/get-by-id",
+        UPDTAETRUCKSTATUS: "trucks/update-truck",
     },
     API_ROUTES_TRIP:{
         NEWTRIP: "trips/new-trip",
