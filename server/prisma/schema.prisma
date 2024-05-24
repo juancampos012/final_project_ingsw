@@ -84,6 +84,7 @@ model trip {
   time              Float
   waypoints         String[] 
   completed         Boolean    @default(false)
+  createdAt   DateTime?    @default(now())
   userTruck         userTruck  @relation(fields: [userTruckId], references: [id])
   userTruckId       String     @db.ObjectId
 }

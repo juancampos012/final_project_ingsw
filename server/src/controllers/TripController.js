@@ -77,6 +77,40 @@ const getList = async (req, res) => {
     }
 };
 
+getListDate = async (req, res) => {
+    const { userId, truckId, date } = req.body;
+
+    try {
+        const startDate = new Date(date);
+        const endDate = new Date(date);
+        endDate.setDate(endDate.getDate() + 1);
+
+        const trips = await prisma.trip.findMany({
+            where: {
+                AND: [
+                    {
+                        userTruck: {
+                            userId: userId,
+                            truckId: truckId,
+                        }
+                    },
+                    {
+                        createdAt: {
+                            gte: startDate,
+                            lt: endDate
+                        }
+                    }
+                ]
+            }
+        });
+
+        res.status(200).json(trips);
+    } catch (error) {
+        console.error(error.message);
+        res.status(400).json({ message: error.message });
+    }
+};
+
 const getTripbyId = async (req, res) => {
     try {
         const { id } = req.query; 
@@ -123,4 +157,4 @@ const updateTrip = async (req, res) => {
     }
 };
 
-module.exports = { createTrip, getListTrips, getList, getTripbyId, deleteTrip, updateTrip };
+module.exports = { createTrip, getListTrips, getList, getTripbyId, deleteTrip, updateTrip, getListDate };
