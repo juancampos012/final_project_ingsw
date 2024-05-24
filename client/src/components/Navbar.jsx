@@ -236,9 +236,6 @@ export const Navbar = () => {
                     Aquí van las notificaciones
                   </Typography>
                 </Popover>
-                <Typography variant="body1" noWrap component="div" sx={{ pr: 2 }}> 
-                    ¡Hola {user.name}!
-                </Typography>
                 <Box sx={{ flexGrow: 0 }}>
                   <Tooltip title="Open settings">
                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, mr: 5 }}>

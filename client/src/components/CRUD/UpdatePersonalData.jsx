@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { User } from '../../request/users';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -32,8 +33,18 @@ export const UpdatePersonalData = () => {
       });
   }, [miCookie]);
 
+  const navigate = useNavigate();
+
   const handleUpdate = async () => {
     try {
+        if(name == ""){
+          alert("No puede ser un campo vacio");
+          return
+        }
+        if(lastName == ""){
+          alert("No puede ser un campo vacio");
+          return
+        }
         const data = {
           name,
           lastName,
@@ -43,8 +54,8 @@ export const UpdatePersonalData = () => {
         const response = await userController.updateUser(data);
         if(response.status === 201){
           alert("Edicion exitosa");
-          userController.createCookie("jwt", "cerrarseision");
-          window.location.reload();
+          navigate('/home');
+          
         }else{
           alert("Error al editar el usuario");
         }

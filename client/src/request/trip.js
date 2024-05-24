@@ -51,4 +51,14 @@ export class Trip {
       const trip = await response.json();
       return trip;
     }
+
+    async getsListByDate(data) {
+      const url = `${this.base_api}/${ENV.API_ROUTES_TRIP.GETLISTBYDATE}`;
+      const response = await fetch(url,{
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {"content-type": "application/json"},
+        })
+      return response;
+  }
 }

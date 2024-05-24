@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { User } from '../../request/users';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Modal as AntdModal } from 'antd';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -43,6 +44,12 @@ export const UpdateDataLog = () => {
 
   const handleUpdate = async () => {
       try {
+          if(passwordHash == ""){
+            AntdModal.error({
+              content: 'El campo contrasena no puede estar vacio.',
+            });
+            return
+          }
           const data = {
             passwordHash,
             email,

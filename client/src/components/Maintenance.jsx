@@ -14,6 +14,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { Autocomplete } from '@mui/material';
 
 const truckController = new Truck();
 const maintenanceController = new Maintenance();
@@ -58,12 +59,27 @@ export const MaintenanceComponent = () => {
     fetchData();
   }, [licensePlate]); 
 
-  const handleChangeLicensePlate = (event) => {
-    setLicensePlate(event.target.value);
+  const handleChangeLicensePlate = (event, newValue) => {
+    setLicensePlate(newValue);
   };
 
   const handleCreate = async () => {
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+  
+    if (nextDate < currentDate) {
+      AntdModal.error({
+        content: 'Elige una fecha valida',
+      });
+      return
+    }
     const costInt = parseInt(cost);
+    if(costInt<= 0){
+      AntdModal.error({
+        content: 'El precio tiene que ser mayor a 0',
+      });
+      return
+    }
     const data = {
       type,
       nextDate,
@@ -90,7 +106,7 @@ export const MaintenanceComponent = () => {
     }
     const response = await maintenanceController.newMaintenance(data);
     if (response.status === 201) {
-      setOpen(false);
+      handleClose();
       AntdModal.success({
           content: 'Mantenimiento creada correctamente.',
       });
@@ -135,22 +151,18 @@ export const MaintenanceComponent = () => {
             <div>
                 <h3>Camion</h3>
                 <div>
-                    <ThemeProvider theme={theme}>
-                        <FormControl sx={{ width: '370px', marginBottom: '40px' }}  variant="outlined">
-                            <InputLabel id="demo-simple-select-label">Placa</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={licensePlate}
-                                    label="Placa"
-                                    onChange={handleChangeLicensePlate}
-                                >
-                                {licensePlates && licensePlates.map((licensePlate) => (
-                                    <MenuItem key={licensePlate.licensePlate} value={licensePlate.licensePlate}>{licensePlate.licensePlate}</MenuItem>
-                                ))}
-                                </Select>
-                        </FormControl>
-                    </ThemeProvider>
+                <ThemeProvider theme={theme}>
+                  <FormControl sx={{ width: '370px', marginBottom: '40px' }} variant="outlined">
+                      <Autocomplete
+                          id="combo-box-demo"
+                          options={licensePlates}
+                          getOptionLabel={(option) => option.licensePlate}
+                          style={{ width: 370 }}
+                          renderInput={(params) => <TextField {...params} label="Placa" variant="outlined" />}
+                          onInputChange={handleChangeLicensePlate}
+                      />
+                  </FormControl>
+              </ThemeProvider>
                 </div>
                 <div>
                     <ThemeProvider theme={theme}>

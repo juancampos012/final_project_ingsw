@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Autocomplete as MaterialAutocomplete } from '@mui/material';
 import { Truck } from '../request/trucks';
 import { Refueling } from '../request/refuelings';
 import { Modal as AntdModal } from 'antd';
@@ -74,8 +75,8 @@ export const RefuelingComponent = () => {
     fetchData();
   }, [licensePlate]); 
 
-  const handleChangeLicensePlate = (event) => {
-    setLicensePlate(event.target.value);
+  const handleChangeLicensePlate = (event, newValue) => {
+    setLicensePlate(newValue);
   };
 
   const handleCreate = async () => {
@@ -121,6 +122,7 @@ export const RefuelingComponent = () => {
 
         const response = await refuelingController.newRefueling(data);
         if (response.status === 201) {
+            setOpen(false);
             dispatch(addRefueling(data));
             AntdModal.success({
                 content: 'Abastecimiento creado correctamente.',
@@ -145,22 +147,18 @@ export const RefuelingComponent = () => {
       <div className='div-top-tires'>
         <h3>Combustible</h3>
         <div>
-                <ThemeProvider theme={theme}>
-                  <FormControl sx={{ width: '370px', marginBottom: '40px' }}  variant="outlined">
-                    <InputLabel id="demo-simple-select-label">Placa</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={licensePlate}
-                        label="Placa"
-                        onChange={handleChangeLicensePlate}
-                      >
-                      {licensePlates && licensePlates.map((licensePlate) => (
-                        <MenuItem key={licensePlate.licensePlate} value={licensePlate.licensePlate}>{licensePlate.licensePlate}</MenuItem>
-                      ))}
-                      </Select>
+        <ThemeProvider theme={theme}>
+                  <FormControl sx={{ width: '370px', marginBottom: '40px' }} variant="outlined">
+                      <MaterialAutocomplete
+                          id="combo-box-demo"
+                          options={licensePlates}
+                          getOptionLabel={(option) => option.licensePlate}
+                          style={{ width: 370 }}
+                          renderInput={(params) => <TextField {...params} label="Placa" variant="outlined" />}
+                          onInputChange={handleChangeLicensePlate}
+                      />
                   </FormControl>
-                </ThemeProvider>
+              </ThemeProvider>
               </div>
               <div>
                 <ThemeProvider theme={theme}>

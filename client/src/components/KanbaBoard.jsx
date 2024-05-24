@@ -1,16 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Trip } from '../request/trip';
 import { User } from '../request/users';
+import { Truck } from '../request/trucks';
 import Cookies from 'js-cookie';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Modal as AntdModal } from 'antd';
+import dayjs from 'dayjs';
+import Button from '@mui/material/Button';
+import { Autocomplete } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
 
 const tripController = new Trip();
 const userController = new User();
+const truckController = new Truck();
 
 export const KanbaBoard = () => {
     const [trips, setTrips] = useState([]);
     const [parsedLocations, setParsedLocations] = useState({});
     const [userId, setUserId] = useState("");
+    const [date, setDate] = React.useState(dayjs());
+    const [licensePlates, setLicensePlates] = React.useState("");
+    const [licensePlate, setLicensePlate] = React.useState("");
+    const [brand, setBrand] = React.useState("");
+    const [model, setModel] = React.useState("");
+    const [truckId, setTruckId] = React.useState("");
     const miCookie = Cookies.get('jwt');
 
     useEffect(() => {
@@ -25,6 +42,38 @@ export const KanbaBoard = () => {
             console.error(error); 
         });
     }, [miCookie]);
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await truckController.getListLicensePlates();
+            setLicensePlates(response);
+          } catch (error) {
+            console.error('Hubo un error al cargar los datos:', error);
+          }
+        };
+        fetchData();
+      }, []);
+
+      React.useEffect(() => {
+        const fetchData = async () => {
+          if (licensePlate) {
+            try {
+              const response = await truckController.getTruckByLicencePlate(licensePlate);
+              setBrand(response.brand);
+              setModel(response.model);
+              setTruckId(response.id);
+            } catch (error) {
+              console.error('Hubo un error al obtener los datos del usuario:', error);
+            }
+          }
+        };
+        fetchData();
+      }, [licensePlate]); 
+    
+      const handleChangeLicensePlate = (event, newValue) => {
+        setLicensePlate(newValue);
+      };
 
     useEffect(() => {
         const parseLocation = async (location) => {
@@ -59,15 +108,13 @@ export const KanbaBoard = () => {
 
         const fetchData = async () => {
             try {
-                const response = await tripController.getListTrip(userId);
-                setTrips(response);
-                await parseLocations(response);
+                await parseLocations(trips);
             } catch (error) {
                 console.error('Hubo un error al cargar los datos:', error);
             }
         };
         fetchData();
-    }, [userId]);
+    }, [trips]);
 
     const startDrag = (evt, item) => {
         evt.dataTransfer.setData('itemID', item.id);
@@ -133,14 +180,82 @@ export const KanbaBoard = () => {
         return `${hours} hrs ${minutes} min`;
     }
 
+    const handleDateChange = (selectedDate) => {
+          setDate(selectedDate);
+    };
+
+    const handleFilter = async() => {
+        if (date < "") {
+          AntdModal.error({
+            content: 'Elige una fecha valida',
+          });
+          return
+        }
+
+        if(truckId === ""){
+            AntdModal.error({
+                content: 'Selecciona un camion',
+              });
+              return
+        }
+        
+        const data = {
+            userId, 
+            truckId, 
+            date 
+        };
+        console.log(data);
+
+        const response = await tripController.getsListByDate(data);
+        const dataTrips = await response.json();
+        setTrips(dataTrips);
+    }  
+
     return (
         <>
+        <div className='div-kanba-filter'>
             <h1 className="h1-kanba">
                 Mis Viajes
                 <img className='icon-react' src="src/assets/react.svg" alt="" />
             </h1>
-            <br />
-
+            <div className='div-filter'>
+                <div className='div-div-filter'>
+                <div>
+                  <ThemeProvider theme={theme}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        value={date}
+                        onChange={handleDateChange}
+                        sx={{ width: '370px', marginBottom: '40px' }}
+                      />
+                    </LocalizationProvider>
+                  </ThemeProvider>
+                </div>
+                <div>
+                <ThemeProvider theme={theme}>
+                  <FormControl sx={{ width: '370px', marginBottom: '40px' }} variant="outlined">
+                      <Autocomplete
+                          id="combo-box-demo"
+                          options={licensePlates}
+                          getOptionLabel={(option) => option.licensePlate}
+                          style={{ width: 370 }}
+                          renderInput={(params) => <TextField {...params} label="Placa" variant="outlined" />}
+                          onInputChange={handleChangeLicensePlate}
+                      />
+                  </FormControl>
+              </ThemeProvider>
+                </div>
+                <div className='button-filter'>
+              <Button
+                variant="contained"
+                disableElevation
+                onClick={handleFilter}
+              >
+                Filtrar
+              </Button>
+              </div>
+            </div>
+            </div>
             <div className='drag-and-drop'>
                 <div className='column column--1'>
                     <h3>
@@ -179,6 +294,40 @@ export const KanbaBoard = () => {
                 </div>
 
             </div>
+            </div>
         </>
     )
 }
+
+const theme = createTheme({
+    components: {
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'black',
+            },
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'black',
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'black',
+            },
+            borderRadius: '15px', 
+            '& fieldset': {
+              borderRadius: '15px',
+            },
+          },
+        },
+      },
+      MuiInputLabel: {
+        styleOverrides: {
+          root: {
+            '&.Mui-focused': {
+              color: 'black',
+            },
+          },
+        },
+      },
+    },
+  });

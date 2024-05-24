@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Autocomplete as MaterialAutocomplete } from '@mui/material';
 import { Truck } from '../request/trucks';
 import { Tire } from '../request/tires';
 import { Modal as AntdModal } from 'antd';
@@ -89,8 +90,8 @@ export const Tires = () => {
     fetchData();
   }, [licensePlate]); 
 
-  const handleChangeLicensePlate = (event) => {
-    setLicensePlate(event.target.value);
+  const handleChangeLicensePlate = (event, newValue) => {
+    setLicensePlate(newValue);
   };
 
   const Wheel = ({ onClick, isHovered, wheelNumber }) => {
@@ -161,6 +162,12 @@ export const Tires = () => {
         return;
     }
 
+    if (velocityIndexInt < 0) {
+      AntdModal.error({
+          content: 'La velocidad debe ser mayor a cero.',
+      });
+      return;
+  }
 
 
       const data = {
@@ -227,22 +234,18 @@ export const Tires = () => {
       <div className='div-top-tires'>
         <h3>Llantas</h3>
         <div>
-                <ThemeProvider theme={theme}>
-                  <FormControl sx={{ width: '370px', marginBottom: '40px' }}  variant="outlined">
-                    <InputLabel id="demo-simple-select-label">Placa</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={licensePlate}
-                        label="Placa"
-                        onChange={handleChangeLicensePlate}
-                      >
-                      {licensePlates && licensePlates.map((licensePlate) => (
-                        <MenuItem key={licensePlate.licensePlate} value={licensePlate.licensePlate}>{licensePlate.licensePlate}</MenuItem>
-                      ))}
-                      </Select>
+        <ThemeProvider theme={theme}>
+                  <FormControl sx={{ width: '370px', marginBottom: '40px' }} variant="outlined">
+                      <MaterialAutocomplete
+                          id="combo-box-demo"
+                          options={licensePlates}
+                          getOptionLabel={(option) => option.licensePlate}
+                          style={{ width: 370 }}
+                          renderInput={(params) => <TextField {...params} label="Placa" variant="outlined" />}
+                          onInputChange={handleChangeLicensePlate}
+                      />
                   </FormControl>
-                </ThemeProvider>
+              </ThemeProvider>
               </div>
               <div>
                 <ThemeProvider theme={theme}>
@@ -305,9 +308,18 @@ export const Tires = () => {
                 </ThemeProvider>
               </div>
               <div>
-                <ThemeProvider theme={theme}>
-                  <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Marca llanta" variant="outlined" value={brand} onChange={(e) => setBrand(e.target.value)}/>
-                </ThemeProvider>
+              <ThemeProvider theme={theme}>
+  <FormControl sx={{ width: '370px', marginBottom: '40px' }} variant="outlined">
+    <MaterialAutocomplete
+      id="combo-box-demo"
+      options={["Michellin", "Pirelli", "Bribgeston"]} 
+      getOptionLabel={(option) => option}
+      style={{ width: 370 }}
+      renderInput={(params) => <TextField {...params} label="Marca llanta" variant="outlined" />}
+      onInputChange={(event, newValue) => setBrand(newValue)}
+    />
+  </FormControl>
+</ThemeProvider>
               </div>
               <div>
                 <ThemeProvider theme={theme}>
@@ -331,7 +343,7 @@ export const Tires = () => {
               </div>
             </div>
             </div>
-            <div className="button-create-truck">
+            <div className="button-create-tire">
               <Button
                 variant="contained"
                 disableElevation
@@ -391,4 +403,5 @@ const style = {
   boxShadow: 24,
   p: 4,
   borderRadius: 3,
+  height: '90vh'
 };

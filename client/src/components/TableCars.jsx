@@ -63,7 +63,8 @@ export const TableCars = () => {
   };
   
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, event) => {
+    event.stopPropagation(); 
     Modal.confirm({
       title: 'Confirmación',
       content: '¿Estás seguro de que quieres eliminar este usuario?',
@@ -224,9 +225,9 @@ const handleStatusChange = async (event) => {
                       );
                     })}
                     <TableCell key="actions" style={{ minWidth: 120, width: 120 }}>
-                      <IconButton onClick={() => handleDelete(truck.id)}>
-                        <DeleteOutlined />
-                      </IconButton>
+                    <IconButton onClick={(event) => handleDelete(truck.id, event)}>
+                      <DeleteOutlined />
+                    </IconButton>
                     </TableCell>
                   </TableRow>
                 );

@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Autocomplete as MaterialAutocomplete } from '@mui/material';
+import { GoogleMap, LoadScript, DirectionsRenderer, Autocomplete as MapAutocomplete } from '@react-google-maps/api';
 import { Trip } from '../request/trip';
 import { User } from '../request/users';
 import { Truck } from '../request/trucks';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { GoogleMap, LoadScript, DirectionsRenderer, Autocomplete } from '@react-google-maps/api';
 import { Modal as AntdModal } from 'antd';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -41,6 +43,8 @@ export const MapComponent = () => {
   const autocompleteOriginRef = useRef(null);
   const autocompleteDestinationRef = useRef(null);
   const autocompleteWaypointRefs = useRef([]);
+
+  const navigate = useNavigate();
 
   const onLoadOrigin = (autocomplete) => {
     autocompleteOriginRef.current = autocomplete;
@@ -177,12 +181,12 @@ export const MapComponent = () => {
     fetchData();
   }, [identification]);  
 
-  const handleChangeIdentification = (event) => {
-    setIdentification(event.target.value);
+  const handleChangeIdentification = (event, newValue) => {
+    setIdentification(newValue);
   };
   
-  const handleChangeLicensePlate = (event) => {
-    setLicensePlate(event.target.value);
+  const handleChangeLicensePlate = (event, newValue) => {
+    setLicensePlate(newValue);
   };
 
   const handleCreate = async () => {
@@ -224,6 +228,7 @@ export const MapComponent = () => {
     dispatch(addTrip(data));
   
     if (response.status === 201) {
+      navigate("/see-routes-admin");
       AntdModal.success({
         content: 'Ruta creada correctamente.',
       });
@@ -244,22 +249,18 @@ export const MapComponent = () => {
             <div>
                 <h3>Camion</h3>
                 <div>
-                    <ThemeProvider theme={theme}>
-                        <FormControl sx={{ width: '370px', marginBottom: '40px' }}  variant="outlined">
-                            <InputLabel id="demo-simple-select-label">Placa</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={licensePlate}
-                                    label="Placa"
-                                    onChange={handleChangeLicensePlate}
-                                >
-                                {licensePlates && licensePlates.map((licensePlate) => (
-                                    <MenuItem key={licensePlate.licensePlate} value={licensePlate.licensePlate}>{licensePlate.licensePlate}</MenuItem>
-                                ))}
-                                </Select>
-                        </FormControl>
-                    </ThemeProvider>
+                <ThemeProvider theme={theme}>
+                  <FormControl sx={{ width: '370px', marginBottom: '40px' }} variant="outlined">
+                      <MaterialAutocomplete
+                          id="combo-box-demo"
+                          options={licensePlates}
+                          getOptionLabel={(option) => option.licensePlate}
+                          style={{ width: 370 }}
+                          renderInput={(params) => <TextField {...params} label="Placa" variant="outlined" />}
+                          onInputChange={handleChangeLicensePlate}
+                      />
+                  </FormControl>
+              </ThemeProvider>
                 </div>
                 <div>
                     <ThemeProvider theme={theme}>
@@ -277,18 +278,14 @@ export const MapComponent = () => {
                 <div>
                     <ThemeProvider theme={theme}>
                         <FormControl sx={{ width: '370px', marginBottom: '40px'}}  variant="outlined">
-                            <InputLabel id="demo-simple-select-label">Identificacion</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={identification}
-                                label="Identificacion"
-                                onChange={handleChangeIdentification}
-                            >
-                                {identifications && identifications.map((identification) => (
-                                    <MenuItem key={identification.identification} value={identification.identification}>{identification.identification}</MenuItem>
-                                ))}
-                            </Select>
+                            <MaterialAutocomplete
+                                id="combo-box-demo"
+                                options={identifications}
+                                getOptionLabel={(option) => option.identification}
+                                style={{ width: 370 }}
+                                renderInput={(params) => <TextField {...params} label="Placa" variant="outlined" />}
+                                onInputChange={handleChangeIdentification}
+                            />
                         </FormControl>
                     </ThemeProvider>
                 </div>
@@ -307,39 +304,39 @@ export const MapComponent = () => {
     </div>
       <LoadScript googleMapsApiKey="AIzaSyAf2AHLtGvjMJouKecs0kkw1AQw2YTZfdc" libraries={["places"]} onLoad={() => setIsMapsLoaded(true)}>
         <div className='div-autocomplete-map'>
-          <Autocomplete onLoad={onLoadOrigin} onPlaceChanged={onPlaceChangedOrigin}>
+          <MapAutocomplete onLoad={onLoadOrigin} onPlaceChanged={onPlaceChangedOrigin}>
             <div>
               <h3>Origen</h3>
               <ThemeProvider theme={theme}>
                 <TextField sx={{ width: '370px' }} id="outlined-basic" label="Origen" variant="outlined"/>
               </ThemeProvider>
             </div>
-          </Autocomplete>
-          <Autocomplete onLoad={onLoadDestination} onPlaceChanged={onPlaceChangedDestination}>
+          </MapAutocomplete>
+          <MapAutocomplete onLoad={onLoadDestination} onPlaceChanged={onPlaceChangedDestination}>
             <div>
               <h3>Destino</h3>
               <ThemeProvider theme={theme}>
                 <TextField sx={{ width: '370px' }} id="outlined-basic" label="Destino" variant="outlined"/>
               </ThemeProvider>
             </div>
-          </Autocomplete>
+          </MapAutocomplete>
           <div className='div-add-waypoint'>
             <h3>Paradas</h3>
             <ThemeProvider theme={theme}>
               {waypoints.map((waypoint, index) => (
                 <div key={index} className='div-delete-waypoint'>
-                  <Autocomplete
+                  <MapAutocomplete
                     onLoad={(autocomplete) => onLoadWaypoint(autocomplete, index)}
                     onPlaceChanged={() => onPlaceChangedWaypoint(index)} 
                   >
                     <TextField sx={{ width: '370px', marginBottom: '10px' }} label={`Parada ${index + 1}`} variant="outlined" />
-                  </Autocomplete>
+                  </MapAutocomplete>
                   <Button onClick={() => removeWaypoint(index)} variant="contained" disableElevation style={{ marginBottom: '10px' }}>
                     Eliminar Parada
                   </Button>
                 </div>
               ))}
-              <Autocomplete>
+              <MapAutocomplete>
                 <TextField
                   sx={{ width: '370px' }}
                   id="outlined-basic"
@@ -348,7 +345,7 @@ export const MapComponent = () => {
                   value={newWaypoint}
                   onChange={(e) => setNewWaypoint(e.target.value)}
                 />
-              </Autocomplete>
+              </MapAutocomplete>
               <Button onClick={addWaypoint} variant="contained" disableElevation style={{ marginTop: '10px', marginBottom: '40px' }}>
                 Añadir Parada
               </Button>
