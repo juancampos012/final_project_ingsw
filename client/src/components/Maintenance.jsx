@@ -70,6 +70,24 @@ export const MaintenanceComponent = () => {
       cost: costInt, 
       truckId, 
     }
+    if (isNaN(cost) ||  cost === "" ) {
+      AntdModal.error({
+          content: 'Por favor, introduce solo números y asegúrate de que todos los campos estén completos.',
+      });
+      return;
+    }
+    if (costInt <= 0) {
+      AntdModal.error({
+          content: 'El costo debe ser mayor a cero.',
+      });
+      return;
+    }
+    if( currentDate.after(nextDate.toDate())){
+      AntdModal.error({
+        content: 'La fecha del próximo mantenimiento debe ser posterior a la actual.',
+    });
+    return;
+    }
     const response = await maintenanceController.newMaintenance(data);
     if (response.status === 201) {
       setOpen(false);

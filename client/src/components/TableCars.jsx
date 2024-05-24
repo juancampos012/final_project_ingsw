@@ -130,6 +130,26 @@ const nextMaintenance = (selectedTruck) => {
   return Object.values(latestMaintenances);
 };
 
+const handleStatusChange = async (event) => {
+  const actualStatus = event.target.value;
+
+  const data = {
+    licensePlate: selectedTruck.licensePlate,
+    actualStatus: actualStatus,
+  };
+    const response = await truckController.updateTruckStatus(data);
+    if (response.status !== 200) {
+      Modal.error({
+        content: 'Ocurrió un error al editar el estado del camión.',
+      });
+    }else{
+      Modal.success({
+        content: 'Camión editado correctamente.',
+      })
+    }
+
+}
+
 
 
   const onDrop = (evt, licensePlate) => {
@@ -231,7 +251,7 @@ const nextMaintenance = (selectedTruck) => {
       onCancel={handleModalClose}
       footer={null}
       className="truck-modal"
-      >
+      > 
     <div className="truck-modal-content">
       <div className="truck-modal-image">
         <img src="https://www.nicepng.com/png/detail/412-4121223_diseamos-contenedores-segn-su-carga-camion-hino.png" alt="Imagen del camión" />
@@ -242,7 +262,12 @@ const nextMaintenance = (selectedTruck) => {
         <p><strong>Línea:</strong> {selectedTruck.model}</p>
         <p><strong>Modelo:</strong> {selectedTruck.year}</p>
         <p><strong>Kilometraje:</strong> {selectedTruck.mileage}</p>
-        <p><strong>Estado Actual:</strong> {selectedTruck.actualStatus}</p>
+        <p><strong>Estado Actual:</strong></p>
+        <select value={selectedTruck.actualStatus} onChange={handleStatusChange}>
+          <option value="En operación">En operación</option>
+          <option value="En mantenimiento">En mantenimiento</option>
+          <option value="Inactivo">Inactivo</option>
+        </select>
         {nextMaintenance(selectedTruck).map((maintenance) => (
           <p key={maintenance.type}>
             <strong>Próximo mantenimiento de {maintenance.type}:</strong> {new Date(maintenance.nextDate).toLocaleDateString()}

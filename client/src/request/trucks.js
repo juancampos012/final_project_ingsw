@@ -67,4 +67,13 @@ export class Truck {
         const trip = await response.json();
         return trip;
       }
+      async updateTruckStatus(data) {
+        const url = `${this.base_api}/${ENV.API_ROUTES_TRUCK.UPDTAETRUCKSTATUS}`;
+        const response = await fetch(url, {
+          method: 'PATCH',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify( data ),
+        });
+        return response;
+      }
 }
