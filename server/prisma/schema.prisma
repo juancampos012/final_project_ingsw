@@ -13,11 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Crear nodelo usuario
-//nombre, apellido, contraseña, correo, activo, avatar, role, direccion
-
-// Crear modelo direccion
-//
 
 model user{
   id              String  @id @default(auto()) @map("_id") @db.ObjectId

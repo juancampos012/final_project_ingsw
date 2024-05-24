@@ -27,6 +27,16 @@ const createTire = async (req, res) => {
                 truckId, 
             },
         });
+
+        await prisma.truck.update({
+            where: { id: truckId },
+            data: {
+                tires: {
+                    connect: { id: tire.id }
+                }
+            }
+        });
+        
         res.status(201).json({tire});
     }catch(error){
         console.error(error);

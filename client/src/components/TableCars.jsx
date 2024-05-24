@@ -17,29 +17,6 @@ import { DeleteOutlined } from '@ant-design/icons';
 import IconButton from '@mui/material/IconButton';
 import { createApi } from 'unsplash-js';
 
-const unsplash = createApi({
-  accessKey: 'Ww_%QY73k}6m4?a',
-});
-
-const getImageForTruck = async (brand, model) => {
-  try {
-    const query = `${brand} ${model}`;
-    const result = await unsplash.search.getPhotos({
-      query: query,
-      page: 1,
-      perPage: 1,
-    });
-
-    if (result.response.results.length > 0) {
-      return result.response.results[0].urls.small;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error('Error fetching image from Unsplash:', error);
-    return null;
-  }
-};
 
 const truckController = new Truck();
 
@@ -55,7 +32,6 @@ const columns = [
 
 export const TableCars = () => {
 
-  const [truckImage, setTruckImage] = useState(null);
   const dispatch = useDispatch();
   const trucks = useSelector((state) => state.truck.trucks);
   const [page, setPage] = useState(0);
@@ -63,15 +39,7 @@ export const TableCars = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedTruck, setSelectedTruck] = useState(null);
 
-  React.useEffect(() => {
-    if (selectedTruck) {
-      const fetchImage = async () => {
-        const imageUrl = await getImageForTruck(selectedTruck.brand, selectedTruck.model);
-        setTruckImage(imageUrl);
-      };
-      fetchImage();
-    }
-  }, [selectedTruck]);
+
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -139,6 +107,29 @@ const handleModalClose = () => {
     setIsModalVisible(false);
     setSelectedTruck(null);
 };
+
+const nextMaintenance = (selectedTruck) => {
+  
+  if (!selectedTruck || !selectedTruck.maintenances || selectedTruck.maintenances.length === 0) {
+    return []; 
+  }
+
+  const latestMaintenances = {};
+
+  selectedTruck.maintenances.forEach((maintenance) => {
+    const { type, nextDate } = maintenance;
+
+    if (
+      !latestMaintenances[type] ||
+      new Date(nextDate) > new Date(latestMaintenances[type].nextDate)
+    ) {
+      latestMaintenances[type] = { type, nextDate };
+    }
+  });
+
+  return Object.values(latestMaintenances);
+};
+
 
 
   const onDrop = (evt, licensePlate) => {
@@ -234,20 +225,32 @@ const handleModalClose = () => {
         />
       </Paper>
       {selectedTruck && (
-        <Modal
-          title="Información del Camión"
-          visible={isModalVisible}
-          onCancel={handleModalClose}
-          footer={null}
-        >
-          {truckImage && <img src={truckImage} alt={`${selectedTruck.brand} ${selectedTruck.model}`} className="truck-image" />}
-          <p><strong>Placa:</strong> {selectedTruck.licensePlate}</p>
-          <p><strong>Marca:</strong> {selectedTruck.brand}</p>
-          <p><strong>Línea:</strong> {selectedTruck.model}</p>
-          <p><strong>Modelo:</strong> {selectedTruck.year}</p>
-          <p><strong>Kilometraje:</strong> {selectedTruck.mileage}</p>
-          <p><strong>Estado Actual:</strong> {selectedTruck.actualStatus}</p>
-        </Modal>
+      <Modal
+      title="Información del Camión"
+      visible={isModalVisible}
+      onCancel={handleModalClose}
+      footer={null}
+      className="truck-modal"
+      >
+    <div className="truck-modal-content">
+      <div className="truck-modal-image">
+        <img src="https://www.nicepng.com/png/detail/412-4121223_diseamos-contenedores-segn-su-carga-camion-hino.png" alt="Imagen del camión" />
+      </div>
+      <div className="truck-modal-info">
+        <p><strong>Placa:</strong> {selectedTruck.licensePlate}</p>
+        <p><strong>Marca:</strong> {selectedTruck.brand}</p>
+        <p><strong>Línea:</strong> {selectedTruck.model}</p>
+        <p><strong>Modelo:</strong> {selectedTruck.year}</p>
+        <p><strong>Kilometraje:</strong> {selectedTruck.mileage}</p>
+        <p><strong>Estado Actual:</strong> {selectedTruck.actualStatus}</p>
+        {nextMaintenance(selectedTruck).map((maintenance) => (
+          <p key={maintenance.type}>
+            <strong>Próximo mantenimiento de {maintenance.type}:</strong> {new Date(maintenance.nextDate).toLocaleDateString()}
+          </p>
+        ))}
+      </div>
+    </div>
+    </Modal>
       )}
     </div>
   );

@@ -14,6 +14,16 @@ const createMaintenance = async (req, res) => {
                 truckId, 
             },
         });
+        
+        await prisma.truck.update({
+            where: { id: truckId },
+            data: {
+                maintenances: {
+                    connect: { id: maintenance.id }
+                }
+            }
+        });
+
         res.status(201).json({maintenance});
     }catch(error){
         console.error(error);
