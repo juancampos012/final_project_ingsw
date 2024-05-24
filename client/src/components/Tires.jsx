@@ -160,6 +160,8 @@ export const Tires = () => {
         return;
     }
 
+
+
       const data = {
         brand,
         position: hoveredWheel,
