@@ -1,10 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-
-
 const createTrip = async (req, res) => {
-    try{
-        const { originPlace, destinationPlace, distance, time, userId, truckId } = req.body;
+    try {
+        const { originPlace, destinationPlace, waypoints, distance, time, userId, truckId } = req.body;
 
         const userTruck = await prisma.userTruck.create({
             data: {
@@ -17,6 +15,7 @@ const createTrip = async (req, res) => {
             data: {
                 originPlace,
                 destinationPlace,
+                waypoints,
                 distance,
                 time,
                 userTruckId: userTruck.id
@@ -41,48 +40,68 @@ const createTrip = async (req, res) => {
         res.status(201).json({trip});
     }catch(error){
         console.error(error);
-        res.status(500).json({error: "Algo salió mal"});
+        res.status(500).json({ error: "Algo salió mal" });
     }
 };
 
-
-
-
 const getListTrips = async (req, res) => {
-    try{
-        const trips = await prisma.trip.findMany();
+    const userId = req.query.userId;
+
+    try {
+        const userTrucks = await prisma.userTruck.findMany({
+            where: {
+                userId: userId
+            },
+            include: {
+                trips: true 
+            }
+        });
+
+        const trips = userTrucks.flatMap(userTruck => userTruck.trips);
+
         res.status(200).json(trips);
-    }catch(error){
-        console.log(error.message);
-        res.status(400).json({message: error.message});
+    } catch (error) {
+        console.error(error.message);
+        res.status(400).json({ message: error.message });
+    }
+};
+
+const getList = async (req, res) => {
+    try {
+        const trips = await prisma.trip.findMany();
+        
+        res.status(200).json(trips);
+    } catch (error) {
+        console.error(error.message);
+        res.status(400).json({ message: error.message });
     }
 };
 
 const getTripbyId = async (req, res) => {
-    try{
-        const {id} = req.query; 
+    try {
+        const { id } = req.query; 
         const trip = await prisma.trip.findUnique({
             where: { id: id },
         });
         res.status(200).json(trip);
-    }catch(error){
-        res.status(400).json({message: error.message});
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
 }
 
 const deleteTrip = async (req, res) => {
-    try{ 
-        const {id} = req.body;
+    try { 
+        const { id } = req.body;
         const trip = await prisma.trip.delete({
             where: { id: id },
         });
-        if(trip){
-            res.status(200).json({message: "Trip deleted successfully"});
+        if (trip) {
+            res.status(200).json({ message: "Trip deleted successfully" });
         } else {
             throw new Error("Trip not found");
         }
-    }catch(error){
-        res.status(500).json({message: error.message});
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }
 
@@ -104,5 +123,4 @@ const updateTrip = async (req, res) => {
     }
 };
 
-
-module.exports = {createTrip, getListTrips , getTripbyId , deleteTrip, updateTrip }
+module.exports = { createTrip, getListTrips, getList, getTripbyId, deleteTrip, updateTrip };

@@ -3,3 +3,4 @@ export * from "./trucks";
 export * from "./trip";
 export * from "./tires";
 export * from "./refuelings";
+export * from "./maintenance";

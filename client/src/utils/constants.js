@@ -23,9 +23,14 @@ export const ENV ={
         GETLISTLICENSEPLATES: "trucks/list-license-plate",  
         GETTRUCKBYLICENCEPLATE: "trucks/get-truck",  
         DELETETRUCKBYID: "trucks/delete-by-id",
+        GETTRUCKBYID: "trucks/get-by-id",
     },
     API_ROUTES_TRIP:{
         NEWTRIP: "trips/new-trip",
+        GETLISTTRIP: "trips/list-trips",
+        GETTRIt: "trips/get-list",
+        GETUSERTTRUCKBYID: "usertrucks/get-usertruck-id",
+        UPDATETRIP: "trips/update-trip"
     },
     API_ROUTES_TIRE:{
         NEWTIRE: "tires/new-tire",
@@ -33,5 +38,8 @@ export const ENV ={
     },
     API_ROUTES_REFUELING:{
         NEWREFUELING: "refueling/new-refueling",
+    },
+    API_ROUTES_MAINTENANCE:{
+        NEWMAINTENANCE: "maintenance/new-maintenance"
     }
 }

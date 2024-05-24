@@ -196,10 +196,24 @@ body{
     border: none;
     cursor: pointer;
 }
+
 .div-table-drivers{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.div-table-routes{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.div-tittle-routes h3{
+    margin-left: 4%;
+    font-size: 250%;
+    font-family: 'Lato', sans-serif;
 }
 
 .div-top-routes h4{
@@ -393,32 +407,38 @@ body{
 
 .column--1{
     border-color: #0e0505;
+    width: 35%;
+}
+
+.column--1 h3{
+    border-color: #0e0505;
+    text-align: center;
 }
 
 .column--1 .title{
     color: #6a6968;
+    text-align: center;
 }
 
 .column--2{
     border-color: #878488;
+    width: 35%;
+}
+
+.column--2 h3{
+    border-color: #878488;
+    text-align: center;
 }
 
 .column--2 .title{
     color: #010101;
 }
 
-.column--3{
-    border-color: #000000;
-}
-
-.column--3 .title{
-    color: #878488;
-}
-
-/* DRAG AND DROP */
 .drag-and-drop{
     display: flex;
     grid-gap: 40px;
+    margin-top: 40px;
+    margin-bottom: 100px;
 }
 
 .dd-zone{
@@ -448,4 +468,89 @@ body{
     margin-bottom: 20px;
     border-radius: 8px;  
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.div-top-maintenance h4{
+    font-size: 300%;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+}
+
+.div-top-maintenance h3{
+    font-size: 200%;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+}
+
+.div-div-top-maintenance{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Lato', sans-serif;
+    margin-top: -60px;
+    margin-bottom: 100px;
+}
+
+.button-create-maintenance{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.button-create-maintenance Button {
+    background-color: #000000;
+    width: 270px;
+    height: 40px;
+    border-radius: 15px;
+    margin-top: 10px;
+}  
+
+.button-create-maintenance Button:hover{
+    background-color: #000000; 
+}
+
+.div-add-waypoint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.div-add-waypoint Button{
+    background-color: #000000;
+    width: 200px;
+    height: 40px;
+    border-radius: 15px;
+    margin-top: 10px;
+}
+
+.div-add-waypoint Button:hover{
+    background-color: #000000; 
+}
+
+.div-delete-waypoint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-table-route {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.button-table-route Button{
+    background-color: #000000;
+    width: 270px;
+    height: 40px;
+    border-radius: 15px;
+    margin-top: 10px;
+}
+
+.button-table-route Button:hover{
+    background-color: #000000; 
 }

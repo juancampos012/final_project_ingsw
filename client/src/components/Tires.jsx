@@ -3,8 +3,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Truck } from '../request/trucks';
 import { Tire } from '../request/tires';
 import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import { Modal as AntdModal } from 'antd';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
@@ -13,6 +11,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { addTire } from '../slices/tireSlice';
 import { useDispatch } from 'react-redux';
+import { Modal as AntdModal } from 'antd';
+import { Modal as MuiModal } from '@mui/material';
 
 const truckController = new Truck();
 const tireController = new Tire();
@@ -47,7 +47,9 @@ export const Tires = () => {
     if(truckId){
       setOpen(true);
     }else{
-      alert("Selecciona un camion.")
+      AntdModal.error({
+        content: 'Seleccione un camion.',
+      });
     }
   }
   const handleClose = () =>{
@@ -192,7 +194,6 @@ export const Tires = () => {
       } else {
         alert.error("Error al crear la llanta");
       }
-
     } catch (error) {
       console.error(error);
       alert.error("Ocurrió un error al intentar crear la llanta");
@@ -265,7 +266,7 @@ export const Tires = () => {
           <Wheel onClick={handleOpen} isHovered={hoveredWheel === 6} wheelNumber={6} />
         </div>
         <div >
-        <Modal
+        <MuiModal
           open={open}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
@@ -309,7 +310,7 @@ export const Tires = () => {
               </Button>
             </div>
           </Box>
-          </Modal>
+          </MuiModal>
       </div>
       </div>
     </>

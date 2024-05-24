@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+// eslint-disable-next-line
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { getTrucks, deleteTruckById, updateTrucksOrder } from "../slices/truckSlice";
 import Paper from '@mui/material/Paper';
@@ -62,7 +63,7 @@ export const TableCars = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedTruck, setSelectedTruck] = useState(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (selectedTruck) {
       const fetchImage = async () => {
         const imageUrl = await getImageForTruck(selectedTruck.brand, selectedTruck.model);

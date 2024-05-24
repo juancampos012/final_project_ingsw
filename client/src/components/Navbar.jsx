@@ -32,6 +32,7 @@ import Popover from '@mui/material/Popover';
 import Cookies from 'js-cookie';
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
+import EngineeringIcon from '@mui/icons-material/Engineering';
 
 const drawerWidth = 240;
 const userController = new User();
@@ -104,10 +105,14 @@ export const Navbar = () => {
         setOpen(false);
     };
 
-    const handleLogout = () => {
-        userController.createCookie("jwt", "cerrarseision");
-        window.location.reload();
-    };
+    const handleLogout = async () => {
+      try {
+          await userController.createCookie("jwt", "cerrarseision");
+          setTimeout(() => window.location.reload(), 40);
+      } catch (error) {
+          console.error("Error al cerrar sesión: ", error);
+      }
+  };  
 
     const handleUpdate = () => {
       navigate('/update-personal-data');
@@ -115,6 +120,11 @@ export const Navbar = () => {
 
     const handlePrincipal = () => {
       navigate('/home');
+      handleDrawerClose();
+    };
+
+    const handleMaintenance = () => {
+      navigate('/maintenance-admin')
       handleDrawerClose();
     };
 
@@ -130,6 +140,11 @@ export const Navbar = () => {
 
     const handleRoutes = () => {
       navigate('/routes-admin');
+      handleDrawerClose();
+    };
+
+    const handleSeeRoutes = () => {
+      navigate('/see-routes-admin');
       handleDrawerClose();
     };
 
@@ -302,12 +317,20 @@ export const Navbar = () => {
                     <ListItemText primary={'Camiones'} />
                   </ListItemButtonStyled>
                 </ListItem>
-                <ListItem key={'Rutas'} disablePadding>
+                <ListItem key={'Crear rutas'} disablePadding>
                   <ListItemButtonStyled onClick={handleRoutes}>
                     <ListItemIcon>
                       <MapIcon/>
                     </ListItemIcon>
-                    <ListItemText primary={'Rutas'} />
+                    <ListItemText primary={'Crear utas'} />
+                  </ListItemButtonStyled>
+                </ListItem>
+                <ListItem key={'verrutas'} disablePadding>
+                  <ListItemButtonStyled onClick={handleSeeRoutes}>
+                    <ListItemIcon>
+                      <MapIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Ver rutas'} />
                   </ListItemButtonStyled>
                 </ListItem>
                 <ListItem key={'Combustible'} disablePadding>
@@ -324,6 +347,14 @@ export const Navbar = () => {
                       <TireRepairIcon/>
                     </ListItemIcon>
                     <ListItemText primary={'Neumaticos'} />
+                  </ListItemButtonStyled>
+                </ListItem>
+                <ListItem key={'Mantenimiento'} disablePadding>
+                  <ListItemButtonStyled onClick={handleMaintenance}>
+                    <ListItemIcon>
+                      <EngineeringIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Mantenimiento'} />
                   </ListItemButtonStyled>
                 </ListItem>
               </List>

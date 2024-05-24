@@ -57,4 +57,14 @@ export class Truck {
         });
         return response;
       }
+
+      async getTruckById(id) {
+        const url = `${this.base_api}/${ENV.API_ROUTES_TRUCK.GETTRUCKBYID}?id=${id}`;
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: { "Content-Type": "application/json" },
+        });
+        const trip = await response.json();
+        return trip;
+      }
 }

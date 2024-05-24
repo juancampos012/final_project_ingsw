@@ -57,6 +57,7 @@ const login = async (req, res) => {
             res.status(401).json({error: "User undefined or invalid password"});
         }
     }catch(error){
+        console.log(error);
         res.status(500).json({error: "Something went wrong"});
     }
 };
@@ -78,6 +79,9 @@ const getListUsers = async (req, res) => {
 const getListIdentifications = async (req, res) => {
     try {
         const identifications = await prisma.user.findMany({
+            where: {
+                role: "user"
+            },
             select: {
                 identification: true
             }
