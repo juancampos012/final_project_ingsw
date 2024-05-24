@@ -7,6 +7,25 @@ const createUserTruck = async (req, res) => {
         const newUserTruck = await prisma.userTruck.create({
             data: { userId, truckId },
         });
+
+        await prisma.truck.update({
+            where: { id: truckId },
+            data: {
+                userTrucks: {
+                    connect: { id: newUserTruck.id }
+                }
+            }
+        });
+
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+                userTrucks: {
+                    connect: { id: newUserTruck.id }
+                }
+            }
+        });
+        
         res.status(201).json(newUserTruck);
     }catch(error){
         res.status(400).json({message: error.message});

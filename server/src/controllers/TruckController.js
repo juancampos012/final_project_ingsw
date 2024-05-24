@@ -24,7 +24,11 @@ const createTruck = async (req, res) => {
 
 const getListTruck = async (req, res) => {
     try{
-        const trucks = await prisma.truck.findMany();
+        const trucks = await prisma.truck.findMany({
+            include: {
+                maintenances: true,
+            },
+        });
         res.status(200).json(trucks);
     }catch(error){
         console.log(error.message);
@@ -32,11 +36,13 @@ const getListTruck = async (req, res) => {
     }
 };
 
+
 const getTruckByLicencePlate = async (req, res) => {
     try{
         const {licensePlate} = req.query; 
         const truck = await prisma.truck.findUnique({
             where: { licensePlate: licensePlate},
+            include
         });
         res.status(200).json(truck);
     }catch(error){
