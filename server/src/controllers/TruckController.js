@@ -42,7 +42,6 @@ const getTruckByLicencePlate = async (req, res) => {
         const {licensePlate} = req.query; 
         const truck = await prisma.truck.findUnique({
             where: { licensePlate: licensePlate},
-            include
         });
         res.status(200).json(truck);
     }catch(error){

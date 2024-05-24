@@ -56,8 +56,8 @@ export const MaintenanceComponent = () => {
       }
     };
     fetchData();
-  }, [licensePlate]);  
-  
+  }, [licensePlate]); 
+
   const handleChangeLicensePlate = (event) => {
     setLicensePlate(event.target.value);
   };
