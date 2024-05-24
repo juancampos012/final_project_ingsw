@@ -21,7 +21,7 @@ import { KanbaBoard } from './components/KanbaBoard';
 import { Tires } from './components/Tires';
 import { RefuelingComponent } from './components/Refueling';
 import { NavbarUser } from './components/NavBarUser';
-import { Maintenance } from './components/Maintenance';
+import { MaintenanceComponent } from './components/Maintenance';
 import { TableRoutes } from './components/TableRoutes';
 
 function App() {
@@ -140,7 +140,7 @@ function App() {
           <RequireAuthAdmin>
             <div>
               <Navbar/>
-              <Maintenance/>
+              <MaintenanceComponent/>
               <Footer/>
             </div>
           </RequireAuthAdmin>

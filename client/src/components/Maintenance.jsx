@@ -1,26 +1,34 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 import { Truck } from '../request/trucks';
+import { Maintenance } from '../request/maintenance';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Modal as AntdModal } from 'antd';
 import { Modal as MuiModal } from '@mui/material';import TextField from '@mui/material/TextField';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { useDispatch } from 'react-redux';
 
 const truckController = new Truck();
+const maintenanceController = new Maintenance();
+const options = ['General', 'Aceite', 'Refrigerante', 'Frenos']; 
 
-export const Maintenance = () => {
-  const dispatch = useDispatch();
+export const MaintenanceComponent = () => {
   const [licensePlate, setLicensePlate] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [brand, setBrand] = React.useState("");
   const [model, setModel] = React.useState("");
   const [licensePlates, setLicensePlates] = React.useState("");
   const [truckId, setTruckId] = React.useState("");
+  const [type, setType] = React.useState("");
+  const [nextDate, setNextDate] = React.useState(dayjs());
+  const [cost, setCost] = React.useState("");
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -55,7 +63,24 @@ export const Maintenance = () => {
   };
 
   const handleCreate = async () => {
-
+    const costInt = parseInt(cost);
+    const data = {
+      type,
+      nextDate,
+      cost: costInt, 
+      truckId, 
+    }
+    const response = await maintenanceController.newMaintenance(data);
+    if (response.status === 201) {
+      setOpen(false);
+      AntdModal.success({
+          content: 'Mantenimiento creada correctamente.',
+      });
+    } else {
+        AntdModal.error({
+            content: 'Ocurrió un error al crear el mantenimiento.',
+        });
+    }
   }  
 
   const handleOpen = () =>{
@@ -63,14 +88,24 @@ export const Maintenance = () => {
       setOpen(true);
     }else{
         AntdModal.error({
-            content: 'Ocurrió un error al crear el abastecimiento.',
+            content: 'Selecciona un camion.',
         });
     }
   }
 
   const handleClose = () =>{
     setOpen(false);
+    setType("");
+    setCost("");
   }
+
+  const handleChange = (event) => {
+    setType(event.target.value);
+  };
+
+  const handleDateChange = (date) => {
+    setNextDate(date);
+  };
 
   return (
     <div>
@@ -132,9 +167,44 @@ export const Maintenance = () => {
               <h2>Nuevo mantenimiento</h2>
             </div>
             <div className='div-create-truck'>
-            <div className='div-create-truck-rigth'>
-
-            </div>
+              <div className='div-create-truck-rigth'>
+                <div>
+                    <ThemeProvider theme={theme}>
+                        <FormControl sx={{ width: '370px', marginBottom: '40px' }}  variant="outlined">
+                        <InputLabel id="demo-simple-select-label">Tipo de mantenimiento</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={type}
+                            label="Tipo de mantenimiento"
+                            onChange={handleChange}
+                          >
+                            {options.map((option) => (
+                              <MenuItem key={option} value={option}>
+                                {option}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                    </ThemeProvider>
+                </div>
+                <div>
+                  <ThemeProvider theme={theme}>
+                    <TextField sx={{ width: '370px', marginBottom: '40px' }} id="outlined-basic" label="Costo($)" variant="outlined" value={cost} onChange={(e) => setCost(e.target.value)}/>
+                  </ThemeProvider>
+                </div>
+                <div>
+                  <ThemeProvider theme={theme}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        value={nextDate}
+                        onChange={handleDateChange}
+                        sx={{ width: '370px', marginBottom: '40px' }}
+                      />
+                    </LocalizationProvider>
+                  </ThemeProvider>
+                </div>
+              </div>
             </div>
             <div className="button-create-truck">
               <Button

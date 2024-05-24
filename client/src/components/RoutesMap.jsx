@@ -20,26 +20,29 @@ const tripController = new Trip();
 
 export const MapComponent = () => {
   const dispatch = useDispatch();
-  const [licensePlate, setLicensePlate] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [brand, setBrand] = React.useState("");
-  const [model, setModel] = React.useState("");
-  const [licensePlates, setLicensePlates] = React.useState("");
-  const [identifications, setIdentifications] = React.useState("");
-  const [identification, setIdentification] = React.useState("");
-  const [userId, setUserId] = React.useState("");
-  const [truckId, setTruckId] = React.useState("");
-  const [timeString, setTimeString] = React.useState("");
-  const [distanceString, setDistanceString] = React.useState("");
-  const [time, setTime] = React.useState("");
-  const [distance, setDistance] = React.useState("");
+  const [licensePlate, setLicensePlate] = useState("");
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [brand, setBrand] = useState("");
+  const [model, setModel] = useState("");
+  const [licensePlates, setLicensePlates] = useState([]);
+  const [identifications, setIdentifications] = useState([]);
+  const [identification, setIdentification] = useState("");
+  const [userId, setUserId] = useState("");
+  const [truckId, setTruckId] = useState("");
+  const [timeString, setTimeString] = useState("");
+  const [distanceString, setDistanceString] = useState("");
+  const [time, setTime] = useState("");
+  const [distance, setDistance] = useState("");
   const [response, setResponse] = useState(null);
   const [originPlace, setOrigin] = useState("");
   const [destinationPlace, setDestination] = useState("");
+  const [waypoints, setWaypoints] = useState([]);
+  const [newWaypoint, setNewWaypoint] = useState("");
   const [isMapsLoaded, setIsMapsLoaded] = useState(false);
   const autocompleteOriginRef = useRef(null);
   const autocompleteDestinationRef = useRef(null);
+  const autocompleteWaypointRefs = useRef([]);
 
   const onLoadOrigin = (autocomplete) => {
     autocompleteOriginRef.current = autocomplete;
@@ -47,6 +50,10 @@ export const MapComponent = () => {
 
   const onLoadDestination = (autocomplete) => {
     autocompleteDestinationRef.current = autocomplete;
+  };
+
+  const onLoadWaypoint = (autocomplete, index) => {
+    autocompleteWaypointRefs.current[index] = autocomplete;
   };
 
   const onPlaceChangedOrigin = () => {
@@ -65,7 +72,29 @@ export const MapComponent = () => {
         setDestination(place.geometry.location.toJSON());
       }
     }
-  };  
+  };
+
+  const onPlaceChangedWaypoint = (index) => {
+    if (autocompleteWaypointRefs.current[index] !== null) {
+      const place = autocompleteWaypointRefs.current[index].getPlace();
+      if (place && place.geometry && place.geometry.location) {
+        const newWaypoints = [...waypoints];
+        newWaypoints[index] = place.geometry.location.toJSON();
+        setWaypoints(newWaypoints);
+      }
+    }
+  };
+  
+  const addWaypoint = () => {
+    const updatedWaypoints = [...waypoints, newWaypoint];
+    setWaypoints(updatedWaypoints);
+    setNewWaypoint("");
+  };
+
+  const removeWaypoint = (index) => {
+    const newWaypoints = waypoints.filter((_, i) => i !== index);
+    setWaypoints(newWaypoints);
+  };
 
   useEffect(() => {
     if (isMapsLoaded && originPlace && destinationPlace && window.google && window.google.maps) {
@@ -75,22 +104,23 @@ export const MapComponent = () => {
         {
           origin: originPlace,
           destination: destinationPlace,
+          waypoints: waypoints.map(wp => ({ location: wp, stopover: true })),
           travelMode: window.google.maps.TravelMode.DRIVING,
         },
         (result, status) => {
           if (status === window.google.maps.DirectionsStatus.OK) {
             setResponse(result);
-            setDistanceString(result.routes[0].legs[0].distance.text);
-            setTimeString(result.routes[0].legs[0].duration.text);
+            setDistanceString(result.routes[0].legs.map(leg => leg.distance.text).join(", "));
+            setTimeString(result.routes[0].legs.map(leg => leg.duration.text).join(", "));
           } else {
             console.error(`error fetching directions ${result}`);
           }
         }
       );
     }
-  }, [isMapsLoaded, originPlace, destinationPlace]);
+  }, [isMapsLoaded, originPlace, destinationPlace, waypoints]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await truckController.getListLicensePlates();
@@ -102,7 +132,7 @@ export const MapComponent = () => {
     fetchData();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await userController.getListIdentifications();
@@ -114,7 +144,7 @@ export const MapComponent = () => {
     fetchData();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       if (licensePlate) {
         try {
@@ -130,7 +160,7 @@ export const MapComponent = () => {
     fetchData();
   }, [licensePlate]);  
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       if (identification) {
         try {
@@ -164,6 +194,7 @@ export const MapComponent = () => {
     const data = {
       originPlace: JSON.stringify(originPlace),
       destinationPlace: JSON.stringify(destinationPlace),
+      waypoints: waypoints.map(wp => JSON.stringify(wp)),
       distance, 
       time, 
       userId, 
@@ -272,6 +303,37 @@ export const MapComponent = () => {
               </ThemeProvider>
             </div>
           </Autocomplete>
+          <div className='div-add-waypoint'>
+            <h3>Paradas</h3>
+            <ThemeProvider theme={theme}>
+              {waypoints.map((waypoint, index) => (
+                <div key={index} className='div-delete-waypoint'>
+                  <Autocomplete
+                    onLoad={(autocomplete) => onLoadWaypoint(autocomplete, index)}
+                    onPlaceChanged={() => onPlaceChangedWaypoint(index)} 
+                  >
+                    <TextField sx={{ width: '370px', marginBottom: '10px' }} label={`Parada ${index + 1}`} variant="outlined" />
+                  </Autocomplete>
+                  <Button onClick={() => removeWaypoint(index)} variant="contained" disableElevation style={{ marginBottom: '10px' }}>
+                    Eliminar Parada
+                  </Button>
+                </div>
+              ))}
+              <Autocomplete>
+                <TextField
+                  sx={{ width: '370px' }}
+                  id="outlined-basic"
+                  label="Nueva Parada"
+                  variant="outlined"
+                  value={newWaypoint}
+                  onChange={(e) => setNewWaypoint(e.target.value)}
+                />
+              </Autocomplete>
+              <Button onClick={addWaypoint} variant="contained" disableElevation style={{ marginTop: '10px', marginBottom: '40px' }}>
+                Añadir Parada
+              </Button>
+            </ThemeProvider>
+          </div>
         </div>
         <div className='div-map-route'>  
           <GoogleMap

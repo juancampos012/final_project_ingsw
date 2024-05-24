@@ -8,6 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { Trip } from '../request/trip';
+import Button from '@mui/material/Button';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Modal from '@mui/material/Modal';
@@ -227,7 +228,7 @@ export const TableRoutes = () => {
                <GoogleMap
                  id='direction-example'
                  mapContainerStyle={{
-                   height: "70vh",
+                   height: "50vh",
                    width: "100%"
                  }}
                  zoom={8}
@@ -250,6 +251,15 @@ export const TableRoutes = () => {
            </LoadScript>
             )}
           </Typography>
+          <div className="button-create-truck">
+              <Button
+                variant="contained"
+                disableElevation
+                onClick={() => setOpen(false)}
+              >
+                Cerrar
+              </Button>
+            </div>
         </Box>
       </Modal>
     </>
@@ -261,7 +271,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: '80%',
+  width: '65%',
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
