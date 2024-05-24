@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from "react-redux";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getUsers, deleteUserById, updateUsersOrder } from "../slices/userSlice";
 import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -26,10 +28,11 @@ const columns = [
 export const TableDrivers = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.user.users);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [identification, setIdentification] = useState("");
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const usersData = await userController.getListUser();
@@ -99,8 +102,15 @@ export const TableDrivers = () => {
     dispatch(updateUsersOrder(updatedUsers));
   };
 
+  const filteredUsers = users.filter(user => user.identification.toLowerCase().includes(identification.toLowerCase()));
+
   return (
     <>
+      <div className='div-filter-cars'>
+        <ThemeProvider theme={theme}>
+          <TextField sx={{ width: '370px' }} id="identification" label="Identificación" variant="outlined" value={identification} onChange={(e) => setIdentification(e.target.value)} />
+        </ThemeProvider>
+      </div>
       <div className='div-table-drivers'>
         <Paper sx={{ width: '92%', overflow: 'hidden', marginBottom: '100px' }}>
           <TableContainer sx={{ maxHeight: 800, minHeight: 500 }}>
@@ -118,7 +128,7 @@ export const TableDrivers = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users
+                {filteredUsers
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((user) => {
                     return (
@@ -156,7 +166,7 @@ export const TableDrivers = () => {
           <TablePagination
             rowsPerPageOptions={[10, 25]}
             component="div"
-            count={users.length}
+            count={filteredUsers.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -167,3 +177,36 @@ export const TableDrivers = () => {
     </>
   );
 };
+
+const theme = createTheme({
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'black',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'black',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'black',
+          },
+          borderRadius: '15px', 
+          '& fieldset': {
+            borderRadius: '15px',
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focused': {
+            color: 'black',
+          },
+        },
+      },
+    },
+  },
+});
