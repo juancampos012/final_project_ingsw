@@ -1,9 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-
 const createTrip = async (req, res) => {
     try {
-        const { originPlace, destinationPlace, distance, time, userId, truckId } = req.body;
+        const { originPlace, destinationPlace, waypoints, distance, time, userId, truckId } = req.body;
 
         const userTruck = await prisma.userTruck.create({
             data: {
@@ -16,6 +15,7 @@ const createTrip = async (req, res) => {
             data: {
                 originPlace,
                 destinationPlace,
+                waypoints,
                 distance,
                 time,
                 userTruckId: userTruck.id
