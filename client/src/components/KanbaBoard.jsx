@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Trip } from '../request/trip';
 import { User } from '../request/users';
 import Cookies from 'js-cookie';
+import { Modal as AntdModal } from 'antd';
 
 const tripController = new Trip();
 const userController = new User();
@@ -12,7 +13,7 @@ export const KanbaBoard = () => {
     const [userId, setUserId] = useState("");
     const miCookie = Cookies.get('jwt');
 
-    React.useEffect(() => {
+    useEffect(() => {
         userController.verifyToken(miCookie)
         .then(data => data.json())
         .then(response => {
@@ -68,25 +69,53 @@ export const KanbaBoard = () => {
 
     const startDrag = (evt, item) => {
         evt.dataTransfer.setData('itemID', item.id);
-        console.log(item);
     }
 
     const draggingOver = (evt) => {
         evt.preventDefault();
     }
 
+    const updateTrip = async (trip) => {
+        console.log(trip);
+        try {
+            const data = {
+                id: trip.id,
+                completed: true,
+              };
+            
+              const response = await tripController.updateTrip(data);
+            
+              if (response.status === 200) {
+                AntdModal.success({
+                  content: 'Ruta completada correctamente.',
+                });
+              } else {
+                AntdModal.error({
+                  content: 'Ocurrió un error al completar la ruta.',
+                });
+              }
+        } catch (error) {
+            console.error('Error al actualizar el viaje:', error);
+        }
+    }
+
     const onDrop = (evt, completed) => {
         const itemID = evt.dataTransfer.getData('itemID');
         const item = trips.find(item => item.id === itemID);
-        item.completed = completed;
-
-        const newState = trips.map(trip => {
-            if (trip.id === itemID) return item;
-            return trip;
-        });
-
-        setTrips(newState);
+    
+        if (!item.completed && completed) {
+            item.completed = true; 
+    
+            const newState = trips.map(trip => {
+                if (trip.id === itemID) return item;
+                return trip;
+            });
+            setTrips(newState);
+    
+            updateTrip(item);
+        }
     }
+    
 
     const formatTime = (timeInHours) => {
         const hours = Math.floor(timeInHours);
